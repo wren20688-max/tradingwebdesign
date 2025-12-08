@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin — PreoTrade FX</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top-nav">
+    <div class="nav-left">
+      <button id="menuToggle" class="menu-toggle">☰ Menu</button>
+      <img src="logo.png" alt="PreoTrade FX Logo" class="logo" style="height:40px; margin-right:12px;">
+      <h1>PreoTrade FX — Admin</h1>
+    </div>
+    <div class="nav-center">
+      <span class="balance-display">Balance: <strong id="balance">$0.00</strong></span>
+    </div>
+    <div class="nav-right">
+      <button id="toggleMode" class="nav-btn">🌙 Theme</button>
+      <a href="index.html" class="nav-btn logout">🚪 Logout</a>
+    </div>
+  </header>
+
+  <nav id="sideMenu" class="side-menu">
+    <button class="menu-close">&times;</button>
+    <div class="menu-items">
+      <a href="dashboard.html" class="menu-item">📊 Manual Trading</a>
+      <a href="auto-trading.html" class="menu-item">🤖 Auto Trading</a>
+      <a href="finances.html" class="menu-item">💰 Finances</a>
+      <a href="transactions.html" class="menu-item">📋 Transactions</a>
+      <a href="payment-methods.html" class="menu-item">💳 Payment Methods</a>
+      <a href="profile.html" class="menu-item">👤 Profile</a>
+      <a href="admin.html" class="menu-item active">🛠️ Admin</a>
+    </div>
+  </nav>
+
+  <main class="main-container page-container">
+    <div class="page-header">
+      <h2>🛠️ Admin Dashboard</h2>
+      <p>Privileged user tools — visible only to admin/privileged users</p>
+    </div>
+
+    <section class="content-card">
+      <h3>Privileged Users</h3>
+      <div id="privilegedListAdmin">Loading...</div>
+      <div style="display:flex; gap:8px; margin-top:8px;">
+        <input id="privilegedInputAdmin" placeholder="username" style="flex:1; padding:8px;" />
+        <button id="addPrivilegedAdmin" class="action-btn">Add</button>
+      </div>
+    </section>
+
+    <section class="content-card">
+      <h3>Pending Withdrawals</h3>
+      <div id="pendingWithdrawalsAdmin">Loading...</div>
+    </section>
+
+    <section class="content-card">
+      <h3>System Self-Test</h3>
+      <button id="runAdminSelfTest" class="action-btn">Run Self-Test</button>
+      <div id="adminSelfTestResults" style="margin-top:10px;"></div>
+    </section>
+  </main>
+
+  <script src="storage.js"></script>
+  <script src="pages.js"></script>
+  <script>
+    const API_URL = 'http://localhost:5000/api';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check if user is logged in
+      const user = checkAuth();
+      if (!user) return;
+
+      const me = user.username;
+
+      // Check if user is admin or privileged
+      fetch(`${API_URL}/user/${me}/check-access`)
+        .then(r => r.json())
+        .then(data => {
+          if (!data.canAccess) {
+            alert('Admin access only. Redirecting to dashboard.');
+            window.location.href = 'dashboard.html';
+          }
+        })
+        .catch(e => {
+          // If API fails, check local user data
+          if (!user.isAdmin) {
+            alert('Admin access only. Redirecting to dashboard.');
+            window.location.href = 'dashboard.html';
+          }
+        });
+
+      // render privileged list
+      function renderPrivList() {
+        fetch(`${API_URL}/privileged-users`)
+          .then(r => r.json())
+          .then(list => {
+            const el = document.getElementById('privilegedListAdmin');
+            el.innerHTML = '';
+            if (!list || list.length === 0) { el.textContent = 'No privileged users'; return; }
+            list.forEach(u => {
+              const row = document.createElement('div');
+              row.style.cssText = 'display:flex; gap:8px; align-items:center; margin:6px 0; padding:8px; border-bottom:1px solid #eee;';
+              row.innerHTML = `<div style="flex:1"><strong>${u.username}</strong><br/><small>winBias: ${u.winBias} • autoCompleteWithdrawals: ${u.autoCompleteWithdrawals}</small></div><div style="display:flex;gap:6px"><button class="do-credit action-btn small" data-user="${u.username}">Credit</button><button class="remove-priv action-btn small" data-user="${u.username}">Remove</button></div>`;
+              el.appendChild(row);
+            });
+            el.querySelectorAll('.remove-priv').forEach(b => b.addEventListener('click', () => {
+              fetch(`${API_URL}/privileged-users/${b.dataset.user}`, { method: 'DELETE' })
+                .then(r => r.json())
+                .then(() => { alert('User removed'); renderPrivList(); })
+                .catch(e => alert('Error: ' + e.message));
+            }));
+            el.querySelectorAll('.do-credit').forEach(b => b.addEventListener('click', () => {
+              const amt = parseFloat(prompt('Amount to credit', '100') || '0');
+              if (amt > 0) {
+                fetch(`${API_URL}/admin/credit`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ username: b.dataset.user, amount: amt })
+                })
+                  .then(r => r.json())
+                  .then(() => { alert('Credited'); renderPrivList(); })
+                  .catch(e => alert('Error: ' + e.message));
+              }
+            }));
+          })
+          .catch(e => { document.getElementById('privilegedListAdmin').textContent = 'Error loading users'; console.error(e); });
+      }
+
+      renderPrivList();
+
+      document.getElementById('addPrivilegedAdmin')?.addEventListener('click', () => {
+        const v = document.getElementById('privilegedInputAdmin')?.value?.trim();
+        if (!v) return alert('Enter username');
+        fetch(`${API_URL}/privileged-users`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: v, autoCredit: true, autoCompleteWithdrawals: true, winBias: 0.8 })
+        })
+          .then(r => r.json())
+          .then(() => { document.getElementById('privilegedInputAdmin').value = ''; renderPrivList(); })
+          .catch(e => alert('Error: ' + e.message));
+      });
+
+      // render pending withdrawals
+      const pendingWrap = document.getElementById('pendingWithdrawalsAdmin');
+      fetch(`${API_URL}/pending-withdrawals`)
+        .then(r => r.json())
+        .then(withdrawals => {
+          pendingWrap.innerHTML = '';
+          if (!withdrawals || withdrawals.length === 0) {
+            pendingWrap.textContent = 'No pending withdrawals';
+            return;
+          }
+          withdrawals.forEach(w => {
+            const row = document.createElement('div');
+            row.style.cssText = 'display:flex; gap:8px; align-items:center; margin:6px 0; padding:8px; border-bottom:1px solid #eee;';
+            row.innerHTML = `<div style="flex:1"><strong>${w.username}</strong><br/><small>$${w.amount} • ${w.method}</small></div><button class="approve-withdrawal action-btn small" data-id="${w.id}">Approve</button>`;
+            pendingWrap.appendChild(row);
+          });
+          pendingWrap.querySelectorAll('.approve-withdrawal').forEach(b => b.addEventListener('click', () => {
+            fetch(`${API_URL}/withdrawals/${b.dataset.id}/approve`, { method: 'POST' })
+              .then(r => r.json())
+              .then(() => { alert('Withdrawal approved'); location.reload(); })
+              .catch(e => alert('Error: ' + e.message));
+          }));
+        })
+        .catch(e => { pendingWrap.textContent = 'Error loading withdrawals'; console.error(e); });
+
+      document.getElementById('runAdminSelfTest')?.addEventListener('click', () => {
+        fetch(`${API_URL}/admin/self-test`, { method: 'POST' })
+          .then(r => r.json())
+          .then(result => { document.getElementById('adminSelfTestResults').textContent = 'Self-test completed: ' + JSON.stringify(result); })
+          .catch(e => { document.getElementById('adminSelfTestResults').textContent = 'Self-test error: ' + e.message; });
+      });
+    });
+  </script>
+</body>
+</html>

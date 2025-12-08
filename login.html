@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — PreoTrade FX</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-page">
+
+  <div class="auth-panel">
+    <div class="auth-top">
+      <img src="assets/logo.svg" alt="Logo" class="logo-small">
+      <h2>Login to PreoTrade FX</h2>
+    </div>
+
+    <form id="loginForm" class="form modern-login">
+      <div class="login-grid">
+        <div class="login-box">
+          <h4>Account</h4>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="you@example.com" required>
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input id="password" type="password" placeholder="Enter password" required>
+          </div>
+        </div>
+
+        <div class="login-box">
+          <h4>Profile</h4>
+          <div class="field">
+            <label for="clientCategory">Client Category</label>
+            <select id="clientCategory" required>
+              <option value="retail">Retail</option>
+              <option value="institutional">Institutional</option>
+              <option value="affiliate">Affiliate</option>
+              <option value="demo">Demo</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="phoneQuick">Phone (optional)</label>
+            <input id="phoneQuick" type="tel" placeholder="+254 7XX XXX XXX">
+          </div>
+        </div>
+
+        <div class="login-box actions-box">
+          <h4>Actions</h4>
+          <p class="small-note">Use your registered email and password.</p>
+          <div class="form-actions modern-actions" style="margin-top:8px; display:flex; flex-direction:column; gap:10px;">
+            <button type="submit" class="btn-login">Login</button>
+            <button type="button" id="demoBtn" class="btn-quick">Quick Login</button>
+            <a href="signup.html" class="btn-quick" style="text-align:center;">Create account</a>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // Simple verification login: accept email or username + password
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const ident = document.getElementById('email').value.trim();
+      const pwd = document.getElementById('password').value;
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+
+      // require matching email and password
+      const found = users.find(u => (u.email && u.email.toLowerCase() === ident.toLowerCase()));
+      if (found && found.password === pwd) {
+        // store minimal session and request to open chart view (ETHUSD)
+        localStorage.setItem('preo_user', JSON.stringify({ username: found.username || found.email, email: found.email }));
+        localStorage.setItem('preo_open_chart', 'true');
+        localStorage.setItem('preo_open_chart_asset', 'ETHUSD');
+        window.location.href = 'dashboard.html';
+        return;
+      }
+
+      // if no users exist, allow quick demo login (for dev/demo purposes)
+      if (users.length === 0) {
+        localStorage.setItem('preo_user', JSON.stringify({ username: 'demo_user', email: ident }));
+        localStorage.setItem('preo_open_chart', 'true');
+        localStorage.setItem('preo_open_chart_asset', 'ETHUSD');
+        window.location.href = 'dashboard.html';
+        return;
+      }
+
+      alert('Invalid credentials. Please enter a registered email and correct password.');
+    });
+
+    // Demo quick-login button
+    document.getElementById('demoBtn').addEventListener('click', function () {
+      localStorage.setItem('preo_user', JSON.stringify({ username: 'demo_user', email: 'demo@preotrade.local' }));
+      localStorage.setItem('preo_open_chart', 'true');
+      window.location.href = 'dashboard.html';
+    });
+  </script>
+</body>
+</html>
+
+

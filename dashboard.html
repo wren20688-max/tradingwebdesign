@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trading Dashboard — PreoTrade FX</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.0.0/dist/lightweight-charts.standalone.production.min.js"></script>
+</head>
+<body>
+  <!-- Top Navigation -->
+  <header class="top-nav">
+    <div class="nav-left">
+      <button id="menuToggle" class="menu-toggle">☰</button>
+      <div class="logo">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#0055ff;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <circle cx="100" cy="100" r="95" fill="none" stroke="url(#logoGradient)" stroke-width="2" opacity="0.3"/>
+          <path d="M 100 30 L 150 60 L 150 130 L 100 160 L 50 130 L 50 60 Z" fill="url(#logoGradient)" opacity="0.1" stroke="url(#logoGradient)" stroke-width="1.5"/>
+          <g>
+            <rect x="70" y="95" width="8" height="35" fill="#00d084" opacity="0.9"/>
+            <line x1="74" y1="85" x2="74" y2="135" stroke="#00d084" stroke-width="2"/>
+            <rect x="85" y="75" width="8" height="55" fill="#00d084" opacity="0.95"/>
+            <line x1="89" y1="65" x2="89" y2="135" stroke="#00d084" stroke-width="2"/>
+            <rect x="100" y="55" width="8" height="75" fill="#0055ff" opacity="1"/>
+            <line x1="104" y1="45" x2="104" y2="135" stroke="#0055ff" stroke-width="2"/>
+            <rect x="115" y="80" width="8" height="50" fill="#00d4ff" opacity="0.9"/>
+            <line x1="119" y1="70" x2="119" y2="135" stroke="#00d4ff" stroke-width="2"/>
+          </g>
+          <circle cx="160" cy="55" r="8" fill="none" stroke="#00d084" stroke-width="1.5" opacity="0.8"/>
+          <circle cx="160" cy="55" r="5" fill="none" stroke="#00d084" stroke-width="1" opacity="0.6"/>
+          <circle cx="160" cy="55" r="2" fill="#00d084" opacity="0.9"/>
+        </svg>
+      </div>
+      <h1>PreoTrade FX</h1>
+    </div>
+    <div class="nav-center">
+      <div class="market-ticker">
+        <div class="ticker-item">
+          <span class="ticker-pair">EUR/USD</span>
+          <span class="ticker-price">1.0945</span>
+          <span class="ticker-change green">+0.12%</span>
+        </div>
+        <div class="ticker-item">
+          <span class="ticker-pair">GBP/USD</span>
+          <span class="ticker-price">1.2638</span>
+          <span class="ticker-change red">-0.15%</span>
+        </div>
+        <div class="ticker-item">
+          <span class="ticker-pair">BTC/USD</span>
+          <span class="ticker-price">45,230</span>
+          <span class="ticker-change green">+2.34%</span>
+        </div>
+        <div class="ticker-item">
+          <span class="ticker-pair">GOLD</span>
+          <span class="ticker-price">2,052</span>
+          <span class="ticker-change green">+1.15%</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="user-info">
+        <span id="username" style="font-size: 13px;">User</span>
+        <img src="https://ui-avatars.com/api/?name=Trader&background=0055ff&color=fff" alt="User Avatar" class="user-avatar">
+      </div>
+      <button id="toggleMode" class="nav-btn" title="Dark Mode">🌙</button>
+      <a href="index.html" class="nav-btn logout">Logout</a>
+    </div>
+  </header>
+
+  <!-- Side Menu -->
+  <nav id="sideMenu" class="side-menu">
+    <button class="menu-close">✕</button>
+    <div class="menu-items">
+      <a href="dashboard.html" class="menu-item active">Dashboard</a>
+      <a href="auto-trading.html" class="menu-item">Auto Bot</a>
+      <a href="finances.html" class="menu-item">Wallet</a>
+      <a href="transactions.html" class="menu-item">Transactions</a>
+      <a href="payment-methods.html" class="menu-item">Payments</a>
+      <a href="profile.html" class="menu-item">Settings</a>
+      <a href="faq.html" class="menu-item">Support</a>
+      <a href="admin.html" class="menu-item">Admin</a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-container">
+    <!-- Trust & Security Header -->
+    <div class="security-header">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 18px;">Secured</span>
+        <div class="security-badges">
+          <div class="trust-badge verified">
+            <span style="font-size: 14px;">✓</span>
+            Licensed Broker
+          </div>
+          <div class="trust-badge secure">
+            <span style="font-size: 14px;">🔒</span>
+            SSL Encrypted
+          </div>
+          <div class="trust-badge regulated">
+            <span style="font-size: 14px;">✓</span>
+            Regulated
+          </div>
+        </div>
+      </div>
+      <div class="trust-score">
+        <span class="trust-score-number">9.8</span>
+        <div>
+          <div class="trust-score-label">Trust Score</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Summary Cards -->
+    <section class="account-summary">
+      <div class="summary-card">
+        <div class="summary-label">Account Balance</div>
+        <div class="summary-value" id="balance">$10,000.00</div>
+        <div class="summary-change">Available funds</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Open Positions</div>
+        <div class="summary-value" id="openPositions">0</div>
+        <div class="summary-change">Total positions</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Today's P&L</div>
+        <div class="summary-value" id="todayPnL" style="color: var(--success);">+$0.00</div>
+        <div class="summary-change">+0.00%</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Account Equity</div>
+        <div class="summary-value" id="equity">$10,000.00</div>
+        <div class="summary-change">Total equity</div>
+      </div>
+
+      <div class="account-toggle">
+        <button id="accountToggle" class="toggle-btn demo-active">Demo Account</button>
+        <button id="realAccountToggle" class="toggle-btn">Real Account</button>
+      </div>
+    </section>
+
+    <!-- Main Chart -->
+    <section class="chart-container large">
+      <div class="chart-header">
+        <div style="display: flex; gap: 20px; align-items: center;">
+          <div>
+            <h3 id="chartTitle">EUR/USD</h3>
+            <p style="margin: 0; font-size: 12px; color: var(--text-tertiary);">Euro vs US Dollar</p>
+          </div>
+          <div style="border-left: 1px solid var(--border-color); padding-left: 20px;">
+            <label style="font-size: 12px; color: var(--text-tertiary); display: block; margin-bottom: 6px;">Select Pair</label>
+            <select id="pairSelector" style="padding: 6px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary); cursor: pointer;">
+              <optgroup label="Forex (12)">
+                <option value="EURUSD">EUR/USD</option>
+                <option value="GBPUSD">GBP/USD</option>
+                <option value="USDJPY">USD/JPY</option>
+                <option value="AUDUSD">AUD/USD</option>
+                <option value="USDCAD">USD/CAD</option>
+                <option value="NZDUSD">NZD/USD</option>
+                <option value="USDCHF">USD/CHF</option>
+                <option value="EURGBP">EUR/GBP</option>
+                <option value="EURJPY">EUR/JPY</option>
+                <option value="GBPJPY">GBP/JPY</option>
+                <option value="AUDJPY">AUD/JPY</option>
+                <option value="USDSGD">USD/SGD</option>
+              </optgroup>
+              <optgroup label="Crypto (6)">
+                <option value="BTCUSD">BTC/USD</option>
+                <option value="ETHUSD">ETH/USD</option>
+                <option value="XRPUSD">XRP/USD</option>
+                <option value="LTCUSD">LTC/USD</option>
+                <option value="ADAUSD">ADA/USD</option>
+                <option value="DOGEUSD">DOGE/USD</option>
+              </optgroup>
+              <optgroup label="Stocks (15)">
+                <option value="AAPL">Apple Inc.</option>
+                <option value="MSFT">Microsoft Corp.</option>
+                <option value="GOOGL">Alphabet Inc.</option>
+                <option value="AMZN">Amazon.com Inc.</option>
+                <option value="TSLA">Tesla Inc.</option>
+                <option value="NVDA">NVIDIA Corp.</option>
+                <option value="META">Meta Platforms</option>
+                <option value="JPM">JPMorgan Chase</option>
+                <option value="V">Visa Inc.</option>
+                <option value="JNJ">Johnson & Johnson</option>
+                <option value="WMT">Walmart Inc.</option>
+                <option value="DIS">Disney Inc.</option>
+                <option value="NFLX">Netflix Inc.</option>
+                <option value="IBM">IBM Corp.</option>
+                <option value="INTC">Intel Corp.</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <div class="chart-type-selector" style="display: flex; align-items: center; gap: 8px; border-right: 1px solid var(--border-color); padding-right: 12px;">
+            <label style="font-size: 12px; color: var(--text-tertiary); white-space: nowrap;">Chart Type:</label>
+            <button class="chart-type-btn active" data-type="candlestick" title="Candlestick" style="padding: 6px 10px; border: 2px solid transparent;">🕯️ Candlestick</button>
+            <button class="chart-type-btn" data-type="line" title="Line" style="padding: 6px 10px; border: 2px solid transparent;">📈 Line</button>
+            <button class="chart-type-btn" data-type="area" title="Area" style="padding: 6px 10px; border: 2px solid transparent;">📊 Area</button>
+            <button class="chart-type-btn" data-type="bar" title="Bar" style="padding: 6px 10px; border: 2px solid transparent;">📉 Bar</button>
+          </div>
+          <div class="timeframe-buttons">
+            <button class="tf-btn" data-tf="1">1S</button>
+            <button class="tf-btn active" data-tf="60">1M</button>
+            <button class="tf-btn" data-tf="5">5M</button>
+            <button class="tf-btn" data-tf="15">15M</button>
+            <button class="tf-btn" data-tf="60">1H</button>
+            <button class="tf-btn" data-tf="240">4H</button>
+            <button class="tf-btn" data-tf="1440">1D</button>
+          </div>
+        </div>
+      </div>
+      <div style="position: relative; width: 100%; height: 500px; display: flex; flex-direction: column;">
+        <div id="mainChart" style="width: 100%; height: 100%; flex: 1;"></div>
+        <!-- Buy/Sell Buttons Overlay -->
+        <div style="position: absolute; top: 50%; left: 20px; transform: translateY(-50%); display: flex; flex-direction: column; gap: 12px; z-index: 10;">
+          <button id="buyBtn" class="chart-action-btn buy-btn" title="Buy">
+            <div style="font-size: 20px; margin-bottom: 4px;">⬆️</div>
+            <div style="font-size: 13px; font-weight: bold;">BUY</div>
+            <div id="buyPrice" style="font-size: 11px; margin-top: 4px; opacity: 0.8;">--</div>
+          </button>
+        </div>
+        <div style="position: absolute; top: 50%; right: 20px; transform: translateY(-50%); display: flex; flex-direction: column; gap: 12px; z-index: 10;">
+          <button id="sellBtn" class="chart-action-btn sell-btn" title="Sell">
+            <div style="font-size: 20px; margin-bottom: 4px;">⬇️</div>
+            <div style="font-size: 13px; font-weight: bold;">SELL</div>
+            <div id="sellPrice" style="font-size: 11px; margin-top: 4px; opacity: 0.8;">--</div>
+          </button>
+        </div>
+      </div>
+      <div id="indicatorValues" style="padding: var(--spacing-md); background: var(--bg-tertiary); border-top: 1px solid var(--border-color); font-size: 12px; color: var(--text-tertiary); display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-md);"></div>
+      
+      <!-- Indicator & Drawing Tools Panel -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md); padding: var(--spacing-md); background: var(--bg-tertiary); border-top: 1px solid var(--border-color);">
+        <!-- Indicators Selector -->
+        <div>
+          <h4 style="margin-bottom: var(--spacing-md); font-size: 13px; color: var(--text-primary);">Technical Indicators</h4>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px;">
+              <input type="checkbox" id="ind-sma" value="sma"> SMA (20)
+            </label>
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px;">
+              <input type="checkbox" id="ind-ema" value="ema"> EMA (12)
+            </label>
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px;">
+              <input type="checkbox" id="ind-rsi" value="rsi"> RSI (14)
+            </label>
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px;">
+              <input type="checkbox" id="ind-macd" value="macd"> MACD
+            </label>
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px;">
+              <input type="checkbox" id="ind-bb" value="bb"> Bollinger Bands
+            </label>
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px;">
+              <input type="checkbox" id="ind-stoch" value="stoch"> Stochastic
+            </label>
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px;">
+              <input type="checkbox" id="ind-atr" value="atr"> ATR (14)
+            </label>
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px;">
+              <input type="checkbox" id="ind-adx" value="adx"> ADX (14)
+            </label>
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px;">
+              <input type="checkbox" id="ind-cci" value="cci"> CCI (20)
+            </label>
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px;">
+              <input type="checkbox" id="ind-williams" value="williams"> Williams %R
+            </label>
+          </div>
+        </div>
+        
+        <!-- Drawing Tools -->
+        <div>
+          <h4 style="margin-bottom: var(--spacing-md); font-size: 13px; color: var(--text-primary);">Drawing Tools</h4>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+            <button class="drawing-tool-btn" data-tool="line" title="Draw Line">📏 Line</button>
+            <button class="drawing-tool-btn" data-tool="rectangle" title="Draw Rectangle">⬜ Rectangle</button>
+            <button class="drawing-tool-btn" data-tool="trendline" title="Trend Line">📈 Trend Line</button>
+            <button class="drawing-tool-btn" data-tool="hline" title="Horizontal Line">➖ H-Line</button>
+            <button class="drawing-tool-btn" data-tool="vline" title="Vertical Line">⬇️ V-Line</button>
+            <button class="drawing-tool-btn" data-tool="text" title="Text">📝 Text</button>
+            <button class="drawing-tool-btn" data-tool="select" title="Select/Erase" style="grid-column: 1/-1;">🔲 Select/Erase</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Two Column Grid for Pairs and Market Heat -->
+    <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: var(--spacing-lg); grid-column: 1 / -1;">
+      <!-- Forex Pairs -->
+      <section class="trading-section">
+        <div class="section-header">
+          <h2>Forex Pairs</h2>
+          <input type="text" id="searchPairs" class="search-box" placeholder="Search..." style="max-width: 200px;">
+        </div>
+        <div class="pairs-table">
+          <div class="table-header">
+            <div class="col-pair">Pair</div>
+            <div class="col-price">Price</div>
+            <div class="col-change">Change</div>
+            <div class="col-bid-ask">Bid/Ask</div>
+            <div class="col-action">Action</div>
+          </div>
+          <div id="forexList"></div>
+        </div>
+      </section>
+
+      <!-- Cryptocurrencies -->
+      <section class="trading-section">
+        <div class="section-header">
+          <h2>Cryptos</h2>
+        </div>
+        <div class="pairs-table">
+          <div class="table-header">
+            <div class="col-pair">Asset</div>
+            <div class="col-price">Price</div>
+            <div class="col-change">24h</div>
+            <div class="col-action">Trade</div>
+          </div>
+          <div id="cryptoList"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Open Positions & Recent Trades -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg); grid-column: 1 / -1;">
+      <section class="content-card">
+        <h3>📍 Open Positions</h3>
+        <div id="openPositionsList" class="empty-state">No open positions</div>
+      </section>
+
+      <section class="content-card">
+        <h3>📝 Recent Trades</h3>
+        <div id="recentTradesList" class="empty-state">No trades yet</div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Trade Modal -->
+  <div id="tradeModal" class="modal">
+    <div class="modal-content" style="max-width: 500px; max-height: 90vh; overflow-y: auto;">
+      <div class="modal-header">
+        <h2>Trade <span id="modalPair" style="color: var(--secondary);">EUR/USD</span></h2>
+        <button class="modal-close" onclick="closeTradeModal()">✕</button>
+      </div>
+
+      <form id="tradeForm" style="padding: 0 var(--spacing-lg) var(--spacing-lg);">
+        <!-- Trade Type Selection -->
+        <div class="form-group">
+          <label>Trade Type</label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md);">
+            <button type="button" id="buyBtn" class="btn btn-success" style="background: var(--success);">📈 Buy</button>
+            <button type="button" id="sellBtn" class="btn" style="background: var(--danger); color: var(--text-primary);">📉 Sell</button>
+          </div>
+        </div>
+
+        <!-- Volume -->
+        <div class="form-group">
+          <label for="tradeVolume">Volume (Lots)</label>
+          <input type="number" id="tradeVolume" placeholder="0.1" min="0.01" step="0.01" required>
+          <div class="form-helper">Minimum: 0.01 lots</div>
+        </div>
+
+        <!-- Hold Time -->
+        <div class="form-group">
+          <label for="holdTime">Hold Time</label>
+          <select id="holdTime" style="width: 100%; padding: var(--spacing-sm); border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary);">
+            <option value="5">Scalp (5 sec)</option>
+            <option value="30">Short (30 sec)</option>
+            <option value="60">Medium (1 min)</option>
+            <option value="300">Swing (5 min)</option>
+            <option value="900">Long Swing (15 min)</option>
+            <option value="3600">Intraday (1 hour)</option>
+          </select>
+        </div>
+
+        <!-- Stop Loss & Take Profit -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md);">
+          <div class="form-group">
+            <label for="tradeSL">Stop Loss %</label>
+            <input type="number" id="tradeSL" placeholder="1.0" min="0.1" step="0.1">
+          </div>
+          <div class="form-group">
+            <label for="tradeTP">Take Profit %</label>
+            <input type="number" id="tradeTP" placeholder="2.0" min="0.1" step="0.1">
+          </div>
+        </div>
+
+        <!-- Indicators Selection -->
+        <div class="form-group">
+          <label>Technical Indicators</label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-sm);">
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+              <input type="checkbox" id="indicatorSMA" value="sma"> SMA (20)
+            </label>
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+              <input type="checkbox" id="indicatorEMA" value="ema"> EMA (12)
+            </label>
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+              <input type="checkbox" id="indicatorRSI" value="rsi"> RSI (14)
+            </label>
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+              <input type="checkbox" id="indicatorMACD" value="macd"> MACD
+            </label>
+          </div>
+        </div>
+
+        <!-- Price Info -->
+        <div style="background: var(--bg-tertiary); padding: var(--spacing-md); border-radius: var(--radius-md); margin-bottom: var(--spacing-lg); font-size: 13px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <span>Entry Price:</span>
+            <span id="priceInfo" style="color: var(--secondary); font-weight: 600;">1.0945</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>Potential Profit:</span>
+            <span id="potentialProfit" style="color: var(--success);">+$0.00</span>
+          </div>
+        </div>
+
+        <!-- Execute Button -->
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: var(--spacing-md); font-size: 16;">
+          Execute Trade
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="storage.js"></script>
+  <script src="dashboard-app.js"></script>
+</body>
+</html>
+

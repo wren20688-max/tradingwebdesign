@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Profile — PreoTrade FX</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top-nav">
+    <div class="nav-left">
+      <button id="menuToggle" class="menu-toggle">☰</button>
+      <div class="logo" style="width: 32px; height: 32px; margin: 0 8px;">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="lg4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#0055ff;stop-opacity:1" /><stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1" /></linearGradient></defs><circle cx="100" cy="100" r="95" fill="none" stroke="url(#lg4)" stroke-width="2" opacity="0.3"/><path d="M 100 30 L 150 60 L 150 130 L 100 160 L 50 130 L 50 60 Z" fill="url(#lg4)" opacity="0.1"/><g><rect x="70" y="95" width="8" height="35" fill="#00d084" opacity="0.9"/><line x1="74" y1="85" x2="74" y2="135" stroke="#00d084" stroke-width="2"/><rect x="85" y="75" width="8" height="55" fill="#00d084" opacity="0.95"/><line x1="89" y1="65" x2="89" y2="135" stroke="#00d084" stroke-width="2"/><rect x="100" y="55" width="8" height="75" fill="#0055ff" opacity="1"/><line x1="104" y1="45" x2="104" y2="135" stroke="#0055ff" stroke-width="2"/><rect x="115" y="80" width="8" height="50" fill="#00d4ff" opacity="0.9"/><line x1="119" y1="70" x2="119" y2="135" stroke="#00d4ff" stroke-width="2"/></g></svg>
+      </div>
+      <h1>PreoTrade FX</h1>
+    </div>
+    <div class="nav-center">
+      <span class="balance-display">Balance: <strong id="balance">$10,000.00</strong></span>
+    </div>
+    <div class="nav-right">
+      <button id="toggleMode" class="nav-btn">Theme</button>
+      <a href="index.html" class="nav-btn logout">Logout</a>
+    </div>
+  </header>
+
+  <nav id="sideMenu" class="side-menu">
+    <button class="menu-close">&times;</button>
+    <div class="menu-items">
+      <a href="dashboard.html" class="menu-item">Dashboard</a>
+      <a href="auto-trading.html" class="menu-item">Auto Trading</a>
+      <a href="finances.html" class="menu-item">Finances</a>
+      <a href="transactions.html" class="menu-item">Transactions</a>
+      <a href="payment-methods.html" class="menu-item">💳 Payment Methods</a>
+      <a href="profile.html" class="menu-item active">👤 Profile</a>
+    </div>
+  </nav>
+
+  <main class="main-container page-container">
+    <div class="page-header">
+      <h2>👤 Account Settings</h2>
+      <p>Manage your account and trading preferences</p>
+    </div>
+
+    <section class="content-card">
+      <h3>Personal Information</h3>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="username" readonly>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="email" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="fullname" placeholder="John Doe">
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="tel" id="phone" placeholder="+1 234 567 8900">
+        </div>
+        <button class="action-btn btn-primary" onclick="saveProfile()" style="grid-column:1/-1;">Save Changes</button>
+      </div>
+    </section>
+
+    <section class="content-card">
+      <h3>Trading Preferences</h3>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+        <div class="form-group">
+          <label>Default Leverage</label>
+          <select id="leverage">
+            <option value="1">1:1</option>
+            <option value="10">1:10</option>
+            <option value="50">1:50</option>
+            <option value="100">1:100</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Preferred Order Type</label>
+          <select id="orderType">
+            <option value="market">Market Order</option>
+            <option value="limit">Limit Order</option>
+            <option value="stop">Stop Order</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Base Currency</label>
+          <select id="baseCurrency">
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+            <option value="JPY">JPY</option>
+          </select>
+        </div>
+        <button class="action-btn btn-primary" onclick="savePreferences()" style="grid-column:1/-1;">Save Preferences</button>
+      </div>
+    </section>
+
+    <section class="content-card">
+      <h3>Security</h3>
+      <div style="display:grid; gap:12px;">
+        <button class="action-btn btn-secondary" onclick="changePassword()">Change Password</button>
+        <button class="action-btn btn-secondary" onclick="enable2FA()">Enable 2-Factor Authentication</button>
+        <button class="action-btn btn-secondary" onclick="manageSessions()">Manage Sessions</button>
+      </div>
+    </section>
+
+    <section class="content-card">
+      <h3>Notifications</h3>
+      <div style="display:grid; gap:15px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border-color);">
+          <span>Email Notifications</span>
+          <label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border-color);">
+          <span>SMS Alerts</span>
+          <label class="toggle-switch"><input type="checkbox"><span class="slider"></span></label>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0;">
+          <span>Trade Notifications</span>
+          <label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="storage.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!storage.isLoggedIn()) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      const user = storage.getUser();
+      if (user) {
+        document.getElementById('username').value = user.username;
+        loadBalance();
+      }
+
+      setupMenuToggle();
+    });
+
+    function saveProfile() {
+      alert('Profile updated successfully!');
+    }
+
+    function savePreferences() {
+      alert('Preferences saved!');
+    }
+
+    function changePassword() {
+      alert('Password change feature coming soon');
+    }
+
+    function enable2FA() {
+      alert('2FA setup feature coming soon');
+    }
+
+    function manageSessions() {
+      alert('Session management coming soon');
+    }
+
+    function loadBalance() {
+      const balance = storage.getBalance('demo');
+      document.getElementById('balance').textContent = '$' + balance.toLocaleString('en-US', {minimumFractionDigits: 2});
+    }
+
+    function setupMenuToggle() {
+      const menuToggle = document.getElementById('menuToggle');
+      const sideMenu = document.getElementById('sideMenu');
+      const menuClose = document.querySelector('.menu-close');
+      const logout = document.querySelector('.logout');
+      const toggleMode = document.getElementById('toggleMode');
+
+      if (menuToggle) menuToggle.addEventListener('click', () => sideMenu?.classList.add('active'));
+      if (menuClose) menuClose.addEventListener('click', () => sideMenu?.classList.remove('active'));
+      if (logout) logout.addEventListener('click', (e) => {
+        e.preventDefault();
+        storage.removeUser();
+        window.location.href = 'index.html';
+      });
+      if (toggleMode) toggleMode.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+        localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+      });
+
+      if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-mode');
+      }
+    }
+  </script>
+</body>
+</html>

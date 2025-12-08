@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — PreoTrade FX | Professional Trading Platform</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ============================================================================
+       LOGIN PAGE STYLES
+       ============================================================================ */
+
+    .login-page {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+    }
+
+    .login-left {
+      background: linear-gradient(135deg, #0055ff 0%, #00d4ff 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: var(--spacing-xl);
+      color: var(--text-primary);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-left::before {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      top: -100px;
+      right: -100px;
+    }
+
+    .login-left::after {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+      bottom: -50px;
+      left: -50px;
+    }
+
+    .login-content-left {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .login-logo {
+      font-size: 48px;
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .login-content-left h1 {
+      font-size: 42px;
+      margin-bottom: var(--spacing-md);
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .login-content-left p {
+      font-size: 16px;
+      opacity: 0.9;
+      margin-bottom: var(--spacing-2xl);
+      line-height: 1.8;
+    }
+
+    .features-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-lg);
+      text-align: left;
+      margin-top: var(--spacing-2xl);
+    }
+
+    .feature-item {
+      display: flex;
+      gap: var(--spacing-md);
+      align-items: flex-start;
+    }
+
+    .feature-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .feature-text h3 {
+      margin: 0 0 4px 0;
+      font-size: 16px;
+    }
+
+    .feature-text p {
+      margin: 0;
+      font-size: 13px;
+      opacity: 0.85;
+    }
+
+    .login-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: var(--spacing-xl);
+    }
+
+    .login-form-container {
+      max-width: 500px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .login-form-header {
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .login-form-header h2 {
+      font-size: 28px;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .login-form-header p {
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    .form-group {
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: var(--spacing-sm);
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 14px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: var(--spacing-md);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--secondary);
+      background: rgba(0, 212, 255, 0.05);
+      box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+    }
+
+    .form-group input::placeholder {
+      color: var(--text-tertiary);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-md);
+    }
+
+    .checkbox-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-lg);
+      font-size: 14px;
+    }
+
+    .checkbox-group label {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      margin: 0;
+      cursor: pointer;
+    }
+
+    .checkbox-group label input {
+      width: auto;
+      margin: 0;
+    }
+
+    .forgot-password {
+      color: var(--secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .forgot-password:hover {
+      color: var(--secondary-light);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: var(--spacing-md) var(--spacing-lg);
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: var(--text-primary);
+      border: none;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 85, 255, 0.3);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .form-divider {
+      display: flex;
+      align-items: center;
+      margin: var(--spacing-lg) 0;
+      color: var(--text-tertiary);
+      font-size: 12px;
+    }
+
+    .form-divider::before,
+    .form-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border-color);
+    }
+
+    .form-divider span {
+      padding: 0 var(--spacing-md);
+    }
+
+    .demo-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .demo-section h3 {
+      margin-top: 0;
+      font-size: 14px;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .demo-accounts {
+      display: grid;
+      gap: var(--spacing-sm);
+      font-size: 13px;
+    }
+
+    .demo-account-item {
+      display: flex;
+      justify-content: space-between;
+      padding: var(--spacing-sm);
+      background: rgba(0, 212, 255, 0.05);
+      border-radius: var(--radius-md);
+      border-left: 3px solid var(--secondary);
+    }
+
+    .demo-account-label {
+      color: var(--text-tertiary);
+    }
+
+    .demo-account-value {
+      color: var(--secondary);
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+
+    .signup-link {
+      text-align: center;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .signup-link a {
+      color: var(--secondary);
+      font-weight: 600;
+    }
+
+    .error-message {
+      background: rgba(255, 71, 87, 0.1);
+      border: 1px solid var(--danger);
+      color: var(--danger);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--spacing-lg);
+      font-size: 14px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    /* ============================================================================
+       RESPONSIVE DESIGN
+       ============================================================================ */
+
+    @media (max-width: 968px) {
+      .login-page {
+        grid-template-columns: 1fr;
+      }
+
+      .login-left {
+        display: none;
+      }
+
+      .login-right {
+        min-height: 100vh;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .login-right {
+        padding: var(--spacing-lg);
+      }
+
+      .login-form-container {
+        width: 100%;
+      }
+
+      .login-form-header h2 {
+        font-size: 24px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .checkbox-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-page">
+    <!-- Left Side: Features -->
+    <div class="login-left">
+      <div class="login-content-left">
+        <div class="login-logo" style="width: 80px; height: 80px;">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="logoGradientLogin" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#e6f2ff;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+            <circle cx="100" cy="100" r="95" fill="none" stroke="url(#logoGradientLogin)" stroke-width="2" opacity="0.5"/>
+            <path d="M 100 30 L 150 60 L 150 130 L 100 160 L 50 130 L 50 60 Z" fill="url(#logoGradientLogin)" opacity="0.15" stroke="url(#logoGradientLogin)" stroke-width="1.5"/>
+            <g>
+              <rect x="70" y="95" width="8" height="35" fill="#ffffff" opacity="0.9"/>
+              <line x1="74" y1="85" x2="74" y2="135" stroke="#ffffff" stroke-width="2"/>
+              <rect x="85" y="75" width="8" height="55" fill="#ffffff" opacity="0.95"/>
+              <line x1="89" y1="65" x2="89" y2="135" stroke="#ffffff" stroke-width="2"/>
+              <rect x="100" y="55" width="8" height="75" fill="#ffffff" opacity="1"/>
+              <line x1="104" y1="45" x2="104" y2="135" stroke="#ffffff" stroke-width="2"/>
+              <rect x="115" y="80" width="8" height="50" fill="#ffffff" opacity="0.9"/>
+              <line x1="119" y1="70" x2="119" y2="135" stroke="#ffffff" stroke-width="2"/>
+            </g>
+            <circle cx="160" cy="55" r="8" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.8"/>
+            <circle cx="160" cy="55" r="5" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+            <circle cx="160" cy="55" r="2" fill="#ffffff" opacity="0.9"/>
+          </svg>
+        </div>
+        <h1>PreoTrade FX</h1>
+        <p>Professional Trading Platform<br>for Global Markets</p>
+
+        <div class="features-list">
+          <div class="feature-item">
+            <div class="feature-icon">⚡</div>
+            <div class="feature-text">
+              <h3>Fast Execution</h3>
+              <p>Real-time trading with low latency</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="feature-icon">📊</div>
+            <div class="feature-text">
+              <h3>Advanced Charts</h3>
+              <p>Professional technical analysis tools</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="feature-icon">🤖</div>
+            <div class="feature-text">
+              <h3>Auto Trading</h3>
+              <p>Automated trading strategies & bots</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="feature-icon">🔒</div>
+            <div class="feature-text">
+              <h3>Secure</h3>
+              <p>Bank-level security for your funds</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side: Login Form -->
+    <div class="login-right">
+      <div class="login-form-container">
+        <div class="login-form-header">
+          <h2>Welcome Back</h2>
+          <p>Sign in to your trading account</p>
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="your@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Enter your password" required>
+          </div>
+
+          <div class="checkbox-group">
+            <label>
+              <input type="checkbox" id="rememberMe">
+              Remember me
+            </label>
+            <a href="#" class="forgot-password">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="login-btn">Sign In</button>
+        </form>
+
+        <!-- Trust & Security Badges -->
+        <div style="display: flex; gap: 8px; justify-content: center; margin: var(--spacing-lg) 0; flex-wrap: wrap;">
+          <div class="trust-badge verified">
+            <span style="font-size: 14px;">✓</span>
+            Licensed
+          </div>
+          <div class="trust-badge secure">
+            <span style="font-size: 14px;">🔒</span>
+            SSL Secure
+          </div>
+          <div class="trust-badge regulated">
+            <span style="font-size: 14px;">✓</span>
+            Regulated
+          </div>
+        </div>
+
+        <!-- Demo Accounts Info -->
+        <div class="demo-section">
+          <h3>Demo Accounts (For Testing)</h3>
+          <div class="demo-accounts">
+            <div class="demo-account-item">
+              <span class="demo-account-label">Trader:</span>
+              <span class="demo-account-value">trader1 / pass123</span>
+            </div>
+            <div class="demo-account-item">
+              <span class="demo-account-label">Admin:</span>
+              <span class="demo-account-value">admin / admin123</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Company Trust Info -->
+        <div class="company-info">
+          <div class="company-info-item">
+            <span class="company-info-label">Established</span>
+            <span class="company-info-value">2023</span>
+          </div>
+          <div class="company-info-item">
+            <span class="company-info-label">Trading Volume</span>
+            <span class="company-info-value">$2.5B+</span>
+          </div>
+          <div class="company-info-item">
+            <span class="company-info-label">Active Traders</span>
+            <span class="company-info-value">150K+</span>
+          </div>
+          <div class="company-info-item">
+            <span class="company-info-label">Security Rating</span>
+            <span class="company-info-value">Grade A</span>
+          </div>
+        </div>
+
+        <div class="signup-link">
+          Don't have an account? <a href="signup.html">Create one now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="storage.js"></script>
+  <script>
+    // ============================================================================
+    // Login Form Handler
+    // ============================================================================
+
+    const loginForm = document.getElementById('loginForm');
+    const errorMessage = document.getElementById('errorMessage');
+    const rememberMe = document.getElementById('rememberMe');
+
+    // Demo users - replace with backend authentication in production
+    const demoUsers = {
+      'trader1@demo.local': { password: 'pass123', username: 'trader1', role: 'trader' },
+      'admin@demo.local': { password: 'admin123', username: 'admin', role: 'admin' }
+    };
+
+    // Load remember me preference
+    if (localStorage.getItem('rememberEmail')) {
+      document.getElementById('email').value = localStorage.getItem('rememberEmail');
+      rememberMe.checked = true;
+    }
+
+    // Handle login
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      errorMessage.classList.remove('show');
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      if (!email || !password) {
+        showError('Please fill in all fields');
+        return;
+      }
+
+      // Validate email format
+      if (!email.includes('@')) {
+        showError('Please enter a valid email address');
+        return;
+      }
+
+      // Check demo users (in production, use backend authentication)
+      if (demoUsers[email] && demoUsers[email].password === password) {
+        // Save user session
+        const user = {
+          email,
+          username: demoUsers[email].username,
+          role: demoUsers[email].role,
+          loginTime: new Date().toISOString(),
+          balance: 10000
+        };
+        storage.setUser(user);
+
+        // Save remember me preference
+        if (rememberMe.checked) {
+          localStorage.setItem('rememberEmail', email);
+        } else {
+          localStorage.removeItem('rememberEmail');
+        }
+
+        // Redirect to dashboard
+        window.location.href = 'dashboard.html';
+      } else {
+        showError('Invalid email or password. Try demo@example.com');
+      }
+    });
+
+    function showError(message) {
+      errorMessage.textContent = message;
+      errorMessage.classList.add('show');
+      setTimeout(() => {
+        errorMessage.classList.remove('show');
+      }, 5000);
+    }
+
+    // Check if already logged in
+    window.addEventListener('load', () => {
+      const user = storage.getUser();
+      if (user) {
+        window.location.href = 'dashboard.html';
+      }
+    });
+  </script>
+</body>
+</html>

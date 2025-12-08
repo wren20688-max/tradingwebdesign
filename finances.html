@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wallet — PreoTrade FX</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top-nav">
+    <div class="nav-left">
+      <button id="menuToggle" class="menu-toggle">☰</button>
+      <div class="logo" style="width: 32px; height: 32px; margin: 0 8px;">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#0055ff;stop-opacity:1" /><stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1" /></linearGradient></defs><circle cx="100" cy="100" r="95" fill="none" stroke="url(#lg1)" stroke-width="2" opacity="0.3"/><path d="M 100 30 L 150 60 L 150 130 L 100 160 L 50 130 L 50 60 Z" fill="url(#lg1)" opacity="0.1"/><g><rect x="70" y="95" width="8" height="35" fill="#00d084" opacity="0.9"/><line x1="74" y1="85" x2="74" y2="135" stroke="#00d084" stroke-width="2"/><rect x="85" y="75" width="8" height="55" fill="#00d084" opacity="0.95"/><line x1="89" y1="65" x2="89" y2="135" stroke="#00d084" stroke-width="2"/><rect x="100" y="55" width="8" height="75" fill="#0055ff" opacity="1"/><line x1="104" y1="45" x2="104" y2="135" stroke="#0055ff" stroke-width="2"/><rect x="115" y="80" width="8" height="50" fill="#00d4ff" opacity="0.9"/><line x1="119" y1="70" x2="119" y2="135" stroke="#00d4ff" stroke-width="2"/></g></svg>
+      </div>
+      <h1>PreoTrade FX</h1>
+    </div>
+    <div class="nav-right">
+      <button id="toggleMode" class="nav-btn" title="Dark Mode">🌙</button>
+      <a href="index.html" class="nav-btn logout">Logout</a>
+    </div>
+  </header>
+
+  <!-- Side Menu -->
+  <nav id="sideMenu" class="side-menu">
+    <button class="menu-close">✕</button>
+    <div class="menu-items">
+      <a href="dashboard.html" class="menu-item">Dashboard</a>
+      <a href="auto-trading.html" class="menu-item">Auto Bot</a>
+      <a href="finances.html" class="menu-item active">Wallet</a>
+      <a href="transactions.html" class="menu-item">Transactions</a>
+      <a href="payment-methods.html" class="menu-item">💳 Payments</a>
+      <a href="profile.html" class="menu-item">⚙️ Settings</a>
+      <a href="faq.html" class="menu-item">❓ Support</a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-container">
+    <h2 style="margin-bottom: var(--spacing-xl);">💰 Wallet & Funds</h2>
+
+    <!-- Account Balances -->
+    <section class="account-summary">
+      <div class="summary-card">
+        <div class="summary-label">📊 Total Balance</div>
+        <div class="summary-value" id="totalBalance">$10,000.00</div>
+        <div class="summary-change">All accounts</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">📱 Demo Account</div>
+        <div class="summary-value" id="demoBalance">$10,000.00</div>
+        <div class="summary-change">For practice</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">💎 Real Account</div>
+        <div class="summary-value" id="realBalance">$0.00</div>
+        <div class="summary-change">Live trading</div>
+      </div>
+    </section>
+
+    <!-- Deposit & Withdraw Section -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg); grid-column: 1 / -1; margin-bottom: var(--spacing-lg);">
+      <!-- Quick Deposit -->
+      <section class="content-card">
+        <h3>📥 Quick Deposit</h3>
+        <div class="form-group">
+          <label for="depositAmount">Amount (USD)</label>
+          <input type="number" id="depositAmount" placeholder="100.00" min="10" step="0.01">
+          <div class="form-helper">Minimum deposit: $10</div>
+        </div>
+        <button class="btn btn-primary" style="width: 100%;" onclick="processDeposit()">
+          Add Funds
+        </button>
+      </section>
+
+      <!-- Quick Withdraw -->
+      <section class="content-card">
+        <h3>📤 Quick Withdraw</h3>
+        <div class="form-group">
+          <label for="withdrawAmount">Amount (USD)</label>
+          <input type="number" id="withdrawAmount" placeholder="100.00" min="10" step="0.01">
+          <div class="form-helper">Minimum withdrawal: $10</div>
+        </div>
+        <button class="btn btn-secondary" style="width: 100%;" onclick="processWithdraw()">
+          Request Withdrawal
+        </button>
+      </section>
+    </div>
+
+    <!-- Payment Methods -->
+    <section class="content-card" style="grid-column: 1 / -1;">
+      <h3>💳 Deposit Methods</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--spacing-lg); margin-top: var(--spacing-lg);">
+        
+        <div class="card" style="text-align: center; cursor: pointer; transition: all 0.3s;" onclick="selectPaymentMethod('mpesa', this)">
+          <div style="font-size: 48px; margin-bottom: var(--spacing-md);">📱</div>
+          <h4 style="margin: 0 0 var(--spacing-sm) 0;">M-Pesa</h4>
+          <p style="margin: 0; font-size: 12px; color: var(--text-tertiary);">Instant mobile money</p>
+        </div>
+
+        <div class="card" style="text-align: center; cursor: pointer; transition: all 0.3s;" onclick="selectPaymentMethod('card', this)">
+          <div style="font-size: 48px; margin-bottom: var(--spacing-md);">💳</div>
+          <h4 style="margin: 0 0 var(--spacing-sm) 0;">Credit Card</h4>
+          <p style="margin: 0; font-size: 12px; color: var(--text-tertiary);">Visa/Mastercard</p>
+        </div>
+
+        <div class="card" style="text-align: center; cursor: pointer; transition: all 0.3s;" onclick="selectPaymentMethod('bank', this)">
+          <div style="font-size: 48px; margin-bottom: var(--spacing-md);">🏦</div>
+          <h4 style="margin: 0 0 var(--spacing-sm) 0;">Bank Transfer</h4>
+          <p style="margin: 0; font-size: 12px; color: var(--text-tertiary);">Direct transfer</p>
+        </div>
+
+        <div class="card" style="text-align: center; cursor: pointer; transition: all 0.3s;" onclick="selectPaymentMethod('crypto', this)">
+          <div style="font-size: 48px; margin-bottom: var(--spacing-md);">₿</div>
+          <h4 style="margin: 0 0 var(--spacing-sm) 0;">Cryptocurrency</h4>
+          <p style="margin: 0; font-size: 12px; color: var(--text-tertiary);">BTC, ETH, USDT</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Transaction History -->
+    <section class="content-card" style="grid-column: 1 / -1;">
+      <h3>📝 Recent Transactions</h3>
+      <div id="transactionList"></div>
+    </section>
+  </main>
+
+  <!-- Deposit Modal -->
+  <div id="depositModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close">&times;</button>
+      <h2 id="depositTitle">Deposit Funds</h2>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Amount (USD)</label>
+          <input type="number" id="depositAmount" placeholder="100" min="10" step="0.01">
+        </div>
+
+        <div id="mpesaForm" style="display:none;">
+          <div class="form-group">
+            <label>M-Pesa Phone Number</label>
+            <input type="tel" id="mpesaPhone" placeholder="+254712345678">
+          </div>
+          <p style="color:#b0b8c1; font-size:12px; margin:10px 0;">You will receive an M-Pesa prompt to complete the payment</p>
+        </div>
+
+        <div id="cardForm" style="display:none;">
+          <div class="form-group">
+            <label>Card Number</label>
+            <input type="text" id="cardNumber" placeholder="4532 1234 5678 9010" maxlength="19">
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div class="form-group">
+              <label>Expiry</label>
+              <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5">
+            </div>
+            <div class="form-group">
+              <label>CVV</label>
+              <input type="text" id="cardCVV" placeholder="123" maxlength="3">
+            </div>
+          </div>
+        </div>
+
+        <div id="bankForm" style="display:none;">
+          <div class="form-group">
+            <label>Bank Account Number</label>
+            <input type="text" id="bankAccount" placeholder="1234567890">
+          </div>
+          <div class="form-group">
+            <label>Bank Name</label>
+            <input type="text" id="bankName" placeholder="Your Bank Name">
+          </div>
+        </div>
+
+        <div id="cryptoForm" style="display:none;">
+          <div class="form-group">
+            <label>Cryptocurrency</label>
+            <select id="cryptoType">
+              <option value="btc">Bitcoin (BTC)</option>
+              <option value="eth">Ethereum (ETH)</option>
+              <option value="usdt">USDT</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Your Wallet Address</label>
+            <input type="text" id="cryptoAddress" placeholder="Paste your wallet address">
+          </div>
+        </div>
+
+        <button class="action-btn" style="width:100%; padding:12px; margin-top:20px;" onclick="processDeposit()">Proceed to Deposit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- M-Pesa PIN Modal -->
+  <div id="mpesaPinModal" class="modal">
+    <div class="modal-content" style="max-width:400px;">
+      <button class="modal-close">&times;</button>
+      <h2>Enter M-Pesa PIN</h2>
+      <p style="color:#b0b8c1; margin:10px 0;">A prompt has been sent to your phone. Enter your M-Pesa PIN to complete the transaction.</p>
+      <div class="form-group">
+        <input type="password" id="mpesaPin" placeholder="••••" maxlength="4">
+      </div>
+      <button class="action-btn" style="width:100%; padding:12px;" onclick="verifyMpesaPin()">Confirm Payment</button>
+    </div>
+  </div>
+
+  <script src="storage.js"></script>
+  <script>
+    let currentDepositMethod = '';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = storage.getUser();
+      if (!user) {
+        window.location.href = 'index.html';
+        return;
+      }
+      
+      loadBalances();
+      loadTransactions();
+      setupMenuToggle();
+      
+      document.querySelectorAll('.modal-close').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+        });
+      });
+
+      document.getElementById('withdrawMethod').addEventListener('change', (e) => {
+        updateWithdrawalDetails(e.target.value);
+      });
+    });
+
+    function openDepositModal(method) {
+      currentDepositMethod = method;
+      document.getElementById('depositModal').classList.add('active');
+
+      // Hide all forms
+      document.getElementById('mpesaForm').style.display = 'none';
+      document.getElementById('cardForm').style.display = 'none';
+      document.getElementById('bankForm').style.display = 'none';
+      document.getElementById('cryptoForm').style.display = 'none';
+
+      // Show selected form
+      if (method === 'mpesa') {
+        document.getElementById('mpesaForm').style.display = 'block';
+        document.getElementById('depositTitle').textContent = 'Deposit via M-Pesa';
+      } else if (method === 'card') {
+        document.getElementById('cardForm').style.display = 'block';
+        document.getElementById('depositTitle').textContent = 'Deposit via Credit Card';
+      } else if (method === 'bank') {
+        document.getElementById('bankForm').style.display = 'block';
+        document.getElementById('depositTitle').textContent = 'Deposit via Bank Transfer';
+      } else if (method === 'crypto') {
+        document.getElementById('cryptoForm').style.display = 'block';
+        document.getElementById('depositTitle').textContent = 'Deposit via Cryptocurrency';
+      }
+    }
+
+    function processDeposit() {
+      const amount = parseFloat(document.getElementById('depositAmount').value);
+      if (amount < 10) {
+        showNotification('Minimum deposit is $10', 'error');
+        return;
+      }
+
+      if (currentDepositMethod === 'mpesa') {
+        const phone = document.getElementById('mpesaPhone').value;
+        if (!phone) {
+          showNotification('Please enter M-Pesa phone number', 'error');
+          return;
+        }
+        // Send M-Pesa prompt
+        sendMpesaPrompt(phone, amount);
+        document.getElementById('depositModal').classList.remove('active');
+        document.getElementById('mpesaPinModal').classList.add('active');
+      } else {
+        showNotification(`✅ Deposit of $${amount.toFixed(2)} initiated!`, 'success');
+        document.getElementById('depositModal').classList.remove('active');
+        setTimeout(() => loadBalances(), 1000);
+      }
+    }
+
+    function sendMpesaPrompt(phone, amount) {
+      fetch(`${API_URL}/payment/mpesa-prompt`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, amount })
+      }).catch(e => console.error(e));
+    }
+
+    function verifyMpesaPin() {
+      const pin = document.getElementById('mpesaPin').value;
+      if (pin.length !== 4) {
+        showNotification('Please enter 4-digit PIN', 'error');
+        return;
+      }
+
+      showNotification('✅ Payment confirmed! Deposit added to account', 'success');
+      document.getElementById('mpesaPinModal').classList.remove('active');
+      setTimeout(() => loadBalances(), 1000);
+    }
+
+    function updateWithdrawalDetails(method) {
+      const detailsDiv = document.getElementById('withdrawalDetails');
+      
+      if (method === 'mpesa') {
+        detailsDiv.innerHTML = `
+          <label>M-Pesa Phone Number</label>
+          <input type="tel" id="withdrawPhone" placeholder="+254712345678">
+        `;
+      } else if (method === 'bank') {
+        detailsDiv.innerHTML = `
+          <label>Bank Account Number</label>
+          <input type="text" id="withdrawAccount" placeholder="1234567890">
+        `;
+      } else if (method === 'crypto') {
+        detailsDiv.innerHTML = `
+          <label>Wallet Address</label>
+          <input type="text" id="withdrawAddress" placeholder="Your wallet address">
+        `;
+      }
+    }
+
+    function processDeposit() {
+      const amount = parseFloat(document.getElementById('depositAmount')?.value || 0);
+      if (!amount || amount < 10) {
+        alert('Minimum deposit is $10');
+        return;
+      }
+
+      const currentBalance = parseFloat(localStorage.getItem('balance') || '10000');
+      const newBalance = currentBalance + amount;
+      localStorage.setItem('balance', newBalance);
+
+      alert('Deposit of $' + amount.toFixed(2) + ' added to your account!');
+      loadBalances();
+    }
+
+    function processWithdraw() {
+      const amount = parseFloat(document.getElementById('withdrawAmount')?.value || 0);
+      if (!amount || amount < 10) {
+        alert('Minimum withdrawal is $10');
+        return;
+      }
+
+      const currentBalance = parseFloat(localStorage.getItem('balance') || '10000');
+      if (amount > currentBalance) {
+        alert('Insufficient balance');
+        return;
+      }
+
+      alert('Withdrawal request of $' + amount.toFixed(2) + ' submitted! Processing time: 1-2 business days');
+    }
+
+    function selectPaymentMethod(method, element) {
+      document.querySelectorAll('.card').forEach(c => c.style.borderColor = 'var(--border-color)');
+      if (element.classList) {
+        element.style.borderColor = 'var(--secondary)';
+      }
+    }
+
+    function loadBalances() {
+      const balance = parseFloat(localStorage.getItem('balance') || '10000');
+      document.getElementById('totalBalance').textContent = '$' + balance.toLocaleString('en-US', {minimumFractionDigits: 2});
+      document.getElementById('demoBalance').textContent = '$' + balance.toLocaleString('en-US', {minimumFractionDigits: 2});
+      document.getElementById('realBalance').textContent = '$0.00';
+    }
+
+    function loadTransactions() {
+      const el = document.getElementById('transactionList');
+      if (!el) return;
+      
+      // Load actual transactions from storage
+      let transactions = [];
+      
+      // Get trades from storage
+      const tradesData = localStorage.getItem('preo_trades');
+      if (tradesData) {
+        try {
+          const trades = JSON.parse(tradesData);
+          transactions = transactions.concat(trades.map(trade => ({
+            date: new Date(trade.timestamp).toISOString().split('T')[0],
+            type: trade.status === 'closed' ? (trade.pnl >= 0 ? 'Trade Win' : 'Trade Loss') : 'Trade Open',
+            method: trade.pair,
+            amount: (trade.pnl >= 0 ? '+' : '') + '$' + Math.abs(trade.pnl || 0).toFixed(2),
+            status: trade.status === 'closed' ? 'Closed' : 'Open'
+          })));
+        } catch (e) { }
+      }
+      
+      // Get transactions from storage
+      const transactionsData = localStorage.getItem('preo_transactions');
+      if (transactionsData) {
+        try {
+          const storedTx = JSON.parse(transactionsData);
+          transactions = transactions.concat(storedTx.map(tx => ({
+            date: tx.date || new Date(tx.timestamp).toISOString().split('T')[0],
+            type: tx.type.charAt(0).toUpperCase() + tx.type.slice(1).replace('_', ' '),
+            method: tx.method || tx.type,
+            amount: (tx.amount >= 0 ? '+' : '') + '$' + Math.abs(tx.amount).toFixed(2),
+            status: 'Completed'
+          })));
+        } catch (e) { }
+      }
+      
+      // Sort by date descending (newest first)
+      transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      // If no transactions, show empty message with demo data option
+      if (transactions.length === 0) {
+        el.innerHTML = `
+          <div style="padding: 30px; text-align: center; color: var(--text-secondary);">
+            <p>No transactions yet. Start trading to see your activity here.</p>
+            <button onclick="loadDemoFinanceTransactions()" style="margin-top: 15px; padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+              Load Demo Data
+            </button>
+          </div>
+        `;
+        return;
+      }
+      
+      el.innerHTML = transactions.map(t => `
+        <div style="padding: var(--spacing-md); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <strong>${t.type}</strong>
+            <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">${t.date} • ${t.method}</div>
+          </div>
+          <div style="text-align: right;">
+            <strong style="color: ${t.amount.startsWith('+') ? 'var(--success)' : 'var(--danger)'}">${t.amount}</strong>
+            <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">${t.status}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function setupMenuToggle() {
+      const menuToggle = document.getElementById('menuToggle');
+      const sideMenu = document.getElementById('sideMenu');
+      const menuClose = document.querySelector('.menu-close');
+      const logout = document.querySelector('.logout');
+      const toggleMode = document.getElementById('toggleMode');
+
+      if (menuToggle) menuToggle.addEventListener('click', () => sideMenu?.classList.add('active'));
+      if (menuClose) menuClose.addEventListener('click', () => sideMenu?.classList.remove('active'));
+      if (logout) logout.addEventListener('click', (e) => {
+        e.preventDefault();
+        storage.removeUser();
+        window.location.href = 'index.html';
+      });
+      if (toggleMode) toggleMode.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+        localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+      });
+
+      if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-mode');
+      }
+    }
+
+    function loadDemoFinanceTransactions() {
+      // Create sample transactions for demo/testing
+      const demoTransactions = [
+        { type: 'trade_win', date: '2025-12-09', amount: 125.50, method: 'EUR/USD', timestamp: Date.now() - 3600000 },
+        { type: 'trade_loss', date: '2025-12-09', amount: -75.25, method: 'GBP/USD', timestamp: Date.now() - 7200000 },
+        { type: 'deposit', date: '2025-12-08', amount: 500.00, method: 'M-Pesa', timestamp: Date.now() - 86400000 }
+      ];
+      
+      localStorage.setItem('preo_transactions', JSON.stringify(demoTransactions));
+      
+      // Also add some demo trades
+      const demoTrades = [
+        { 
+          id: Date.now() - 10000, 
+          pair: 'EUR/USD', 
+          type: 'BUY', 
+          volume: 1, 
+          entryPrice: 1.0945,
+          stopLoss: 1,
+          takeProfit: 2,
+          timestamp: new Date().toISOString(),
+          status: 'closed',
+          pnl: 125.50,
+          entryTime: Date.now() - 3600000
+        },
+        {
+          id: Date.now() - 20000,
+          pair: 'GBP/USD',
+          type: 'SELL',
+          volume: 0.5,
+          entryPrice: 1.2638,
+          stopLoss: 1,
+          takeProfit: 2,
+          timestamp: new Date(Date.now() - 7200000).toISOString(),
+          status: 'closed',
+          pnl: -75.25,
+          entryTime: Date.now() - 7200000
+        }
+      ];
+      
+      localStorage.setItem('preo_trades', JSON.stringify(demoTrades));
+      
+      // Reload transactions
+      loadTransactions();
+      alert('Demo data loaded! You can now see sample transactions.');
+    }
+  </script>
+</body>
+</html>

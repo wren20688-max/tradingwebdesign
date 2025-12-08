@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up — PreoTrade FX</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .signup-container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 40px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      color: white;
+    }
+    .signup-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .signup-header h2 {
+      font-size: 2.2em;
+      margin: 0;
+      font-weight: 700;
+    }
+    .signup-header .subtitle {
+      font-size: 0.95em;
+      opacity: 0.9;
+      margin-top: 8px;
+    }
+    .step-indicator {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+    .step-dot {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.9em;
+      transition: all 0.3s;
+    }
+    .step-dot.active {
+      background: white;
+      color: #667eea;
+      transform: scale(1.1);
+    }
+    .step-dot.completed {
+      background: #4CAF50;
+    }
+    .form-step {
+      display: none;
+      opacity: 0;
+      visibility: hidden;
+    }
+    .form-step.active {
+      display: block;
+      opacity: 1;
+      visibility: visible;
+      animation: fadeIn 0.4s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.95em;
+      font-weight: 600;
+      margin-bottom: 8px;
+      opacity: 0.95;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 8px;
+      font-size: 1em;
+      background: rgba(255,255,255,0.95);
+      color: #333;
+      transition: all 0.3s;
+    }
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: white;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.2);
+    }
+    .form-group input::placeholder {
+      color: #aaa;
+    }
+    .location-info {
+      padding: 12px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 8px;
+      font-size: 0.9em;
+      margin-top: 8px;
+    }
+    .password-strength {
+      height: 4px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 2px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+    .password-strength-bar {
+      height: 100%;
+      width: 0;
+      transition: all 0.3s;
+    }
+    .password-strength.weak .password-strength-bar { width: 33%; background: #FF6B6B; }
+    .password-strength.medium .password-strength-bar { width: 66%; background: #FFD93D; }
+    .password-strength.strong .password-strength-bar { width: 100%; background: #4CAF50; }
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .btn-next, .btn-prev, .btn-submit {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .btn-next, .btn-submit {
+      background: white;
+      color: #667eea;
+    }
+    .btn-next:hover, .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    .btn-prev {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      flex: 0.4;
+    }
+    .btn-prev:hover {
+      background: rgba(255,255,255,0.3);
+    }
+    .verification-badge {
+      display: inline-block;
+      background: #4CAF50;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+    .error {
+      background: rgba(255,107,107,0.2);
+      color: #FFB3B3;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.9em;
+      margin-bottom: 16px;
+    }
+    .info-box {
+      background: rgba(255,255,255,0.1);
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 0.9em;
+      margin-bottom: 20px;
+      border-left: 4px solid white;
+    }
+    .success-screen {
+      text-align: center;
+      display: none;
+    }
+    .success-screen.show {
+      display: block;
+      animation: fadeIn 0.4s;
+    }
+    .success-icon {
+      font-size: 4em;
+      margin-bottom: 16px;
+      animation: bounce 0.6s;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+    .success-screen h3 {
+      font-size: 1.8em;
+      margin: 16px 0;
+    }
+    .success-screen p {
+      font-size: 0.95em;
+      opacity: 0.9;
+      margin-bottom: 24px;
+    }
+    .back-to-login {
+      display: inline-block;
+      background: white;
+      color: #667eea;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    .back-to-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    .step-title {
+      font-size: 1.3em;
+      font-weight: 700;
+      margin-bottom: 20px;
+      opacity: 0.95;
+    }
+  </style>
+</head>
+<body class="auth-page">
+
+  <div class="signup-container">
+    <div class="signup-header">
+      <h2>🚀 Join PreoTrade FX</h2>
+      <p class="subtitle">Start trading in 5 minutes—demo account included!</p>
+    </div>
+    <div id="signupDebug" style="color: #fff; text-align:center; margin-bottom:12px; font-size:0.95em;"></div>
+
+    <div class="step-indicator">
+      <div class="step-dot active" data-step="1">1</div>
+      <div class="step-dot" data-step="2">2</div>
+      <div class="step-dot" data-step="3">3</div>
+      <div class="step-dot" data-step="4">4</div>
+      <div class="step-dot" data-step="5">5</div>
+    </div>
+
+    <div id="successScreen" class="success-screen">
+      <div class="success-icon">✨</div>
+      <h3>Welcome to PreoTrade FX!</h3>
+      <p>Your account is created and verified. Start trading immediately with your $10k demo account.</p>
+      <a href="login.html" class="back-to-login">Go to Login</a>
+    </div>
+
+    <form id="signupForm" style="display: block;">
+
+      <!-- STEP 1: Username & Email -->
+      <div class="form-step active" data-step="1">
+        <div class="step-title">📝 Basic Info</div>
+        <div id="error1" class="error" style="display:none;"></div>
+        
+        <div class="form-group">
+          <label>Username</label>
+          <input id="username" type="text" placeholder="Choose a unique username" required>
+        </div>
+
+        <div class="form-group">
+          <label>Email Address</label>
+          <input id="signupEmail" type="email" placeholder="you@example.com" required>
+        </div>
+
+        <div class="info-box">
+          💡 We'll send a verification code to your email
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-next" onclick="nextStep(1)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Password & Confirm -->
+      <div class="form-step" data-step="2">
+        <div class="step-title">🔐 Secure Password</div>
+        <div id="error2" class="error" style="display:none;"></div>
+
+        <div class="form-group">
+          <label>Create Password</label>
+          <input id="signupPassword" type="password" placeholder="Min 8 chars, mix of letters & numbers" required onkeyup="checkPasswordStrength()">
+          <div class="password-strength" id="strengthMeter">
+            <div class="password-strength-bar"></div>
+          </div>
+          <small style="opacity: 0.8;">Strong password = more security</small>
+        </div>
+
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <input id="confirmPassword" type="password" placeholder="Re-enter password" required>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-prev" onclick="prevStep(2)">← Back</button>
+          <button type="button" class="btn-next" onclick="nextStep(2)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Phone & Location -->
+      <div class="form-step" data-step="3">
+        <div class="step-title">📱 Contact & Location</div>
+        <div id="error3" class="error" style="display:none;"></div>
+
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input id="phoneNumber" type="tel" placeholder="+254 7XX XXX XXX" required>
+        </div>
+
+        <div class="form-group">
+          <label>Your Location</label>
+          <div style="padding: 12px; background: rgba(255,255,255,0.95); border-radius: 8px;">
+            <input id="locationDisplay" type="text" style="border: none; background: transparent; color: #333; cursor: default; font-weight: 600;" readonly>
+          </div>
+          <button type="button" onclick="detectLocation()" style="margin-top: 8px; padding: 10px; width: 100%; background: rgba(255,255,255,0.2); color: white; border: 2px solid white; border-radius: 6px; cursor: pointer; font-weight: 600;">📍 Auto-Detect Location</button>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-prev" onclick="prevStep(3)">← Back</button>
+          <button type="button" class="btn-next" onclick="nextStep(3)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: ID Verification -->
+      <div class="form-step" data-step="4">
+        <div class="step-title">🆔 Identity Verification</div>
+        <div id="error4" class="error" style="display:none;"></div>
+
+        <div class="info-box">
+          Upload or enter your ID details for account verification
+        </div>
+
+        <div class="form-group">
+          <label>ID Type</label>
+          <select id="idType" required>
+            <option value="">-- Select ID Type --</option>
+            <option value="passport">Passport</option>
+            <option value="national-id">National ID</option>
+            <option value="driver-license">Driver's License</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>ID Number</label>
+          <input id="idNumber" type="text" placeholder="Enter your ID number" required>
+        </div>
+
+        <div class="form-group">
+          <label>Date of Birth</label>
+          <input id="dateOfBirth" type="date" required>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-prev" onclick="prevStep(4)">← Back</button>
+          <button type="button" class="btn-next" onclick="nextStep(4)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- STEP 5: Review & Verify -->
+      <div class="form-step" data-step="5">
+        <div class="step-title">✅ Review & Verify</div>
+        <div id="error5" class="error" style="display:none;"></div>
+
+        <div class="info-box">
+          Please verify your information before submitting. A confirmation email will be sent immediately.
+        </div>
+
+        <div style="background: rgba(255,255,255,0.1); padding: 16px; border-radius: 8px; margin-bottom: 20px; font-size: 0.95em;">
+          <p><strong>Username:</strong> <span id="reviewUsername"></span></p>
+          <p><strong>Email:</strong> <span id="reviewEmail"></span></p>
+          <p><strong>Phone:</strong> <span id="reviewPhone"></span></p>
+          <p><strong>Location:</strong> <span id="reviewLocation"></span></p>
+          <p><strong>ID Type:</strong> <span id="reviewIdType"></span></p>
+          <p><strong>ID Number:</strong> <span id="reviewIdNumber"></span></p>
+        </div>
+
+        <div class="form-group">
+          <label style="display: flex; align-items: center; gap: 8px;">
+            <input id="agreeTerms" type="checkbox" required style="width: auto;">
+            I agree to Terms of Service and Privacy Policy
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-prev" onclick="prevStep(5)">← Back</button>
+          <button type="submit" class="btn-submit" style="flex: 1;">✨ Create Account</button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+  <script>
+    let currentStep = 1;
+    const totalSteps = 5;
+
+    function nextStep(step) {
+      if (!validateStep(step)) {
+        console.log('Validation failed for step', step);
+        return;
+      }
+      console.log('Moving from step', step, 'to step', step + 1);
+      currentStep = step + 1;
+      updateUI();
+    }
+
+    function prevStep(step) {
+      currentStep = step - 1;
+      updateUI();
+    }
+
+    function updateUI() {
+      console.log('Updating UI for step', currentStep);
+      document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.step-dot').forEach((el, i) => {
+        el.classList.remove('active', 'completed');
+        if (i + 1 === currentStep) el.classList.add('active');
+        else if (i + 1 < currentStep) el.classList.add('completed');
+      });
+      const activeStep = document.querySelector(`.form-step[data-step="${currentStep}"]`);
+      if (activeStep) {
+        activeStep.classList.add('active');
+        console.log('Activated step', currentStep);
+        // Scroll to top of form
+        activeStep.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        console.error('Step element not found for step', currentStep);
+      }
+
+      if (currentStep === 5) populateReview();
+    }
+
+    // Enhanced validateStep with try/catch and visible debug output
+    function validateStep(step) {
+      try {
+        const debug = document.getElementById('signupDebug');
+        if (debug) debug.textContent = '';
+
+        const error = document.getElementById(`error${step}`);
+        if (error) {
+          error.style.display = 'none';
+          error.textContent = '';
+        }
+
+        if (step === 1) {
+          const username = document.getElementById('username').value.trim();
+          const email = document.getElementById('signupEmail').value.trim();
+          console.log('Step1 values', { username, email });
+          if (!username) {
+            showError(step, 'Username is required');
+            if (debug) debug.textContent = 'Validation failed: username empty';
+            return false;
+          }
+          if (!email) {
+            showError(step, 'Email is required');
+            if (debug) debug.textContent = 'Validation failed: email empty';
+            return false;
+          }
+          const users = JSON.parse(localStorage.getItem('users') || '[]');
+          // case-insensitive comparison to reduce accidental collisions
+          if (users.find(u => u.email && u.email.toLowerCase() === email.toLowerCase())) {
+            showError(step, 'Email already registered');
+            if (debug) debug.textContent = 'Validation failed: email already registered';
+            return false;
+          }
+          if (users.find(u => u.username && u.username.toLowerCase() === username.toLowerCase())) {
+            showError(step, 'Username taken');
+            if (debug) debug.textContent = 'Validation failed: username taken';
+            return false;
+          }
+        }
+
+        if (step === 2) {
+          const pwd = document.getElementById('signupPassword').value;
+          const confirm = document.getElementById('confirmPassword').value;
+          console.log('Step2 password length', pwd.length);
+          if (pwd.length < 8) {
+            showError(step, 'Password must be at least 8 characters');
+            return false;
+          }
+          if (pwd !== confirm) {
+            showError(step, 'Passwords do not match');
+            return false;
+          }
+        }
+
+        if (step === 3) {
+          const phone = document.getElementById('phoneNumber').value.trim();
+          const location = document.getElementById('locationDisplay').value.trim();
+          console.log('Step3', { phone, location });
+          if (!phone) {
+            showError(step, 'Phone number is required');
+            return false;
+          }
+          if (!location) {
+            showError(step, 'Please auto-detect your location');
+            return false;
+          }
+        }
+
+        if (step === 4) {
+          const idType = document.getElementById('idType').value;
+          const idNumber = document.getElementById('idNumber').value.trim();
+          const dob = document.getElementById('dateOfBirth').value;
+          console.log('Step4', { idType, idNumber, dob });
+          if (!idType) {
+            showError(step, 'Select an ID type');
+            return false;
+          }
+          if (!idNumber) {
+            showError(step, 'ID number is required');
+            return false;
+          }
+          if (!dob) {
+            showError(step, 'Date of birth is required');
+            return false;
+          }
+        }
+
+        if (step === 5) {
+          if (!document.getElementById('agreeTerms').checked) {
+            showError(step, 'You must agree to Terms and Privacy Policy');
+            return false;
+          }
+        }
+
+        // show debug pass
+        const debug2 = document.getElementById('signupDebug');
+        if (debug2) debug2.textContent = `Step ${step} validation passed`;
+        return true;
+      } catch (err) {
+        console.error('validateStep error', err);
+        const debug = document.getElementById('signupDebug');
+        if (debug) debug.textContent = 'Validation error: ' + err.message;
+        return false;
+      }
+    }
+
+    function showError(step, message) {
+      const error = document.getElementById(`error${step}`);
+      error.textContent = message;
+      error.style.display = 'block';
+    }
+
+    function populateReview() {
+      document.getElementById('reviewUsername').textContent = document.getElementById('username').value;
+      document.getElementById('reviewEmail').textContent = document.getElementById('signupEmail').value;
+      document.getElementById('reviewPhone').textContent = document.getElementById('phoneNumber').value;
+      document.getElementById('reviewLocation').textContent = document.getElementById('locationDisplay').value;
+      document.getElementById('reviewIdType').textContent = document.getElementById('idType').value;
+      document.getElementById('reviewIdNumber').textContent = document.getElementById('idNumber').value;
+    }
+
+    function detectLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            // Reverse geocode: estimate country/region from coordinates
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
+              .then(res => res.json())
+              .then(data => {
+                const location = data.address?.country || `${latitude.toFixed(2)}, ${longitude.toFixed(2)}`;
+                document.getElementById('locationDisplay').value = location;
+              })
+              .catch(() => {
+                document.getElementById('locationDisplay').value = `${latitude.toFixed(2)}, ${longitude.toFixed(2)}`;
+              });
+          },
+          () => {
+            alert('Unable to access location. Please enable location services.');
+          }
+        );
+      } else {
+        alert('Geolocation not supported by your browser');
+      }
+    }
+
+    function checkPasswordStrength() {
+      const pwd = document.getElementById('signupPassword').value;
+      const meter = document.getElementById('strengthMeter');
+      meter.classList.remove('weak', 'medium', 'strong');
+
+      if (pwd.length < 8) {
+        meter.classList.add('weak');
+      } else if (/[a-z]/.test(pwd) && /[A-Z]/.test(pwd) && /\d/.test(pwd)) {
+        meter.classList.add('strong');
+      } else if (/[a-z]/.test(pwd) && /\d/.test(pwd)) {
+        meter.classList.add('medium');
+      } else {
+        meter.classList.add('weak');
+      }
+    }
+
+    document.getElementById('signupForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!validateStep(5)) return;
+
+      const userData = {
+        username: document.getElementById('username').value,
+        email: document.getElementById('signupEmail').value,
+        password: document.getElementById('signupPassword').value,
+        phone: document.getElementById('phoneNumber').value,
+        location: document.getElementById('locationDisplay').value,
+        idType: document.getElementById('idType').value,
+        idNumber: document.getElementById('idNumber').value,
+        dateOfBirth: document.getElementById('dateOfBirth').value,
+        created: Date.now(),
+        verified: true
+      };
+
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      users.push(userData);
+      localStorage.setItem('users', JSON.stringify(users));
+
+      // Auto-create demo account
+      const demoAccounts = JSON.parse(localStorage.getItem('demo_accounts') || '{}');
+      demoAccounts[userData.username] = { balance: 10000, created: Date.now() };
+      localStorage.setItem('demo_accounts', JSON.stringify(demoAccounts));
+
+      // Show success screen
+      document.getElementById('signupForm').style.display = 'none';
+      document.getElementById('successScreen').classList.add('show');
+    });
+
+    // Attach listeners to Continue buttons to log and ensure nextStep is invoked
+    document.querySelectorAll('.btn-next').forEach(btn => {
+      btn.addEventListener('click', (ev) => {
+        try {
+          // find parent step
+          const stepEl = ev.target.closest('.form-step');
+          const step = stepEl ? parseInt(stepEl.getAttribute('data-step')) : null;
+          console.log('Continue clicked, parent step:', step);
+          const debug = document.getElementById('signupDebug');
+          if (debug) debug.textContent = `Clicked Continue on step ${step}`;
+          // call nextStep if available
+          if (typeof nextStep === 'function' && step) nextStep(step);
+        } catch (err) {
+          console.error('btn-next handler error', err);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
