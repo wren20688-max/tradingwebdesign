@@ -69,7 +69,7 @@
         <img src="https://ui-avatars.com/api/?name=Trader&background=0055ff&color=fff" alt="User Avatar" class="user-avatar">
       </div>
       <button id="toggleMode" class="nav-btn" title="Dark Mode">🌙</button>
-      <a href="index.html" class="nav-btn logout">Logout</a>
+      <button id="logoutBtn" class="nav-btn logout" title="Logout">Logout</button>
     </div>
   </header>
 
@@ -144,10 +144,16 @@
         <button id="accountToggle" class="toggle-btn demo-active">Demo Account</button>
         <button id="realAccountToggle" class="toggle-btn">Real Account</button>
       </div>
+      
+      <!-- Mobile Tab Navigation -->
+      <div id="mobileTabNav" class="mobile-tab-nav" style="display: none; margin-top: var(--spacing-md);">
+        <button class="mobile-tab-btn active" data-tab="chart">📊 Chart</button>
+        <button class="mobile-tab-btn" data-tab="indicators">📈 Indicators</button>
+      </div>
     </section>
 
-    <!-- Main Chart -->
-    <section class="chart-container large">
+    <!-- Main Chart (Mobile Tab 1) -->
+    <section id="chartTab" class="chart-container large chart-tab-content">
       <div class="chart-header">
         <div style="display: flex; gap: 20px; align-items: center;">
           <div>
@@ -218,7 +224,7 @@
           </div>
         </div>
       </div>
-      <div style="position: relative; width: 100%; height: 500px; display: flex; flex-direction: column;">
+      <div style="position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; flex: 1;">
         <div id="mainChart" style="width: 100%; height: 100%; flex: 1;"></div>
         <!-- Buy/Sell Buttons Overlay -->
         <div style="position: absolute; top: 50%; left: 20px; transform: translateY(-50%); display: flex; flex-direction: column; gap: 12px; z-index: 10;">
@@ -238,8 +244,10 @@
       </div>
       <div id="indicatorValues" style="padding: var(--spacing-md); background: var(--bg-tertiary); border-top: 1px solid var(--border-color); font-size: 12px; color: var(--text-tertiary); display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-md);"></div>
       
-      <!-- Indicator & Drawing Tools Panel -->
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md); padding: var(--spacing-md); background: var(--bg-tertiary); border-top: 1px solid var(--border-color);">
+      <!-- Indicator & Drawing Tools Panel (Mobile Tab 2) -->
+      <div id="indicatorsTab" class="chart-tab-content" style="display: none;">
+        <h3 style="margin-top: 0; color: var(--text-primary);">Technical Analysis Tools</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md); padding: var(--spacing-md); background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-md);">
         <!-- Indicators Selector -->
         <div>
           <h4 style="margin-bottom: var(--spacing-md); font-size: 13px; color: var(--text-primary);">Technical Indicators</h4>
@@ -290,6 +298,7 @@
             <button class="drawing-tool-btn" data-tool="select" title="Select/Erase" style="grid-column: 1/-1;">🔲 Select/Erase</button>
           </div>
         </div>
+      </div>
       </div>
     </section>
 

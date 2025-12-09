@@ -47,10 +47,10 @@
 
     <!-- PAYMENT OPTIONS -->
     <div class="payment-options">
-      <!-- M-Pesa -->
+      <!-- M-Pesa with PayHero Integration -->
       <section class="content-card payment-card">
-        <h3>📱 M-Pesa</h3>
-        <p>Send money directly to our M-Pesa account</p>
+        <h3>📱 M-Pesa (Pay via PayHero)</h3>
+        <p>Enter M-Pesa number → Pay via PayHero in KSH</p>
         <button class="action-btn" onclick="selectPaymentMethod('mpesa')">Select M-Pesa</button>
       </section>
 
@@ -78,6 +78,43 @@
     <div id="paymentDetails" class="content-card" style="display:none; margin-top:20px;">
       <button class="action-btn outline" onclick="backToPaymentList()">← Back</button>
       <h3 id="paymentDetailsTitle">Payment Method</h3>
+      
+      <!-- STK Push Modal for M-Pesa -->
+      <div id="stkPushModal" style="display:none; margin-top:20px; padding:20px; background:rgba(0,212,255,0.1); border:1px solid rgba(0,212,255,0.3); border-radius:12px;">
+        <div style="margin-bottom:20px;">
+          <h4 style="margin: 0 0 12px 0; color: var(--text-primary);">📱 STK Push - Enter Your Details</h4>
+          <p style="margin: 0; font-size:13px; color: var(--text-secondary);">A prompt will pop up on your phone to enter your M-Pesa PIN</p>
+        </div>
+        
+        <div style="display: grid; gap: 12px;">
+          <div>
+            <label style="display:block; font-size:12px; color:var(--text-tertiary); margin-bottom:6px; font-weight:600;">Phone Number</label>
+            <input type="tel" id="mpesaPhone" placeholder="+254712345678 or 0712345678" style="width:100%; padding:12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-secondary); color:var(--text-primary); font-size:14px;">
+            <small style="color:var(--text-tertiary); display:block; margin-top:4px;">Format: +254712345678 or 0712345678</small>
+          </div>
+          
+          <div>
+            <label style="display:block; font-size:12px; color:var(--text-tertiary); margin-bottom:6px; font-weight:600;">Amount (USD)</label>
+            <input type="number" id="mpesaAmount" placeholder="100" min="10" step="0.01" style="width:100%; padding:12px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-secondary); color:var(--text-primary); font-size:14px;">
+            <small style="color:var(--text-tertiary); display:block; margin-top:4px;">Minimum: $10</small>
+          </div>
+          
+          <button class="action-btn" onclick="initiateStkPush()" style="margin-top:8px;">
+            <span style="display:inline-block; margin-right:8px;">📲</span> Send STK Push
+          </button>
+          
+          <!-- STK Response -->
+          <div id="stkResponse" style="display:none; margin-top:16px; padding:14px; background:rgba(0,208,132,0.1); border:1px solid rgba(0,208,132,0.3); border-radius:8px; text-align:center;">
+            <div style="font-size:32px; margin-bottom:8px;">📤</div>
+            <p style="margin:0; font-weight:600; color:var(--success);">STK Push Sent!</p>
+            <p style="margin:8px 0 0 0; font-size:13px; color:var(--text-secondary);">Check your phone and enter your M-Pesa PIN</p>
+            <div id="stkPhoneDisplay" style="margin-top:12px; font-size:12px; color:var(--text-tertiary); background:var(--bg-tertiary); padding:10px; border-radius:6px; font-family:monospace;"></div>
+            <button class="action-btn outline" onclick="resetStkPush()" style="margin-top:12px; font-size:13px;">Clear</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Regular Payment Info -->
       <div id="paymentInfo" style="margin-top:15px; line-height:1.8;"></div>
       <div style="text-align:center; margin-top:20px;">
         <p style="font-size:12px; color:#888;">Copy and send payment to complete your transaction</p>
@@ -104,19 +141,115 @@
 
     function selectPaymentMethod(method) {
       const details = {
-        mpesa: { title: 'M-Pesa', info: 'Account: +254712345678\\nBusiness Name: PreoTrade FX\\nMinimum: $10' },
-        bank: { title: 'Bank Transfer', info: 'Account: 1234567890\\nBank: Global Finance Bank\\nSwift: GFBKXX\\nMinimum: $50' },
-        usdt: { title: 'USDT (TRC20)', info: 'Address: TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t\\nNetwork: TRC20\\nMinimum: $10' },
-        bitcoin: { title: 'Bitcoin', info: 'Address: 1A1z7agoat7SBLkjvotQwNLac5cBacK8h2\\nNetwork: Bitcoin\\nMinimum: $50' },
-        ethereum: { title: 'Ethereum', info: 'Address: 0x742d35Cc6634C0532925a3b844Bc9e7595f42e7\\nNetwork: ETH\\nMinimum: $10' },
-        tron: { title: 'TRON', info: 'Address: TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t\\nNetwork: Tron\\nMinimum: $10' }
+        mpesa: { title: 'M-Pesa (Pay via PayHero)', info: 'Enter your M-Pesa number and pay via PayHero in KSH', showStk: true },
+        bank: { title: 'Bank Transfer', info: 'Account: 1234567890\\nBank: Global Finance Bank\\nSwift: GFBKXX\\nMinimum: $50', showStk: false },
+        usdt: { title: 'USDT (TRC20)', info: 'Address: TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t\\nNetwork: TRC20\\nMinimum: $10', showStk: false },
+        bitcoin: { title: 'Bitcoin', info: 'Address: 1A1z7agoat7SBLkjvotQwNLac5cBacK8h2\\nNetwork: Bitcoin\\nMinimum: $50', showStk: false },
+        ethereum: { title: 'Ethereum', info: 'Address: 0x742d35Cc6634C0532925a3b844Bc9e7595f42e7\\nNetwork: ETH\\nMinimum: $10', showStk: false },
+        tron: { title: 'TRON', info: 'Address: TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t\\nNetwork: Tron\\nMinimum: $10', showStk: false }
       };
 
       const detail = details[method];
       if (detail) {
         document.getElementById('paymentDetailsTitle').textContent = detail.title;
-        document.getElementById('paymentInfo').innerHTML = '<pre style="white-space:pre-wrap; word-wrap:break-word;">' + detail.info + '</pre>';
+        
+        // Show STK push modal for M-Pesa
+        if (detail.showStk) {
+          document.getElementById('stkPushModal').style.display = 'block';
+          document.getElementById('paymentInfo').innerHTML = '';
+        } 
+        // Show regular payment info
+        else {
+          document.getElementById('stkPushModal').style.display = 'none';
+          document.getElementById('paymentInfo').innerHTML = '<pre style="white-space:pre-wrap; word-wrap:break-word;">' + detail.info + '</pre>';
+        }
+        
         document.getElementById('paymentDetails').style.display = 'block';
+      }
+    }
+
+    function initiateStkPush() {
+      const phone = document.getElementById('mpesaPhone').value.trim();
+      const amount = parseFloat(document.getElementById('mpesaAmount').value);
+      
+      // Validate phone number - accept +254XXXXXXXXX or 07XXXXXXXXX or 01XXXXXXXXX
+      if (!phone.match(/^(\+254|0)[17]\d{8}$/)) {
+        alert('Please enter a valid M-Pesa phone number (e.g., +254712345678 or 0712345678)');
+        return;
+      }
+      
+      if (!amount || amount < 10) {
+        alert('Amount must be at least $10');
+        return;
+      }
+      
+      console.log('STK Push initiated for:', phone, 'Amount:', amount);
+      
+      // Request notification permission first
+      if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            sendBrowserNotification('STK Push Sent', 'Check your phone for M-Pesa payment prompt');
+          }
+          proceedWithStkPush(phone, amount);
+        });
+      } else if ('Notification' in window && Notification.permission === 'granted') {
+        sendBrowserNotification('STK Push Sent', 'Check your phone for M-Pesa payment prompt');
+        proceedWithStkPush(phone, amount);
+      } else {
+        proceedWithStkPush(phone, amount);
+      }
+    }
+
+    function proceedWithStkPush(phone, amount) {
+      // Show success message
+      document.getElementById('stkResponse').style.display = 'block';
+      document.getElementById('stkPhoneDisplay').textContent = 'Phone: ' + phone + '\nAmount: $' + amount.toFixed(2) + '\nStatus: ⏳ Redirecting to PayHero...';
+      
+      // Proceed to PayHero after 2 seconds
+      setTimeout(() => {
+        showPayheroPayment(phone, amount);
+      }, 2000);
+    }
+
+    function showPayheroPayment(phone, amount) {
+      // Convert USD to KSH (1 USD = 130 KSH approx)
+      const kshAmount = Math.round(amount * 130);
+      
+      const paymentRef = prompt('💳 PayHero Payment\n\nM-Pesa Number: ' + phone + '\nUSD Amount: $' + amount.toFixed(2) + '\nKSH Amount: KSH ' + kshAmount + '\n\nProceed to PayHero to complete payment.\n\n(Enter confirmation or click OK):', '');
+      
+      if (paymentRef !== null) {
+        // Simulate PayHero payment completion
+        setTimeout(() => {
+          const refNo = 'PH-' + Date.now();
+          sendBrowserNotification('✅ Payment Completed', 'Amount: KSH ' + kshAmount + ' | Ref: ' + refNo);
+          alert('✅ PayHero Payment Completed!\n\nM-Pesa: ' + phone + '\nAmount: KSH ' + kshAmount + '\nReference: ' + refNo + '\n\nYour account has been credited.');
+          resetStkPush();
+          backToPaymentList();
+          
+          // Update balance
+          const newBalance = storage.getBalance('demo') + amount;
+          storage.setBalance(newBalance, 'demo');
+          loadBalance();
+        }, 1500);
+      }
+    }
+
+    function resetStkPush() {
+      document.getElementById('mpesaPhone').value = '';
+      document.getElementById('mpesaAmount').value = '';
+      document.getElementById('stkResponse').style.display = 'none';
+    }
+
+    function sendBrowserNotification(title, message) {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification(title, {
+          body: message,
+          icon: '/assets/logo.png',
+          badge: '/assets/logo-badge.png',
+          tag: 'preotrade-payment',
+          requireInteraction: false
+        });
       }
     }
 

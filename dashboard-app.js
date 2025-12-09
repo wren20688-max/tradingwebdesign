@@ -477,7 +477,11 @@ function initChart() {
     return;
   }
   
-  console.log('Chart container found, size:', container.clientWidth, 'x', container.clientHeight);
+  // Force container to have dimensions
+  const width = container.clientWidth || 800;
+  const height = container.clientHeight || 450;
+  
+  console.log('Chart container found, size:', width, 'x', height);
   
   // Wait for LightweightCharts to load
   if (!window.LightweightCharts) {
@@ -490,8 +494,8 @@ function initChart() {
   
   try {
     globalState.chart = LightweightCharts.createChart(container, {
-      width: container.clientWidth,
-      height: 450,
+      width: width,
+      height: height,
       layout: {
         background: { color: '#0f1419' },
         textColor: '#d1d5db'
@@ -522,7 +526,8 @@ function initChart() {
     // Handle window resize
     window.addEventListener('resize', () => {
       if (globalState.chart && container) {
-        globalState.chart.applyOptions({ width: container.clientWidth });
+        const newWidth = container.clientWidth || 800;
+        globalState.chart.applyOptions({ width: newWidth });
       }
     });
   } catch (err) {
@@ -842,6 +847,35 @@ function closeTradeModal() {
 }
 
 function setupEventListeners() {
+  // Mobile tab navigation
+  const mobileTabBtns = document.querySelectorAll('.mobile-tab-btn');
+  mobileTabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tabName = btn.dataset.tab;
+      
+      // Remove active class from all tabs and contents
+      mobileTabBtns.forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.chart-tab-content').forEach(c => c.classList.remove('active'));
+      
+      // Add active class to clicked tab
+      btn.classList.add('active');
+      
+      if (tabName === 'chart') {
+        document.getElementById('chartTab').classList.add('active');
+      } else if (tabName === 'indicators') {
+        document.getElementById('indicatorsTab').classList.add('active');
+      }
+    });
+  });
+  
+  // Set chart tab as active by default on mobile
+  const chartTab = document.getElementById('chartTab');
+  if (chartTab) {
+    chartTab.classList.add('active');
+    const firstTabBtn = mobileTabBtns[0];
+    if (firstTabBtn) firstTabBtn.classList.add('active');
+  }
+  
   // Modal close button
   document.querySelector('.modal-close')?.addEventListener('click', closeTradeModal);
   
@@ -992,11 +1026,22 @@ function setupEventListeners() {
   });
   
   // Logout
-  document.querySelector('.logout')?.addEventListener('click', (e) => {
-    e.preventDefault();
-    storage.removeUser();
-    window.location.href = 'index.html';
-  });
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Logout clicked');
+      storage.removeUser();
+      localStorage.removeItem('preo_user');
+      localStorage.removeItem('preo_saved_email');
+      localStorage.removeItem('preo_saved_password');
+      localStorage.removeItem('preo_last_login');
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 100);
+    });
+  }
   
   // Dark mode toggle
   document.getElementById('toggleMode')?.addEventListener('click', () => {
@@ -1070,7 +1115,6 @@ function executeTrade(e) {
   // Get current account balance
   const currentBalance = globalState.accountBalances[globalState.currentAccount].balance;
   const entryPrice = MARKET_DATA.forex[0].ask;
-  const tradeValue = volume * entryPrice;
   
   // Create trade object
   const trade = {
@@ -1131,18 +1175,20 @@ function executeTrade(e) {
       winRate = isPrivileged ? 0.90 : 0.80; // 90% privileged, 80% regular on demo
     }
     
-    // Calculate realistic P&L based on win rate and SL/TP
+    // Calculate realistic P&L based on pips (1 pip = 0.0001 for most forex pairs)
     const isWinning = Math.random() < winRate;
     let pnlAmount;
     
     if (isWinning) {
-      // Winning trade - profit based on TP
-      const profitPercent = Math.random() * tp;
-      pnlAmount = (tradeValue * profitPercent) / 100;
+      // Winning trade - profit based on TP (in pips)
+      const pipsWon = Math.random() * tp; // e.g., 0-2 pips
+      const pipValue = volume * 10; // $10 per 1 pip per 1 lot (standard 0.1 lot = $1 per pip)
+      pnlAmount = pipsWon * pipValue;
     } else {
-      // Losing trade - loss based on SL
-      const lossPercent = Math.random() * sl;
-      pnlAmount = -(tradeValue * lossPercent) / 100;
+      // Losing trade - loss based on SL (in pips)
+      const pipsLost = Math.random() * sl; // e.g., 0-1 pip
+      const pipValue = volume * 10; // $10 per 1 pip per 1 lot
+      pnlAmount = -(pipsLost * pipValue);
     }
     
     // Update account balance and equity

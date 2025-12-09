@@ -198,25 +198,53 @@
     .success-screen h3 {
       font-size: 1.8em;
       margin: 16px 0;
+      font-weight: 700;
+    }
+    .success-screen p {
+      margin: 12px 0;
+      font-size: 1em;
+      line-height: 1.6;
+    }
+    .btn-success-login {
+      display: inline-block;
+      background: white;
+      color: #667eea;
+      padding: 14px 32px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      margin-top: 20px;
+      margin-right: 12px;
+      transition: all 0.3s;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      cursor: pointer;
+      border: none;
+      font-size: 1em;
+    }
+    .btn-success-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+    }
+    .btn-secondary-link {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      padding: 12px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: 20px;
+      transition: all 0.3s;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    .btn-secondary-link:hover {
+      background: rgba(255,255,255,0.3);
     }
     .success-screen p {
       font-size: 0.95em;
       opacity: 0.9;
       margin-bottom: 24px;
-    }
-    .back-to-login {
-      display: inline-block;
-      background: white;
-      color: #667eea;
-      padding: 12px 24px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: all 0.3s;
-    }
-    .back-to-login:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     }
     .step-title {
       font-size: 1.3em;
@@ -246,8 +274,10 @@
     <div id="successScreen" class="success-screen">
       <div class="success-icon">✨</div>
       <h3>Welcome to PreoTrade FX!</h3>
-      <p>Your account is created and verified. Start trading immediately with your $10k demo account.</p>
-      <a href="login.html" class="back-to-login">Go to Login</a>
+      <p>Your account has been successfully created and verified.</p>
+      <p style="font-size: 0.95em; opacity: 0.9;">You now have a $10,000 demo account ready to use.</p>
+      <a href="login.html" class="btn-success-login">Go to Login & Start Trading</a>
+      <a href="index.html" class="btn-secondary-link">Back to Home</a>
     </div>
 
     <form id="signupForm" style="display: block;">

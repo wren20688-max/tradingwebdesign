@@ -550,7 +550,7 @@ code {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: var(--spacing-lg);
-  height: auto;
+  height: 600px;
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow-sm);
@@ -559,7 +559,7 @@ code {
 
 .chart-container.large {
   grid-column: 1 / -1;
-  height: auto;
+  height: 600px;
 }
 
 .chart-header {
@@ -1478,5 +1478,159 @@ button {
 .sell-btn:active {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(255, 68, 68, 0.3);
+}
+
+/* ============================================================================
+   MOBILE RESPONSIVE & TAB NAVIGATION
+   ============================================================================ */
+
+.mobile-tab-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: var(--spacing-md);
+}
+
+.mobile-tab-btn {
+  padding: 12px 16px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.mobile-tab-btn.active {
+  background: var(--accent-blue);
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+}
+
+.mobile-tab-btn:hover {
+  background: var(--bg-secondary);
+}
+
+.chart-tab-content {
+  display: none;
+}
+
+.chart-tab-content.active {
+  display: block;
+}
+
+/* Mobile layout - hide trading section on small screens */
+@media (max-width: 1024px) {
+  .main-container {
+    grid-template-columns: 1fr;
+  }
+
+  #mobileTabNav {
+    display: grid !important;
+  }
+
+  .account-summary {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .search-box {
+    width: 100% !important;
+    margin-top: 12px;
+  }
+
+  .pairs-table {
+    font-size: 12px;
+  }
+
+  .col-pair, .col-price, .col-change, .col-bid-ask {
+    flex: 1;
+  }
+
+  .col-action {
+    display: none;
+  }
+
+  .btn-small {
+    padding: 4px 8px !important;
+    font-size: 11px !important;
+  }
+}
+
+/* Extra small phones */
+@media (max-width: 640px) {
+  .top-nav {
+    padding: 12px 16px;
+  }
+
+  .main-container {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+  }
+
+  .chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .chart-type-selector {
+    border-right: none !important;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 12px !important;
+    width: 100%;
+  }
+
+  .timeframe-buttons {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .tf-btn {
+    flex: 1;
+    min-width: 45px;
+    padding: 8px 4px !important;
+    font-size: 11px !important;
+  }
+
+  .account-summary {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .summary-card {
+    padding: var(--spacing-md);
+  }
+
+  .chart-container {
+    padding: var(--spacing-md);
+  }
+
+  #mainChart {
+    height: 400px !important;
+  }
+
+  .section-header h2 {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  .pairs-table {
+    overflow-x: auto;
+  }
+
+  .table-header {
+    min-width: 400px;
+  }
+
+  .pairs-row {
+    min-width: 400px;
+  }
 }
 

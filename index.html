@@ -6,10 +6,6 @@
   <title>Login — PreoTrade FX | Professional Trading Platform</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* ============================================================================
-       LOGIN PAGE STYLES
-       ============================================================================ */
-
     .login-page {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -23,8 +19,8 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: var(--spacing-xl);
-      color: var(--text-primary);
+      padding: 40px;
+      color: white;
       position: relative;
       overflow: hidden;
     }
@@ -58,34 +54,34 @@
     }
 
     .login-logo {
-      font-size: 48px;
-      margin-bottom: var(--spacing-xl);
+      font-size: 60px;
+      margin-bottom: 20px;
     }
 
     .login-content-left h1 {
-      font-size: 42px;
-      margin-bottom: var(--spacing-md);
+      font-size: 40px;
+      margin-bottom: 15px;
       text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     }
 
     .login-content-left p {
       font-size: 16px;
       opacity: 0.9;
-      margin-bottom: var(--spacing-2xl);
+      margin-bottom: 30px;
       line-height: 1.8;
     }
 
     .features-list {
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-lg);
+      gap: 20px;
       text-align: left;
-      margin-top: var(--spacing-2xl);
+      margin-top: 30px;
     }
 
     .feature-item {
       display: flex;
-      gap: var(--spacing-md);
+      gap: 15px;
       align-items: flex-start;
     }
 
@@ -95,7 +91,7 @@
     }
 
     .feature-text h3 {
-      margin: 0 0 4px 0;
+      margin: 0 0 5px 0;
       font-size: 16px;
     }
 
@@ -106,132 +102,114 @@
     }
 
     .login-right {
+      background: #0f1419;
       display: flex;
-      flex-direction: column;
+      align-items: center;
       justify-content: center;
-      padding: var(--spacing-xl);
+      padding: 40px;
     }
 
     .login-form-container {
-      max-width: 500px;
       width: 100%;
-      margin: 0 auto;
-    }
-
-    .login-form-header {
-      margin-bottom: var(--spacing-xl);
+      max-width: 450px;
     }
 
     .login-form-header h2 {
-      font-size: 28px;
-      margin-bottom: var(--spacing-sm);
+      font-size: 32px;
+      margin-bottom: 8px;
+      color: #00d4ff;
     }
 
     .login-form-header p {
-      color: var(--text-secondary);
-      margin: 0;
+      color: #a0a0a0;
+      margin-bottom: 30px;
     }
 
     .form-group {
-      margin-bottom: var(--spacing-lg);
+      margin-bottom: 20px;
     }
 
     .form-group label {
       display: block;
-      margin-bottom: var(--spacing-sm);
-      font-weight: 600;
-      color: var(--text-primary);
+      color: #c0c0c0;
       font-size: 14px;
+      margin-bottom: 8px;
+      font-weight: 600;
     }
 
     .form-group input {
       width: 100%;
-      padding: var(--spacing-md);
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      color: var(--text-primary);
+      padding: 12px 16px;
+      background: #1a1f2e;
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 8px;
+      color: #e0e0e0;
       font-size: 14px;
-      transition: all 0.2s;
+      transition: all 0.3s;
     }
 
     .form-group input:focus {
       outline: none;
-      border-color: var(--secondary);
+      border-color: #00d4ff;
       background: rgba(0, 212, 255, 0.05);
-      box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
-    }
-
-    .form-group input::placeholder {
-      color: var(--text-tertiary);
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--spacing-md);
     }
 
     .checkbox-group {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: var(--spacing-lg);
+      margin-bottom: 25px;
       font-size: 14px;
     }
 
     .checkbox-group label {
       display: flex;
       align-items: center;
-      gap: var(--spacing-sm);
-      margin: 0;
+      gap: 8px;
+      color: #a0a0a0;
       cursor: pointer;
     }
 
-    .checkbox-group label input {
+    .checkbox-group input[type="checkbox"] {
       width: auto;
-      margin: 0;
+      cursor: pointer;
     }
 
     .forgot-password {
-      color: var(--secondary);
+      color: #0055ff;
       text-decoration: none;
-      transition: color 0.2s;
+      transition: color 0.3s;
     }
 
     .forgot-password:hover {
-      color: var(--secondary-light);
+      color: #00d4ff;
     }
 
     .login-btn {
       width: 100%;
-      padding: var(--spacing-md) var(--spacing-lg);
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: var(--text-primary);
+      padding: 14px;
+      background: linear-gradient(135deg, #0055ff, #00d4ff);
+      color: white;
       border: none;
-      border-radius: var(--radius-md);
+      border-radius: 8px;
       font-weight: 600;
       font-size: 16px;
       cursor: pointer;
       transition: all 0.3s;
-      margin-bottom: var(--spacing-md);
+      margin-bottom: 15px;
     }
 
     .login-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0, 85, 255, 0.3);
-    }
-
-    .login-btn:active {
-      transform: translateY(0);
+      box-shadow: 0 10px 30px rgba(0, 85, 255, 0.3);
     }
 
     .form-divider {
       display: flex;
       align-items: center;
-      margin: var(--spacing-lg) 0;
-      color: var(--text-tertiary);
-      font-size: 12px;
+      margin: 20px 0;
+      color: #606060;
+      font-size: 13px;
     }
 
     .form-divider::before,
@@ -239,117 +217,130 @@
       content: '';
       flex: 1;
       height: 1px;
-      background: var(--border-color);
+      background: rgba(0, 212, 255, 0.1);
     }
 
     .form-divider span {
-      padding: 0 var(--spacing-md);
+      padding: 0 10px;
+    }
+
+    .demo-btn {
+      width: 100%;
+      padding: 14px;
+      background: transparent;
+      border: 2px solid #0055ff;
+      color: #0055ff;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .demo-btn:hover {
+      background: rgba(0, 85, 255, 0.1);
+      transform: translateY(-2px);
     }
 
     .demo-section {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: var(--spacing-lg);
-      margin-bottom: var(--spacing-lg);
+      background: rgba(0, 212, 255, 0.05);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
     }
 
     .demo-section h3 {
-      margin-top: 0;
-      font-size: 14px;
-      margin-bottom: var(--spacing-md);
+      margin: 0 0 12px 0;
+      font-size: 13px;
+      color: #00d4ff;
     }
 
     .demo-accounts {
       display: grid;
-      gap: var(--spacing-sm);
-      font-size: 13px;
+      gap: 8px;
+      font-size: 12px;
     }
 
     .demo-account-item {
       display: flex;
       justify-content: space-between;
-      padding: var(--spacing-sm);
-      background: rgba(0, 212, 255, 0.05);
-      border-radius: var(--radius-md);
-      border-left: 3px solid var(--secondary);
+      padding: 8px;
+      background: rgba(0, 85, 255, 0.1);
+      border-radius: 6px;
+      border-left: 2px solid #00d4ff;
     }
 
     .demo-account-label {
-      color: var(--text-tertiary);
+      color: #a0a0a0;
     }
 
     .demo-account-value {
-      color: var(--secondary);
-      font-family: var(--font-mono);
+      color: #00d4ff;
+      font-family: monospace;
       font-weight: 600;
+    }
+
+    .trust-badges {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+
+    .trust-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      padding: 8px 12px;
+      background: rgba(0, 212, 255, 0.1);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 6px;
+      color: #00d4ff;
     }
 
     .signup-link {
       text-align: center;
       font-size: 14px;
-      color: var(--text-secondary);
+      color: #a0a0a0;
+      margin-top: 20px;
     }
 
     .signup-link a {
-      color: var(--secondary);
+      color: #00d4ff;
       font-weight: 600;
+      text-decoration: none;
     }
 
     .error-message {
-      background: rgba(255, 71, 87, 0.1);
-      border: 1px solid var(--danger);
-      color: var(--danger);
-      padding: var(--spacing-md);
-      border-radius: var(--radius-md);
-      margin-bottom: var(--spacing-lg);
-      font-size: 14px;
       display: none;
+      background: rgba(255, 71, 87, 0.1);
+      border: 1px solid rgba(255, 71, 87, 0.3);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 20px;
+      color: #ff6b87;
+      font-size: 13px;
     }
 
     .error-message.show {
       display: block;
     }
 
-    /* ============================================================================
-       RESPONSIVE DESIGN
-       ============================================================================ */
-
-    @media (max-width: 968px) {
+    @media (max-width: 1024px) {
       .login-page {
         grid-template-columns: 1fr;
       }
 
       .login-left {
-        display: none;
+        padding: 40px 20px;
+        min-height: 300px;
       }
 
       .login-right {
-        min-height: 100vh;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .login-right {
-        padding: var(--spacing-lg);
-      }
-
-      .login-form-container {
-        width: 100%;
-      }
-
-      .login-form-header h2 {
-        font-size: 24px;
-      }
-
-      .form-row {
-        grid-template-columns: 1fr;
-      }
-
-      .checkbox-group {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--spacing-sm);
+        padding: 30px 20px;
       }
     }
   </style>
@@ -359,31 +350,7 @@
     <!-- Left Side: Features -->
     <div class="login-left">
       <div class="login-content-left">
-        <div class="login-logo" style="width: 80px; height: 80px;">
-          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="logoGradientLogin" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
-                <stop offset="100%" style="stop-color:#e6f2ff;stop-opacity:1" />
-              </linearGradient>
-            </defs>
-            <circle cx="100" cy="100" r="95" fill="none" stroke="url(#logoGradientLogin)" stroke-width="2" opacity="0.5"/>
-            <path d="M 100 30 L 150 60 L 150 130 L 100 160 L 50 130 L 50 60 Z" fill="url(#logoGradientLogin)" opacity="0.15" stroke="url(#logoGradientLogin)" stroke-width="1.5"/>
-            <g>
-              <rect x="70" y="95" width="8" height="35" fill="#ffffff" opacity="0.9"/>
-              <line x1="74" y1="85" x2="74" y2="135" stroke="#ffffff" stroke-width="2"/>
-              <rect x="85" y="75" width="8" height="55" fill="#ffffff" opacity="0.95"/>
-              <line x1="89" y1="65" x2="89" y2="135" stroke="#ffffff" stroke-width="2"/>
-              <rect x="100" y="55" width="8" height="75" fill="#ffffff" opacity="1"/>
-              <line x1="104" y1="45" x2="104" y2="135" stroke="#ffffff" stroke-width="2"/>
-              <rect x="115" y="80" width="8" height="50" fill="#ffffff" opacity="0.9"/>
-              <line x1="119" y1="70" x2="119" y2="135" stroke="#ffffff" stroke-width="2"/>
-            </g>
-            <circle cx="160" cy="55" r="8" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.8"/>
-            <circle cx="160" cy="55" r="5" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
-            <circle cx="160" cy="55" r="2" fill="#ffffff" opacity="0.9"/>
-          </svg>
-        </div>
+        <div class="login-logo">📈</div>
         <h1>PreoTrade FX</h1>
         <p>Professional Trading Platform<br>for Global Markets</p>
 
@@ -391,8 +358,8 @@
           <div class="feature-item">
             <div class="feature-icon">⚡</div>
             <div class="feature-text">
-              <h3>Fast Execution</h3>
-              <p>Real-time trading with low latency</p>
+              <h3>Ultra-Fast Execution</h3>
+              <p>1ms latency order execution</p>
             </div>
           </div>
 
@@ -400,23 +367,23 @@
             <div class="feature-icon">📊</div>
             <div class="feature-text">
               <h3>Advanced Charts</h3>
-              <p>Professional technical analysis tools</p>
+              <p>10+ indicators, 7 drawing tools</p>
             </div>
           </div>
 
           <div class="feature-item">
             <div class="feature-icon">🤖</div>
             <div class="feature-text">
-              <h3>Auto Trading</h3>
-              <p>Automated trading strategies & bots</p>
+              <h3>Automated Bots</h3>
+              <p>24/7 trading strategies</p>
             </div>
           </div>
 
           <div class="feature-item">
             <div class="feature-icon">🔒</div>
             <div class="feature-text">
-              <h3>Secure</h3>
-              <p>Bank-level security for your funds</p>
+              <h3>Bank-Level Security</h3>
+              <p>256-bit SSL encryption</p>
             </div>
           </div>
         </div>
@@ -447,7 +414,7 @@
           <div class="checkbox-group">
             <label>
               <input type="checkbox" id="rememberMe">
-              Remember me
+              Remember me for 30 days
             </label>
             <a href="#" class="forgot-password">Forgot password?</a>
           </div>
@@ -455,59 +422,38 @@
           <button type="submit" class="login-btn">Sign In</button>
         </form>
 
-        <!-- Trust & Security Badges -->
-        <div style="display: flex; gap: 8px; justify-content: center; margin: var(--spacing-lg) 0; flex-wrap: wrap;">
-          <div class="trust-badge verified">
-            <span style="font-size: 14px;">✓</span>
-            Licensed
-          </div>
-          <div class="trust-badge secure">
-            <span style="font-size: 14px;">🔒</span>
-            SSL Secure
-          </div>
-          <div class="trust-badge regulated">
-            <span style="font-size: 14px;">✓</span>
-            Regulated
-          </div>
+        <div class="form-divider">
+          <span>or try demo</span>
+        </div>
+
+        <button type="button" class="demo-btn" onclick="loginAsDemo()">Quick Demo Login</button>
+
+        <!-- Trust & Security -->
+        <div class="trust-badges">
+          <div class="trust-badge">✓ Licensed</div>
+          <div class="trust-badge">🔒 SSL Secure</div>
+          <div class="trust-badge">✓ Regulated</div>
         </div>
 
         <!-- Demo Accounts Info -->
         <div class="demo-section">
-          <h3>Demo Accounts (For Testing)</h3>
+          <h3>📚 Demo Credentials (for testing)</h3>
           <div class="demo-accounts">
             <div class="demo-account-item">
               <span class="demo-account-label">Trader:</span>
-              <span class="demo-account-value">trader1 / pass123</span>
+              <span class="demo-account-value">trader1@demo.local / pass123</span>
             </div>
             <div class="demo-account-item">
               <span class="demo-account-label">Admin:</span>
-              <span class="demo-account-value">admin / admin123</span>
+              <span class="demo-account-value">admin@demo.local / admin123</span>
             </div>
-          </div>
-        </div>
-
-        <!-- Company Trust Info -->
-        <div class="company-info">
-          <div class="company-info-item">
-            <span class="company-info-label">Established</span>
-            <span class="company-info-value">2023</span>
-          </div>
-          <div class="company-info-item">
-            <span class="company-info-label">Trading Volume</span>
-            <span class="company-info-value">$2.5B+</span>
-          </div>
-          <div class="company-info-item">
-            <span class="company-info-label">Active Traders</span>
-            <span class="company-info-value">150K+</span>
-          </div>
-          <div class="company-info-item">
-            <span class="company-info-label">Security Rating</span>
-            <span class="company-info-value">Grade A</span>
           </div>
         </div>
 
         <div class="signup-link">
-          Don't have an account? <a href="signup.html">Create one now</a>
+          Don't have an account? <a href="signup.html">Create one now</a> — It takes less than 2 minutes
+          <br><br>
+          <a href="landing.html" style="color: #0055ff; font-size: 12px;">← Back to Home</a>
         </div>
       </div>
     </div>
@@ -515,27 +461,30 @@
 
   <script src="storage.js"></script>
   <script>
-    // ============================================================================
-    // Login Form Handler
-    // ============================================================================
-
     const loginForm = document.getElementById('loginForm');
     const errorMessage = document.getElementById('errorMessage');
-    const rememberMe = document.getElementById('rememberMe');
 
-    // Demo users - replace with backend authentication in production
     const demoUsers = {
       'trader1@demo.local': { password: 'pass123', username: 'trader1', role: 'trader' },
       'admin@demo.local': { password: 'admin123', username: 'admin', role: 'admin' }
     };
 
-    // Load remember me preference
-    if (localStorage.getItem('rememberEmail')) {
-      document.getElementById('email').value = localStorage.getItem('rememberEmail');
-      rememberMe.checked = true;
-    }
+    // Auto-fill from storage if available
+    window.addEventListener('load', () => {
+      const user = storage.getUser();
+      if (user) {
+        window.location.href = 'dashboard.html';
+      }
 
-    // Handle login
+      if (localStorage.getItem('preo_saved_email')) {
+        document.getElementById('email').value = localStorage.getItem('preo_saved_email');
+        if (localStorage.getItem('preo_saved_password')) {
+          document.getElementById('password').value = localStorage.getItem('preo_saved_password');
+          document.getElementById('rememberMe').checked = true;
+        }
+      }
+    });
+
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
       errorMessage.classList.remove('show');
@@ -548,37 +497,37 @@
         return;
       }
 
-      // Validate email format
-      if (!email.includes('@')) {
-        showError('Please enter a valid email address');
-        return;
-      }
-
-      // Check demo users (in production, use backend authentication)
       if (demoUsers[email] && demoUsers[email].password === password) {
-        // Save user session
         const user = {
           email,
           username: demoUsers[email].username,
           role: demoUsers[email].role,
-          loginTime: new Date().toISOString(),
-          balance: 10000
+          loginTime: new Date().toISOString()
         };
         storage.setUser(user);
 
-        // Save remember me preference
-        if (rememberMe.checked) {
-          localStorage.setItem('rememberEmail', email);
-        } else {
-          localStorage.removeItem('rememberEmail');
+        if (document.getElementById('rememberMe').checked) {
+          localStorage.setItem('preo_saved_email', email);
+          localStorage.setItem('preo_saved_password', password);
         }
 
-        // Redirect to dashboard
         window.location.href = 'dashboard.html';
       } else {
-        showError('Invalid email or password. Try demo@example.com');
+        showError('Invalid credentials. Use demo accounts above or create a new one.');
       }
     });
+
+    function loginAsDemo() {
+      const email = 'trader1@demo.local';
+      const user = {
+        email,
+        username: demoUsers[email].username,
+        role: demoUsers[email].role,
+        loginTime: new Date().toISOString()
+      };
+      storage.setUser(user);
+      window.location.href = 'dashboard.html';
+    }
 
     function showError(message) {
       errorMessage.textContent = message;
@@ -587,14 +536,6 @@
         errorMessage.classList.remove('show');
       }, 5000);
     }
-
-    // Check if already logged in
-    window.addEventListener('load', () => {
-      const user = storage.getUser();
-      if (user) {
-        window.location.href = 'dashboard.html';
-      }
-    });
   </script>
 </body>
 </html>

@@ -5,17 +5,44 @@
 const storage = {
   // User session management
   getUser: function() {
-    const user = localStorage.getItem('preo_user');
-    return user ? JSON.parse(user) : null;
+    // Check preo_user first (current session)
+    let user = localStorage.getItem('preo_user');
+    if (user) {
+      return JSON.parse(user);
+    }
+    
+    // If no current session, try to recover from last login
+    const lastLogin = localStorage.getItem('preo_last_login');
+    if (lastLogin) {
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const found = users.find(u => u.email && u.email.toLowerCase() === lastLogin.toLowerCase());
+      if (found) {
+        // Restore session
+        const userData = {
+          username: found.username || found.email,
+          email: found.email,
+          timestamp: new Date().getTime()
+        };
+        localStorage.setItem('preo_user', JSON.stringify(userData));
+        localStorage.setItem('preo_token', 'token_' + Date.now());
+        return userData;
+      }
+    }
+    
+    return null;
   },
 
   setUser: function(user) {
     localStorage.setItem('preo_user', JSON.stringify(user));
+    localStorage.setItem('preo_last_login', user.email);
   },
 
   removeUser: function() {
     localStorage.removeItem('preo_user');
     localStorage.removeItem('preo_token');
+    localStorage.removeItem('preo_saved_email');
+    localStorage.removeItem('preo_remember_me');
+    localStorage.removeItem('preo_saved_password');
   },
 
   isLoggedIn: function() {
