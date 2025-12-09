@@ -1,4 +1,4 @@
-# PreoTrade FX Backend API Documentation
+# PreoCrypto Backend API Documentation
 
 ## 🚀 Quick Start
 
@@ -391,7 +391,7 @@ GET /api/health
 ```json
 {
   "success": true,
-  "message": "PreoTrade FX Backend API is running",
+  "message": "PreoCrypto Backend API is running",
   "version": "1.0.0",
   "uptime": 3600
 }
@@ -444,8 +444,8 @@ curl -X GET http://localhost:3000/api/trades/accounts \
 ```
 NODE_ENV=development
 PORT=3000
-JWT_SECRET=preotrade-fx-secret-key-change-in-production-2024
-DB_PATH=./data/preotrade.db
+JWT_SECRET=preocrypto-secret-key-change-in-production-2024
+DB_PATH=./data/preocrypto.db
 ```
 
 ---

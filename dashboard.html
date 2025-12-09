@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trading Dashboard — PreoTrade FX</title>
+  <title>Trading Dashboard — PreoCrypto</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.0.0/dist/lightweight-charts.standalone.production.min.js"></script>
 </head>
@@ -37,7 +37,7 @@
           <circle cx="160" cy="55" r="2" fill="#00d084" opacity="0.9"/>
         </svg>
       </div>
-      <h1>PreoTrade FX</h1>
+      <h1>PreoCrypto</h1>
     </div>
     <div class="nav-center">
       <div class="market-ticker">
@@ -84,7 +84,6 @@
       <a href="payment-methods.html" class="menu-item">Payments</a>
       <a href="profile.html" class="menu-item">Settings</a>
       <a href="faq.html" class="menu-item">Support</a>
-      <a href="admin.html" class="menu-item">Admin</a>
     </div>
   </nav>
 
@@ -225,20 +224,18 @@
         </div>
       </div>
       <div style="position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; flex: 1;">
-        <div id="mainChart" style="width: 100%; height: 100%; flex: 1;"></div>
-        <!-- Buy/Sell Buttons Overlay -->
-        <div style="position: absolute; top: 50%; left: 20px; transform: translateY(-50%); display: flex; flex-direction: column; gap: 12px; z-index: 10;">
-          <button id="buyBtn" class="chart-action-btn buy-btn" title="Buy">
-            <div style="font-size: 20px; margin-bottom: 4px;">⬆️</div>
-            <div style="font-size: 13px; font-weight: bold;">BUY</div>
-            <div id="buyPrice" style="font-size: 11px; margin-top: 4px; opacity: 0.8;">--</div>
+        <div id="mainChart" style="width: 100%; height: 100%; flex: 1; position: relative;">
+          <!-- Buy Button Left Top -->
+          <button id="buyBtn" class="chart-action-btn buy-btn" title="Buy" style="position: absolute; left: 15px; top: 15px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: 1px solid #047857; border-radius: 6px; padding: 8px 12px; color: white; font-weight: 600; font-size: 12px; cursor: pointer; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2); transition: all 0.2s ease; display: flex; flex-direction: column; align-items: center; min-width: 60px; gap: 2px; z-index: 10;">
+            <div style="font-size: 14px;">📈</div>
+            <div>BUY</div>
+            <div id="buyPrice" style="font-size: 9px; opacity: 0.9; font-family: monospace;">--</div>
           </button>
-        </div>
-        <div style="position: absolute; top: 50%; right: 20px; transform: translateY(-50%); display: flex; flex-direction: column; gap: 12px; z-index: 10;">
-          <button id="sellBtn" class="chart-action-btn sell-btn" title="Sell">
-            <div style="font-size: 20px; margin-bottom: 4px;">⬇️</div>
-            <div style="font-size: 13px; font-weight: bold;">SELL</div>
-            <div id="sellPrice" style="font-size: 11px; margin-top: 4px; opacity: 0.8;">--</div>
+          <!-- Sell Button Right Top -->
+          <button id="sellBtn" class="chart-action-btn sell-btn" title="Sell" style="position: absolute; right: 15px; top: 15px; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); border: 1px solid #b91c1c; border-radius: 6px; padding: 8px 12px; color: white; font-weight: 600; font-size: 12px; cursor: pointer; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.2); transition: all 0.2s ease; display: flex; flex-direction: column; align-items: center; min-width: 60px; gap: 2px; z-index: 10;">
+            <div style="font-size: 14px;">📉</div>
+            <div>SELL</div>
+            <div id="sellPrice" style="font-size: 9px; opacity: 0.9; font-family: monospace;">--</div>
           </button>
         </div>
       </div>
@@ -366,9 +363,19 @@
         <div class="form-group">
           <label>Trade Type</label>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md);">
-            <button type="button" id="buyBtn" class="btn btn-success" style="background: var(--success);">📈 Buy</button>
-            <button type="button" id="sellBtn" class="btn" style="background: var(--danger); color: var(--text-primary);">📉 Sell</button>
+            <button type="button" id="modalBuyBtn" class="btn btn-success" style="background: var(--success);">📈 Buy</button>
+            <button type="button" id="modalSellBtn" class="btn" style="background: var(--danger); color: var(--text-primary);">📉 Sell</button>
           </div>
+        </div>
+
+        <!-- Account Selection -->
+        <div class="form-group">
+          <label>Trading Account</label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md);">
+            <button type="button" id="tradeAccountDemo" class="btn" style="background: var(--primary); border: 2px solid var(--primary); color: white;">📊 Demo Account</button>
+            <button type="button" id="tradeAccountLive" class="btn" style="background: transparent; border: 2px solid var(--border-color); color: var(--text-primary);">💰 Real Account</button>
+          </div>
+          <div class="form-helper" id="accountInfo" style="margin-top: var(--spacing-sm); text-align: center;">Using: Demo Account</div>
         </div>
 
         <!-- Volume -->

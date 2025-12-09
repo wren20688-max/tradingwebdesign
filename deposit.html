@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deposit Funds — PreoCrypto</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Top Navigation -->
+  <header class="top-nav">
+    <div class="nav-left">
+      <button id="menuToggle" class="menu-toggle">☰</button>
+      <div class="logo">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#0055ff;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <circle cx="100" cy="100" r="95" fill="none" stroke="url(#logoGradient)" stroke-width="2" opacity="0.3"/>
+          <path d="M 100 30 L 150 60 L 150 130 L 100 160 L 50 130 L 50 60 Z" fill="url(#logoGradient)" opacity="0.1" stroke="url(#logoGradient)" stroke-width="1.5"/>
+          <g>
+            <rect x="70" y="95" width="8" height="35" fill="#00d084" opacity="0.9"/>
+            <rect x="85" y="75" width="8" height="55" fill="#00d084" opacity="0.95"/>
+            <rect x="100" y="55" width="8" height="75" fill="#0055ff" opacity="1"/>
+            <rect x="115" y="80" width="8" height="50" fill="#00d4ff" opacity="0.9"/>
+          </g>
+        </svg>
+      </div>
+      <h1>Deposit Funds</h1>
+    </div>
+    <div class="nav-right">
+      <div class="user-info">
+        <span id="username" style="font-size: 13px;">User</span>
+        <img src="https://ui-avatars.com/api/?name=User&background=0055ff&color=fff" alt="Avatar" class="user-avatar">
+      </div>
+      <button id="toggleMode" class="nav-btn" title="Dark Mode">🌙</button>
+      <button id="logoutBtn" class="nav-btn logout" title="Logout">Logout</button>
+    </div>
+  </header>
+
+  <!-- Side Menu -->
+  <nav id="sideMenu" class="side-menu">
+    <button class="menu-close">✕</button>
+    <div class="menu-items">
+      <a href="dashboard.html" class="menu-item">📊 Trading</a>
+      <a href="deposit.html" class="menu-item active">💰 Deposit</a>
+      <a href="transactions.html" class="menu-item">📋 Transactions</a>
+      <a href="profile.html" class="menu-item">👤 Profile</a>
+      <a href="finances.html" class="menu-item">💳 Finances</a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-container">
+    <!-- Header Section -->
+    <section class="content-card" style="margin-bottom: var(--spacing-lg);">
+      <h2>💵 Add Funds to Your Account</h2>
+      <p style="color: var(--text-secondary); margin-top: var(--spacing-sm);">Deposit securely using any of our supported payment methods</p>
+    </section>
+
+    <!-- Current Balance -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-lg); margin-bottom: var(--spacing-lg);">
+      <div class="summary-card">
+        <div class="summary-label">Current Balance</div>
+        <div class="summary-value" id="currentBalance">$0.00</div>
+        <div class="summary-change">Real Account</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Pending Deposits</div>
+        <div class="summary-value" id="pendingDeposits">$0.00</div>
+        <div class="summary-change" id="pendingCount">0 transactions</div>
+      </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: var(--spacing-lg); grid-column: 1 / -1;">
+      <!-- Deposit Form -->
+      <section class="content-card">
+        <h3>💳 Choose Deposit Method</h3>
+        
+        <!-- Payment Methods -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md); margin-bottom: var(--spacing-lg);">
+          <div class="payment-method-btn active" data-method="bank_transfer">
+            <div style="font-size: 24px; margin-bottom: 8px;">🏦</div>
+            <div style="font-weight: 600; font-size: 14px;">Bank Transfer</div>
+            <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">1-3 days</div>
+          </div>
+          <div class="payment-method-btn" data-method="credit_card">
+            <div style="font-size: 24px; margin-bottom: 8px;">💳</div>
+            <div style="font-weight: 600; font-size: 14px;">Credit Card</div>
+            <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">Instant</div>
+          </div>
+          <div class="payment-method-btn" data-method="crypto">
+            <div style="font-size: 24px; margin-bottom: 8px;">₿</div>
+            <div style="font-weight: 600; font-size: 14px;">Cryptocurrency</div>
+            <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">5-15 min</div>
+          </div>
+          <div class="payment-method-btn" data-method="paypal">
+            <div style="font-size: 24px; margin-bottom: 8px;">📱</div>
+            <div style="font-weight: 600; font-size: 14px;">PayPal</div>
+            <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">Instant</div>
+          </div>
+        </div>
+
+        <!-- Deposit Form -->
+        <form id="depositForm" style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+          <div>
+            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-secondary);">Deposit Amount (USD)</label>
+            <div style="position: relative;">
+              <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 18px; font-weight: 600; color: var(--text-secondary);">$</span>
+              <input type="number" id="depositAmount" placeholder="0.00" min="10" step="0.01" required style="padding: 12px 12px 12px 32px; width: 100%; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary); font-size: 16px;">
+            </div>
+            <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 6px;">Minimum deposit: $10</div>
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-secondary);">Selected Method</label>
+            <div id="selectedMethod" style="padding: 12px; background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-md); color: var(--text-primary); font-weight: 600;">🏦 Bank Transfer</div>
+          </div>
+
+          <!-- Method-specific fields -->
+          <div id="bankFields" class="method-fields">
+            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-secondary);">Bank Account Type</label>
+            <select id="bankType" style="padding: 10px; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary); width: 100%; margin-bottom: var(--spacing-md);">
+              <option value="checking">Checking Account</option>
+              <option value="savings">Savings Account</option>
+            </select>
+          </div>
+
+          <div id="creditCardFields" class="method-fields" style="display: none;">
+            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-secondary);">Card Type</label>
+            <select id="cardType" style="padding: 10px; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary); width: 100%; margin-bottom: var(--spacing-md);">
+              <option value="visa">Visa</option>
+              <option value="mastercard">Mastercard</option>
+              <option value="amex">American Express</option>
+            </select>
+          </div>
+
+          <div id="cryptoFields" class="method-fields" style="display: none;">
+            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-secondary);">Select Cryptocurrency</label>
+            <select id="cryptoType" style="padding: 10px; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary); width: 100%; margin-bottom: var(--spacing-md);">
+              <option value="bitcoin">Bitcoin (BTC)</option>
+              <option value="ethereum">Ethereum (ETH)</option>
+              <option value="usdc">USD Coin (USDC)</option>
+              <option value="usdt">Tether (USDT)</option>
+            </select>
+          </div>
+
+          <div id="paypalFields" class="method-fields" style="display: none;">
+            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-secondary);">PayPal will open in a new window</label>
+            <div style="padding: 12px; background: var(--bg-tertiary); border-left: 3px solid var(--primary); border-radius: var(--radius-md); color: var(--text-secondary); font-size: 13px;">
+              You'll be redirected to PayPal to complete the payment securely.
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; font-weight: 600; font-size: 16px; margin-top: var(--spacing-md);">
+            🔒 Proceed to Deposit
+          </button>
+        </form>
+
+        <!-- Fee Info -->
+        <div style="padding: var(--spacing-md); background: var(--bg-tertiary); border-radius: var(--radius-md); margin-top: var(--spacing-lg);">
+          <div style="font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">💡 Deposit Information</div>
+          <ul style="margin: 0; padding-left: 20px; color: var(--text-secondary); font-size: 13px;">
+            <li>Fees vary by payment method (0-3%)</li>
+            <li>Minimum deposit: $10</li>
+            <li>Maximum deposit: $100,000</li>
+            <li>Processing time: 1 minute to 3 days</li>
+            <li>All deposits are instantly credited</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Recent Deposits & Info -->
+      <section class="content-card">
+        <h3>📊 Recent Deposits</h3>
+        <div id="recentDeposits" style="max-height: 600px; overflow-y: auto;">
+          <div style="text-align: center; color: var(--text-tertiary); padding: var(--spacing-lg);">No deposits yet</div>
+        </div>
+
+        <!-- Benefits -->
+        <div style="padding: var(--spacing-md); background: linear-gradient(135deg, #0055ff22, #00d4ff22); border-radius: var(--radius-md); margin-top: var(--spacing-lg);">
+          <div style="font-weight: 600; margin-bottom: 8px; color: var(--primary);">✨ Platform Benefits</div>
+          <ul style="margin: 0; padding-left: 20px; color: var(--text-secondary); font-size: 13px;">
+            <li>Secure & encrypted transactions</li>
+            <li>24/7 customer support</li>
+            <li>Fast processing times</li>
+            <li>Competitive exchange rates</li>
+            <li>No hidden fees</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Styles for payment method buttons -->
+  <style>
+    .payment-method-btn {
+      padding: var(--spacing-md);
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--bg-secondary);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+
+    .payment-method-btn:hover {
+      border-color: var(--primary);
+      background: var(--bg-tertiary);
+      transform: translateY(-2px);
+    }
+
+    .payment-method-btn.active {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+    }
+
+    .payment-method-btn.active div {
+      color: white;
+    }
+
+    .method-fields {
+      padding: var(--spacing-md);
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-md);
+    }
+  </style>
+
+  <!-- Scripts -->
+  <script src="storage.js"></script>
+  <script src="pages.js"></script>
+  <script src="payhero-integration.js"></script>
+  <script src="deposit-app.js"></script>
+</body>
+</html>

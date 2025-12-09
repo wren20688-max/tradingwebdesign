@@ -4,7 +4,7 @@ $API_URL = "http://localhost:3000"
 $TEST_EMAIL = "e2etest_$(Get-Random)@test.local"
 $TEST_PASSWORD = "TestPass123!"
 
-Write-Host "========== PreoTrade FX Backend E2E Test ==========" -ForegroundColor Cyan
+Write-Host "========== PreoCrypto Backend E2E Test ==========" -ForegroundColor Cyan
 
 # Step 1: Signup
 Write-Host "`n[STEP 1] Creating test account..." -ForegroundColor Yellow

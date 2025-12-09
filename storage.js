@@ -61,7 +61,8 @@ const storage = {
   // Balance management
   getBalance: function(account = 'demo') {
     const key = `balance_${account}`;
-    return parseFloat(localStorage.getItem(key) || '10000');
+    const defaultBalance = account === 'real' ? '0' : '10000';
+    return parseFloat(localStorage.getItem(key) || defaultBalance);
   },
 
   setBalance: function(amount, account = 'demo') {

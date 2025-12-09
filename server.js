@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname)));
 
 const DB_PATH = path.join(__dirname, 'db.json');
-const JWT_SECRET = process.env.JWT_SECRET || 'preotraderfx-secret-key-2024';
+const JWT_SECRET = process.env.JWT_SECRET || 'preocrypto-secret-key-2024';
 
 // ============================================================================
 // DEMO USERS FOR TESTING
@@ -732,7 +732,7 @@ app.post('/api/admin/self-test', (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 PreoTrade FX API Server running on http://localhost:${PORT}`);
+  console.log(`🚀 PreoCrypto API Server running on http://localhost:${PORT}`);
   console.log(`📊 Demo Users: trader1@demo.local (pass123), admin@demo.local (admin123)`);
   console.log(`📁 Database: ${DB_PATH}`);
 });

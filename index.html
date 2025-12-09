@@ -1,540 +1,1168 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login — PreoTrade FX | Professional Trading Platform</title>
+  <title>PreoCrypto - Professional Forex & Crypto Trading Platform</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    .login-page {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
-    }
-
-    .login-left {
-      background: linear-gradient(135deg, #0055ff 0%, #00d4ff 100%);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 40px;
-      color: white;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .login-left::before {
-      content: '';
-      position: absolute;
-      width: 400px;
-      height: 400px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      top: -100px;
-      right: -100px;
-    }
-
-    .login-left::after {
-      content: '';
-      position: absolute;
-      width: 300px;
-      height: 300px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 50%;
-      bottom: -50px;
-      left: -50px;
-    }
-
-    .login-content-left {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-    }
-
-    .login-logo {
-      font-size: 60px;
-      margin-bottom: 20px;
-    }
-
-    .login-content-left h1 {
-      font-size: 40px;
-      margin-bottom: 15px;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    .login-content-left p {
-      font-size: 16px;
-      opacity: 0.9;
-      margin-bottom: 30px;
-      line-height: 1.8;
-    }
-
-    .features-list {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      text-align: left;
-      margin-top: 30px;
-    }
-
-    .feature-item {
-      display: flex;
-      gap: 15px;
-      align-items: flex-start;
-    }
-
-    .feature-icon {
-      font-size: 24px;
-      flex-shrink: 0;
-    }
-
-    .feature-text h3 {
-      margin: 0 0 5px 0;
-      font-size: 16px;
-    }
-
-    .feature-text p {
+    * {
       margin: 0;
-      font-size: 13px;
-      opacity: 0.85;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    .login-right {
-      background: #0f1419;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px;
-    }
-
-    .login-form-container {
-      width: 100%;
-      max-width: 450px;
-    }
-
-    .login-form-header h2 {
-      font-size: 32px;
-      margin-bottom: 8px;
-      color: #00d4ff;
-    }
-
-    .login-form-header p {
-      color: #a0a0a0;
-      margin-bottom: 30px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-group label {
-      display: block;
-      color: #c0c0c0;
-      font-size: 14px;
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 12px 16px;
-      background: #1a1f2e;
-      border: 1px solid rgba(0, 212, 255, 0.2);
-      border-radius: 8px;
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #0a0e27;
       color: #e0e0e0;
-      font-size: 14px;
-      transition: all 0.3s;
+      line-height: 1.6;
     }
 
-    .form-group input:focus {
-      outline: none;
-      border-color: #00d4ff;
-      background: rgba(0, 212, 255, 0.05);
+    /* HEADER & NAVIGATION */
+    .header {
+      background: rgba(10, 14, 39, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 20px 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+      will-change: transform;
     }
 
-    .checkbox-group {
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 25px;
-      font-size: 14px;
+      padding: 0 30px;
+      gap: 20px;
     }
 
-    .checkbox-group label {
+    .logo {
       display: flex;
       align-items: center;
       gap: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #00d4ff;
+      white-space: nowrap;
+      min-width: auto;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
       color: #a0a0a0;
-      cursor: pointer;
-    }
-
-    .checkbox-group input[type="checkbox"] {
-      width: auto;
-      cursor: pointer;
-    }
-
-    .forgot-password {
-      color: #0055ff;
       text-decoration: none;
-      transition: color 0.3s;
+      transition: color 0.15s ease-out;
+      font-size: 14px;
     }
 
-    .forgot-password:hover {
+    .nav-links a:hover {
       color: #00d4ff;
     }
 
-    .login-btn {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, #0055ff, #00d4ff);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.3s;
-      margin-bottom: 15px;
+    .nav-buttons {
+      display: flex;
+      gap: 15px;
     }
 
-    .login-btn:hover {
+    .nav-buttons .btn-login {
+      padding: 10px 24px;
+      background: transparent;
+      border: 1px solid #0055ff;
+      color: #0055ff;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease-out;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .nav-buttons .btn-login:hover {
+      background: #0055ff;
+      color: white;
+    }
+
+    .nav-buttons .btn-signup {
+      padding: 10px 24px;
+      background: linear-gradient(135deg, #0055ff, #00d4ff);
+      border: none;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .nav-buttons .btn-signup:hover {
       transform: translateY(-2px);
       box-shadow: 0 10px 30px rgba(0, 85, 255, 0.3);
     }
 
-    .form-divider {
-      display: flex;
-      align-items: center;
-      margin: 20px 0;
-      color: #606060;
-      font-size: 13px;
+    /* HERO SECTION */
+    .hero {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 100px 30px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
     }
 
-    .form-divider::before,
-    .form-divider::after {
+    .hero::before {
       content: '';
-      flex: 1;
-      height: 1px;
-      background: rgba(0, 212, 255, 0.1);
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(0, 85, 255, 0.08) 0%, transparent 70%);
+      top: -100px;
+      left: -100px;
+      border-radius: 50%;
+      pointer-events: none;
+      will-change: auto;
     }
 
-    .form-divider span {
-      padding: 0 10px;
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(0, 212, 255, 0.08) 0%, transparent 70%);
+      bottom: -100px;
+      right: -100px;
+      border-radius: 50%;
+      pointer-events: none;
     }
 
-    .demo-btn {
-      width: 100%;
-      padding: 14px;
-      background: transparent;
-      border: 2px solid #0055ff;
-      color: #0055ff;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.3s;
+    .hero-content {
+      position: relative;
+      z-index: 1;
     }
 
-    .demo-btn:hover {
-      background: rgba(0, 85, 255, 0.1);
-      transform: translateY(-2px);
+    .hero h1 {
+      font-size: 56px;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #00d4ff 0%, #0055ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 800;
     }
 
-    .demo-section {
-      background: rgba(0, 212, 255, 0.05);
-      border: 1px solid rgba(0, 212, 255, 0.2);
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 15px;
-    }
-
-    .demo-section h3 {
-      margin: 0 0 12px 0;
-      font-size: 13px;
-      color: #00d4ff;
-    }
-
-    .demo-accounts {
-      display: grid;
-      gap: 8px;
-      font-size: 12px;
-    }
-
-    .demo-account-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px;
-      background: rgba(0, 85, 255, 0.1);
-      border-radius: 6px;
-      border-left: 2px solid #00d4ff;
-    }
-
-    .demo-account-label {
+    .hero-subtitle {
+      font-size: 20px;
       color: #a0a0a0;
+      margin-bottom: 30px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    .demo-account-value {
-      color: #00d4ff;
-      font-family: monospace;
-      font-weight: 600;
-    }
-
-    .trust-badges {
+    .cta-buttons {
       display: flex;
-      gap: 10px;
+      gap: 20px;
       justify-content: center;
-      margin: 20px 0;
+      margin-bottom: 60px;
       flex-wrap: wrap;
     }
 
-    .trust-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      padding: 8px 12px;
-      background: rgba(0, 212, 255, 0.1);
-      border: 1px solid rgba(0, 212, 255, 0.2);
-      border-radius: 6px;
-      color: #00d4ff;
-    }
-
-    .signup-link {
-      text-align: center;
-      font-size: 14px;
-      color: #a0a0a0;
-      margin-top: 20px;
-    }
-
-    .signup-link a {
-      color: #00d4ff;
-      font-weight: 600;
-      text-decoration: none;
-    }
-
-    .error-message {
-      display: none;
-      background: rgba(255, 71, 87, 0.1);
-      border: 1px solid rgba(255, 71, 87, 0.3);
+    .btn-primary {
+      padding: 16px 40px;
+      background: linear-gradient(135deg, #0055ff, #00d4ff);
+      border: none;
+      color: white;
       border-radius: 8px;
-      padding: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 85, 255, 0.3);
+    }
+
+    .btn-secondary {
+      padding: 16px 40px;
+      background: transparent;
+      border: 2px solid #00d4ff;
+      color: #00d4ff;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease-out, transform 0.15s ease-out;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(0, 212, 255, 0.1);
+      transform: translateY(-4px);
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+      margin-top: 80px;
+      padding-top: 60px;
+      border-top: 1px solid rgba(0, 212, 255, 0.1);
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 36px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #00d4ff, #0055ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label {
+      color: #a0a0a0;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    /* FEATURES SECTION */
+    .features-section {
+      max-width: 1400px;
+      margin: 100px auto;
+      padding: 0 30px;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 42px;
+      margin-bottom: 50px;
+      font-weight: 700;
+    }
+
+    .section-title span {
+      background: linear-gradient(135deg, #00d4ff, #0055ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-bottom: 80px;
+    }
+
+    .feature-card {
+      background: rgba(0, 212, 255, 0.05);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 12px;
+      padding: 40px;
+      transition: all 0.15s ease-out;
+      cursor: pointer;
+      will-change: transform, box-shadow;
+      contain: layout style;
+    }
+
+    .feature-card:hover {
+      background: rgba(0, 212, 255, 0.1);
+      border-color: rgba(0, 212, 255, 0.4);
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 85, 255, 0.2);
+    }
+
+    .feature-icon {
+      font-size: 48px;
       margin-bottom: 20px;
-      color: #ff6b87;
+    }
+
+    .feature-card h3 {
+      font-size: 22px;
+      margin-bottom: 15px;
+      color: #00d4ff;
+    }
+
+    .feature-card p {
+      color: #a0a0a0;
+      line-height: 1.8;
+    }
+
+    /* TRADING INSTRUMENTS */
+    .instruments-section {
+      max-width: 1400px;
+      margin: 100px auto;
+      padding: 0 30px;
+    }
+
+    .instruments-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .instrument-card {
+      background: linear-gradient(135deg, rgba(0, 85, 255, 0.1), rgba(0, 212, 255, 0.05));
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 8px;
+      padding: 30px 20px;
+      text-align: center;
+      transition: all 0.15s ease-out;
+      will-change: transform, border-color;
+      contain: content;
+    }
+
+    .instrument-card:hover {
+      background: linear-gradient(135deg, rgba(0, 85, 255, 0.2), rgba(0, 212, 255, 0.15));
+      border-color: #00d4ff;
+      transform: translateY(-4px);
+    }
+
+    .instrument-icon {
+      font-size: 36px;
+      margin-bottom: 15px;
+    }
+
+    .instrument-card h4 {
+      color: #00d4ff;
+      margin-bottom: 8px;
+      font-size: 16px;
+    }
+
+    .instrument-card p {
+      color: #a0a0a0;
       font-size: 13px;
     }
 
-    .error-message.show {
-      display: block;
+    /* HOW IT WORKS */
+    .how-it-works {
+      max-width: 1400px;
+      margin: 100px auto;
+      padding: 0 30px;
     }
 
-    @media (max-width: 1024px) {
-      .login-page {
+    .steps-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-top: 50px;
+    }
+
+    .step {
+      text-align: center;
+      position: relative;
+    }
+
+    .step-number {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #0055ff, #00d4ff);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: 700;
+      color: white;
+      margin: 0 auto 20px;
+      will-change: auto;
+      contain: layout style paint;
+    }
+
+    .step h4 {
+      font-size: 18px;
+      margin-bottom: 12px;
+      color: #00d4ff;
+    }
+
+    .step p {
+      color: #a0a0a0;
+      line-height: 1.8;
+    }
+
+    /* TESTIMONIALS */
+    .testimonials-section {
+      max-width: 1400px;
+      margin: 100px auto;
+      padding: 0 30px;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-top: 50px;
+    }
+
+    .testimonial-card {
+      background: rgba(0, 212, 255, 0.05);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 12px;
+      padding: 30px;
+      contain: content;
+    }
+
+    .rating {
+      color: #ffd700;
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    .testimonial-text {
+      color: #c0c0c0;
+      margin-bottom: 20px;
+      font-style: italic;
+      line-height: 1.8;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .author-avatar {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #0055ff, #00d4ff);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .author-info h5 {
+      color: #00d4ff;
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .author-info p {
+      color: #a0a0a0;
+      margin: 0;
+      font-size: 12px;
+    }
+
+    /* SECURITY & TRUST */
+    .security-section {
+      max-width: 1400px;
+      margin: 100px auto;
+      padding: 60px 30px;
+      background: rgba(0, 212, 255, 0.05);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 16px;
+    }
+
+    .security-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .security-text h3 {
+      font-size: 32px;
+      margin-bottom: 20px;
+      color: #00d4ff;
+    }
+
+    .security-text p {
+      color: #a0a0a0;
+      margin-bottom: 20px;
+      line-height: 1.8;
+    }
+
+    .security-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .security-features li {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      color: #c0c0c0;
+    }
+
+    .security-features li::before {
+      content: '✓';
+      color: #00d4ff;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .security-badges {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .badge {
+      text-align: center;
+      padding: 20px;
+      background: rgba(0, 85, 255, 0.1);
+      border-radius: 8px;
+      border: 1px solid rgba(0, 212, 255, 0.2);
+    }
+
+    .badge-icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .badge-label {
+      color: #00d4ff;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* PRICING */
+    .pricing-section {
+      max-width: 1400px;
+      margin: 100px auto;
+      padding: 0 30px;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-top: 50px;
+    }
+
+    .pricing-card {
+      background: rgba(0, 212, 255, 0.05);
+      border: 2px solid rgba(0, 212, 255, 0.2);
+      border-radius: 12px;
+      padding: 40px;
+      text-align: center;
+      transition: all 0.15s ease-out;
+      position: relative;
+      will-change: transform, border-color;
+      contain: layout style;
+    }
+
+    .pricing-card.featured {
+      border-color: #0055ff;
+      background: rgba(0, 85, 255, 0.1);
+      transform: scale(1.05);
+    }
+
+    .pricing-card:hover {
+      border-color: #00d4ff;
+      transform: translateY(-8px);
+    }
+
+    .pricing-card.featured::before {
+      content: 'POPULAR';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #0055ff, #00d4ff);
+      color: white;
+      padding: 6px 20px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .pricing-title {
+      font-size: 22px;
+      color: #00d4ff;
+      margin-bottom: 10px;
+    }
+
+    .pricing-desc {
+      color: #a0a0a0;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .pricing-amount {
+      font-size: 42px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #00d4ff, #0055ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .pricing-period {
+      color: #a0a0a0;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .pricing-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 30px;
+      text-align: left;
+    }
+
+    .pricing-features li {
+      color: #c0c0c0;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pricing-features li::before {
+      content: '✓';
+      color: #00d4ff;
+      font-weight: 700;
+    }
+
+    /* FOOTER */
+    .footer {
+      background: rgba(10, 14, 39, 0.95);
+      border-top: 1px solid rgba(0, 212, 255, 0.1);
+      padding: 60px 30px 30px;
+      margin-top: 100px;
+    }
+
+    .footer-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-section h4 {
+      color: #00d4ff;
+      margin-bottom: 20px;
+    }
+
+    .footer-section ul {
+      list-style: none;
+    }
+
+    .footer-section ul li {
+      margin-bottom: 10px;
+    }
+
+    .footer-section ul li a {
+      color: #a0a0a0;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-section ul li a:hover {
+      color: #00d4ff;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(0, 212, 255, 0.1);
+      padding-top: 20px;
+      text-align: center;
+      color: #606060;
+      font-size: 14px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 36px;
+      }
+
+      .hero-subtitle {
+        font-size: 16px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .section-title {
+        font-size: 28px;
+      }
+
+      .security-content {
         grid-template-columns: 1fr;
+        gap: 30px;
       }
 
-      .login-left {
-        padding: 40px 20px;
-        min-height: 300px;
+      .pricing-card.featured {
+        transform: scale(1);
       }
 
-      .login-right {
-        padding: 30px 20px;
+      .cta-buttons {
+        flex-direction: column;
+      }
+
+      .btn-primary, .btn-secondary {
+        width: 100%;
+      }
+    }
+
+    /* VIDEO MODAL */
+    .video-modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      align-items: center;
+      justify-content: center;
+      will-change: auto;
+    }
+
+    .video-modal-content {
+      position: relative;
+      background-color: #0f1419;
+      padding: 30px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border: 1px solid rgba(0, 212, 255, 0.3);
+    }
+
+    .video-modal-close {
+      position: absolute;
+      right: 20px;
+      top: 10px;
+      color: #00d4ff;
+      font-size: 32px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.15s ease-out;
+    }
+
+    .video-modal-close:hover {
+      color: #0055ff;
+    }
+
+    @media (max-width: 768px) {
+      .video-modal-content {
+        width: 95%;
+        padding: 20px;
+      }
+
+      .video-modal-close {
+        font-size: 24px;
+        right: 10px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="login-page">
-    <!-- Left Side: Features -->
-    <div class="login-left">
-      <div class="login-content-left">
-        <div class="login-logo">📈</div>
-        <h1>PreoTrade FX</h1>
-        <p>Professional Trading Platform<br>for Global Markets</p>
-
-        <div class="features-list">
-          <div class="feature-item">
-            <div class="feature-icon">⚡</div>
-            <div class="feature-text">
-              <h3>Ultra-Fast Execution</h3>
-              <p>1ms latency order execution</p>
-            </div>
-          </div>
-
-          <div class="feature-item">
-            <div class="feature-icon">📊</div>
-            <div class="feature-text">
-              <h3>Advanced Charts</h3>
-              <p>10+ indicators, 7 drawing tools</p>
-            </div>
-          </div>
-
-          <div class="feature-item">
-            <div class="feature-icon">🤖</div>
-            <div class="feature-text">
-              <h3>Automated Bots</h3>
-              <p>24/7 trading strategies</p>
-            </div>
-          </div>
-
-          <div class="feature-item">
-            <div class="feature-icon">🔒</div>
-            <div class="feature-text">
-              <h3>Bank-Level Security</h3>
-              <p>256-bit SSL encryption</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Right Side: Login Form -->
-    <div class="login-right">
-      <div class="login-form-container">
-        <div class="login-form-header">
-          <h2>Welcome Back</h2>
-          <p>Sign in to your trading account</p>
-        </div>
-
-        <div id="errorMessage" class="error-message"></div>
-
-        <form id="loginForm">
-          <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" placeholder="your@email.com" required>
-          </div>
-
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" placeholder="Enter your password" required>
-          </div>
-
-          <div class="checkbox-group">
-            <label>
-              <input type="checkbox" id="rememberMe">
-              Remember me for 30 days
-            </label>
-            <a href="#" class="forgot-password">Forgot password?</a>
-          </div>
-
-          <button type="submit" class="login-btn">Sign In</button>
-        </form>
-
-        <div class="form-divider">
-          <span>or try demo</span>
-        </div>
-
-        <button type="button" class="demo-btn" onclick="loginAsDemo()">Quick Demo Login</button>
-
-        <!-- Trust & Security -->
-        <div class="trust-badges">
-          <div class="trust-badge">✓ Licensed</div>
-          <div class="trust-badge">🔒 SSL Secure</div>
-          <div class="trust-badge">✓ Regulated</div>
-        </div>
-
-        <!-- Demo Accounts Info -->
-        <div class="demo-section">
-          <h3>📚 Demo Credentials (for testing)</h3>
-          <div class="demo-accounts">
-            <div class="demo-account-item">
-              <span class="demo-account-label">Trader:</span>
-              <span class="demo-account-value">trader1@demo.local / pass123</span>
-            </div>
-            <div class="demo-account-item">
-              <span class="demo-account-label">Admin:</span>
-              <span class="demo-account-value">admin@demo.local / admin123</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="signup-link">
-          Don't have an account? <a href="signup.html">Create one now</a> — It takes less than 2 minutes
-          <br><br>
-          <a href="landing.html" style="color: #0055ff; font-size: 12px;">← Back to Home</a>
-        </div>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="nav-container">
+      <div class="logo">PreoCrypto</div>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#instruments">Markets</a></li>
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#testimonials">Reviews</a></li>
+      </ul>
+      <div class="nav-buttons">
+        <a href="login.html" class="btn-login">Login</a>
+        <a href="signup.html" class="btn-signup">Open Account</a>
       </div>
     </div>
   </div>
 
-  <script src="storage.js"></script>
-  <script>
-    const loginForm = document.getElementById('loginForm');
-    const errorMessage = document.getElementById('errorMessage');
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Trade Global Markets with Confidence</h1>
+      <p class="hero-subtitle">Professional Forex, Crypto, and Stock trading platform with advanced charts, automated strategies, and 24/7 support. Join 150K+ successful traders.</p>
+      <div class="cta-buttons">
+        <a href="signup.html" class="btn-primary">Start Trading Free Demo →</a>
+        <button onclick="openVideoModal()" class="btn-secondary">Watch Demo Video</button>
+      </div>
 
-    const demoUsers = {
-      'trader1@demo.local': { password: 'pass123', username: 'trader1', role: 'trader' },
-      'admin@demo.local': { password: 'admin123', username: 'admin', role: 'admin' }
-    };
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-number">2.5B+</div>
+          <div class="stat-label">Trading Volume Monthly</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">150K+</div>
+          <div class="stat-label">Active Traders</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">24/7</div>
+          <div class="stat-label">Live Market Support</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">Grade A</div>
+          <div class="stat-label">Security Certified</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    // Auto-fill from storage if available
-    window.addEventListener('load', () => {
-      const user = storage.getUser();
-      if (user) {
-        window.location.href = 'dashboard.html';
-      }
+  <!-- FEATURES -->
+  <section class="features-section" id="features">
+    <h2 class="section-title">Why Choose <span>PreoCrypto?</span></h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Ultra-Fast Execution</h3>
+        <p>Experience lightning-fast order execution with latency as low as 1ms. Our advanced infrastructure ensures your trades are executed at the best possible prices, instantly.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Professional Trading Tools</h3>
+        <p>Access advanced charting with 10+ technical indicators, 7 drawing tools, multiple chart types (Candlestick, Line, Area, Bar) and real-time market data analysis.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <h3>Automated Trading Bots</h3>
+        <p>Set it and forget it! Deploy automated trading strategies with our AI-powered bots. Backtest strategies, optimize parameters, and let the system trade 24/7.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Bank-Level Security</h3>
+        <p>Your funds are protected with military-grade encryption, multi-factor authentication, and segregated accounts. We're fully regulated and comply with international standards.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <h3>Trade Anywhere</h3>
+        <p>Fully responsive platform works seamlessly on desktop, tablet, and mobile. Never miss a trading opportunity - manage your positions from anywhere, anytime.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💡</div>
+        <h3>Smart Risk Management</h3>
+        <p>Built-in risk management tools including stop-loss, take-profit, trailing stops, and position sizing calculators. Protect your capital with intelligent automation.</p>
+      </div>
+    </div>
+  </section>
 
-      if (localStorage.getItem('preo_saved_email')) {
-        document.getElementById('email').value = localStorage.getItem('preo_saved_email');
-        if (localStorage.getItem('preo_saved_password')) {
-          document.getElementById('password').value = localStorage.getItem('preo_saved_password');
-          document.getElementById('rememberMe').checked = true;
-        }
-      }
-    });
+  <!-- TRADING INSTRUMENTS -->
+  <section class="instruments-section" id="instruments">
+    <h2 class="section-title">Trade <span>33+ Markets</span></h2>
+    <p style="text-align: center; color: #a0a0a0; margin-bottom: 50px;">Choose from Forex, Cryptocurrencies, and Stocks</p>
+    <div class="instruments-grid">
+      <div class="instrument-card">
+        <div class="instrument-icon">💱</div>
+        <h4>Forex Pairs</h4>
+        <p>12 major and minor currency pairs with tight spreads</p>
+      </div>
+      <div class="instrument-card">
+        <div class="instrument-icon">₿</div>
+        <h4>Cryptocurrencies</h4>
+        <p>Bitcoin, Ethereum, XRP, Litecoin, and more</p>
+      </div>
+      <div class="instrument-card">
+        <div class="instrument-icon">📈</div>
+        <h4>US Stocks</h4>
+        <p>15 major stocks including Apple, Microsoft, Tesla</p>
+      </div>
+      <div class="instrument-card">
+        <div class="instrument-icon">⏰</div>
+        <h4>6 Timeframes</h4>
+        <p>From 1-second to 4-hour charts for precise timing</p>
+      </div>
+      <div class="instrument-card">
+        <div class="instrument-icon">📊</div>
+        <h4>Advanced Charts</h4>
+        <p>4 chart types with 10+ technical indicators</p>
+      </div>
+      <div class="instrument-card">
+        <div class="instrument-icon">🎨</div>
+        <h4>Drawing Tools</h4>
+        <p>7 drawing tools for technical analysis</p>
+      </div>
+    </div>
+  </section>
 
-    loginForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      errorMessage.classList.remove('show');
+  <!-- HOW IT WORKS -->
+  <section class="how-it-works" id="how">
+    <h2 class="section-title">Getting Started in <span>4 Easy Steps</span></h2>
+    <div class="steps-container">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h4>Create Account</h4>
+        <p>Sign up in minutes. No credit card needed to start with our demo account. Verify your email and you're ready to trade.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h4>Fund Your Account</h4>
+        <p>Deposit via M-Pesa, Bank Transfer, or Crypto. Multiple payment methods for your convenience. Minimum deposit just $10.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h4>Learn & Practice</h4>
+        <p>Use our demo account with virtual funds to learn trading strategies risk-free. Access educational resources and live market data.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">4</div>
+        <h4>Start Trading</h4>
+        <p>Execute your first trade! Start small, use stop-losses, and follow risk management rules. Scale up as you gain experience.</p>
+      </div>
+    </div>
+  </section>
 
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
+  <!-- SECURITY & TRUST -->
+  <section class="security-section">
+    <div class="security-content">
+      <div class="security-text">
+        <h3>Your Safety is Our Priority</h3>
+        <p>PreoCrypto is committed to maintaining the highest security standards and regulatory compliance. Your funds and personal information are protected with military-grade encryption.</p>
+        <ul class="security-features">
+          <li>SSL/TLS 256-bit encryption on all transactions</li>
+          <li>Two-Factor Authentication (2FA) support</li>
+          <li>Segregated client accounts</li>
+          <li>Regular security audits and penetration testing</li>
+          <li>Compliance with international regulations</li>
+          <li>24/7 fraud monitoring and protection</li>
+        </ul>
+      </div>
+      <div class="security-badges">
+        <div class="badge">
+          <div class="badge-icon">🔒</div>
+          <div class="badge-label">SSL Secured</div>
+        </div>
+        <div class="badge">
+          <div class="badge-icon">✓</div>
+          <div class="badge-label">Regulated</div>
+        </div>
+        <div class="badge">
+          <div class="badge-icon">🛡️</div>
+          <div class="badge-label">Protected</div>
+        </div>
+        <div class="badge">
+          <div class="badge-icon">🎖️</div>
+          <div class="badge-label">Certified</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      if (!email || !password) {
-        showError('Please fill in all fields');
-        return;
-      }
+  <!-- TESTIMONIALS -->
+  <section class="testimonials-section" id="testimonials">
+    <h2 class="section-title">What Our <span>Traders Say</span></h2>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="rating">⭐⭐⭐⭐⭐</div>
+        <p class="testimonial-text">"PreoCrypto has completely transformed my trading journey. The advanced charts and automated bots have increased my profits by 150% in just 6 months!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">👨</div>
+          <div class="author-info">
+            <h5>James Mwangi</h5>
+            <p>Professional Trader</p>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="rating">⭐⭐⭐⭐⭐</div>
+        <p class="testimonial-text">"As a beginner, I was nervous about trading. PreoCrypto's demo account and educational resources helped me build confidence. Now I'm consistently profitable!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">👩</div>
+          <div class="author-info">
+            <h5>Sarah Kipchoge</h5>
+            <p>Emerging Trader</p>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="rating">⭐⭐⭐⭐⭐</div>
+        <p class="testimonial-text">"The customer support is incredible. They helped me set up my first automated bot, and it's been generating passive income while I focus on my business."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">💼</div>
+          <div class="author-info">
+            <h5>David Ochieng</h5>
+            <p>Entrepreneur & Trader</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      if (demoUsers[email] && demoUsers[email].password === password) {
-        const user = {
-          email,
-          username: demoUsers[email].username,
-          role: demoUsers[email].role,
-          loginTime: new Date().toISOString()
-        };
-        storage.setUser(user);
+  <!-- PRICING -->
+  <section class="pricing-section" id="pricing">
+    <h2 class="section-title">Simple, Transparent <span>Pricing</span></h2>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-title">Demo Account</div>
+        <div class="pricing-desc">Perfect for learning</div>
+        <div class="pricing-amount">Free</div>
+        <div class="pricing-period">Forever</div>
+        <ul class="pricing-features">
+          <li>$10,000 virtual balance</li>
+          <li>33+ trading pairs</li>
+          <li>All charting tools</li>
+          <li>Practice bots</li>
+          <li>Community access</li>
+        </ul>
+        <a href="signup.html" class="btn-secondary" style="width: 100%;">Get Started</a>
+      </div>
+      <div class="pricing-card featured">
+        <div class="pricing-title">Standard Account</div>
+        <div class="pricing-desc">For active traders</div>
+        <div class="pricing-amount">$0</div>
+        <div class="pricing-period">No Hidden Fees</div>
+        <ul class="pricing-features">
+          <li>Real money trading</li>
+          <li>Minimum deposit $10</li>
+          <li>Tight spreads</li>
+          <li>Live support</li>
+          <li>Advanced bots</li>
+          <li>Priority execution</li>
+        </ul>
+        <a href="signup.html" class="btn-primary" style="width: 100%;">Open Account</a>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-title">Professional</div>
+        <div class="pricing-desc">For serious traders</div>
+        <div class="pricing-amount">Custom</div>
+        <div class="pricing-period">Volume based</div>
+        <ul class="pricing-features">
+          <li>Ultra-low spreads</li>
+          <li>Dedicated manager</li>
+          <li>Custom strategies</li>
+          <li>VIP support 24/7</li>
+          <li>API access</li>
+          <li>Rebates available</li>
+        </ul>
+        <a href="#" class="btn-secondary" style="width: 100%;">Contact Us</a>
+      </div>
+    </div>
+  </section>
 
-        if (document.getElementById('rememberMe').checked) {
-          localStorage.setItem('preo_saved_email', email);
-          localStorage.setItem('preo_saved_password', password);
-        }
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>About PreoCrypto</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Company Blog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press Kit</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Trading</h4>
+        <ul>
+          <li><a href="#">Trading Platforms</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">Markets</a></li>
+          <li><a href="#">Education</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Live Chat</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Terms & Conditions</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Risk Disclosure</a></li>
+          <li><a href="#">Compliance</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 PreoCrypto. All rights reserved. Risk Warning: Trading involves risk. Please trade responsibly.</p>
+    </div>
+  </footer>
 
-        window.location.href = 'dashboard.html';
-      } else {
-        showError('Invalid credentials. Use demo accounts above or create a new one.');
-      }
-    });
+  <!-- VIDEO MODAL -->
+  <div id="videoModal" class="video-modal" style="display: none;">
+    <div class="video-modal-content">
+      <span class="video-modal-close" onclick="closeVideoModal()">&times;</span>
+      <video width="100%" height="auto" controls style="border-radius: 12px;">
+        <source src="demo-video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <div style="margin-top: 20px; text-align: center; color: #a0a0a0;">
+        <p>Demo video showing deposits, withdrawals, and trading interface</p>
+      </div>
+    </div>
+  </div>
 
-    function loginAsDemo() {
-      const email = 'trader1@demo.local';
-      const user = {
-        email,
-        username: demoUsers[email].username,
-        role: demoUsers[email].role,
-        loginTime: new Date().toISOString()
-      };
-      storage.setUser(user);
-      window.location.href = 'dashboard.html';
+  <script src="storage.js" defer></script>
+  <script defer>
+    // Video modal functions
+    function openVideoModal() {
+      const modal = document.getElementById('videoModal');
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      // Force GPU acceleration
+      modal.style.transform = 'translateZ(0)';
     }
 
-    function showError(message) {
-      errorMessage.textContent = message;
-      errorMessage.classList.add('show');
-      setTimeout(() => {
-        errorMessage.classList.remove('show');
-      }, 5000);
+    function closeVideoModal() {
+      document.getElementById('videoModal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+      const video = document.querySelector('#videoModal video');
+      video.pause();
+    }
+
+    // Close modal when clicking outside the content
+    document.getElementById('videoModal')?.addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeVideoModal();
+      }
+    });
+
+    // Smooth scrolling for anchor links - optimized
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Lazy load images and optimize rendering
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.backgroundImage = entry.target.dataset.bg;
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { rootMargin: '50px' });
+
+      document.querySelectorAll('[data-bg]').forEach(el => observer.observe(el));
     }
   </script>
 </body>

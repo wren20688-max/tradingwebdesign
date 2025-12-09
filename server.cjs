@@ -58,7 +58,7 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`✅ PreoTrade FX Server running at http://localhost:${PORT}`);
+  console.log(`✅ PreoCrypto Server running at http://localhost:${PORT}`);
   console.log(`📱 Share this link: http://192.168.67.160:${PORT}`);
   console.log(`Press Ctrl+C to stop`);
 });

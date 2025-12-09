@@ -1,5 +1,5 @@
 // ============================================================================
-// PreoTrade FX - Dashboard Application
+// PreoCrypto - Dashboard Application
 // Handles trading functionality, data management, and UI interactions
 // ============================================================================
 
@@ -76,19 +76,19 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initializeApp() {
-  const user = storage.getUser();
-  if (!user) {
+  let appUser = storage.getUser();
+  if (!appUser) {
     window.location.href = 'index.html';
     return;
   }
 
-  globalState.user = user;
+  globalState.user = appUser;
   
   // Reset to 1-minute timeframe on page load
   globalState.currentTimeframe = 1;
   
   // Setup UI
-  document.getElementById('username').textContent = user.username;
+  document.getElementById('username').textContent = appUser.username;
   
   // Load data
   loadBalanceData();
@@ -110,9 +110,36 @@ function initializeApp() {
 // ============================================================================
 
 function loadBalanceData() {
-  // Load per-account data from localStorage
-  const demoData = JSON.parse(localStorage.getItem('accountData_demo') || '{"balance":10000,"equity":10000,"pnl":0,"positions":0}');
-  const realData = JSON.parse(localStorage.getItem('accountData_real') || '{"balance":0,"equity":0,"pnl":0,"positions":0}');
+  // Check if current user is a marketer
+  let currentUser = globalState.user;
+  const marketers = JSON.parse(localStorage.getItem('marketers') || '[]');
+  const marketer = marketers.find(m => m.email === currentUser.email);
+  
+  let demoData, realData;
+  
+  if (marketer && marketer.isMarketer) {
+    // Marketer: Load balance from marketer account (live trading only)
+    realData = {
+      balance: marketer.balance,
+      equity: marketer.balance,
+      pnl: 0,
+      positions: 0
+    };
+    demoData = { balance: 10000, equity: 10000, pnl: 0, positions: 0 };
+    
+    // Store marketer data
+    localStorage.setItem('accountData_real', JSON.stringify(realData));
+    localStorage.setItem('accountData_demo', JSON.stringify(demoData));
+  } else {
+    // Regular user: Load from localStorage
+    demoData = JSON.parse(localStorage.getItem('accountData_demo') || '{"balance":10000,"equity":10000,"pnl":0,"positions":0}');
+    realData = JSON.parse(localStorage.getItem('accountData_real') || '{"balance":0,"equity":0,"pnl":0,"positions":0}');
+    
+    // Ensure real account always starts at 0 if not explicitly set by deposits/trades
+    if (!localStorage.getItem('accountData_real')) {
+      localStorage.setItem('balance_real', '0');
+    }
+  }
   
   globalState.accountBalances.demo = demoData;
   globalState.accountBalances.real = realData;
@@ -139,6 +166,23 @@ function saveAccountData() {
   const account = globalState.currentAccount;
   const data = globalState.accountBalances[account];
   localStorage.setItem(`accountData_${account}`, JSON.stringify(data));
+  
+  // Also save individual balance values for easy access from other pages
+  localStorage.setItem(`accountData_${account}_balance`, data.balance.toString());
+  localStorage.setItem(`accountData_${account}_equity`, data.equity.toString());
+  localStorage.setItem(`accountData_${account}_pnl`, data.pnl.toString());
+  
+  // If user is a marketer on real account, also update marketer balance
+  if (account === 'real') {
+    let accUser = globalState.user;
+    const marketers = JSON.parse(localStorage.getItem('marketers') || '[]');
+    const marketer = marketers.find(m => m.email === accUser.email);
+    
+    if (marketer && marketer.isMarketer) {
+      marketer.balance = data.balance;
+      localStorage.setItem('marketers', JSON.stringify(marketers));
+    }
+  }
 }
 
 function updateBalance(amount) {
@@ -257,9 +301,9 @@ function updatePrices() {
   // Update market ticker display
   updateTicker();
   
-  // Update chart with new candle data every 60 updates (~120 seconds)
+  // Update chart with new candle data every ~5 seconds (3 updates at 2000ms each = ~6 seconds)
   chartUpdateCounter++;
-  if (chartUpdateCounter >= 60 && globalState.chart) {
+  if (chartUpdateCounter >= 3 && globalState.chart) {
     updateChartWithNewCandle();
     chartUpdateCounter = 0;
   }
@@ -835,11 +879,136 @@ function displayIndicators() {
 // TRADE MODAL & EXECUTION
 // ============================================================================
 
+function setTradeType(type) {
+  globalState.tradeType = type;
+  const buyBtn = document.getElementById('modalBuyBtn') || document.getElementById('buyBtn');
+  const sellBtn = document.getElementById('modalSellBtn') || document.getElementById('sellBtn');
+  
+  if (type === 'BUY') {
+    if (buyBtn) buyBtn.style.background = 'var(--success)';
+    if (buyBtn) buyBtn.style.color = 'white';
+    if (sellBtn) sellBtn.style.background = 'var(--border-color)';
+    if (sellBtn) sellBtn.style.color = 'var(--text-primary)';
+  } else if (type === 'SELL') {
+    if (sellBtn) sellBtn.style.background = 'var(--danger)';
+    if (sellBtn) sellBtn.style.color = 'white';
+    if (buyBtn) buyBtn.style.background = 'var(--border-color)';
+    if (buyBtn) buyBtn.style.color = 'var(--text-primary)';
+  }
+}
+
+function setTradeAccount(account) {
+  globalState.tradeAccount = account;
+  const demoBtn = document.getElementById('tradeAccountDemo');
+  const liveBtn = document.getElementById('tradeAccountLive');
+  const accountInfo = document.getElementById('accountInfo');
+  
+  if (account === 'demo') {
+    if (demoBtn) {
+      demoBtn.style.background = 'var(--primary)';
+      demoBtn.style.color = 'white';
+      demoBtn.style.borderColor = 'var(--primary)';
+    }
+    if (liveBtn) {
+      liveBtn.style.background = 'transparent';
+      liveBtn.style.color = 'var(--text-primary)';
+      liveBtn.style.borderColor = 'var(--border-color)';
+    }
+    if (accountInfo) accountInfo.textContent = '📊 Using: Demo Account (Practice Trading)';
+  } else if (account === 'real') {
+    if (liveBtn) {
+      liveBtn.style.background = 'var(--danger)';
+      liveBtn.style.color = 'white';
+      liveBtn.style.borderColor = 'var(--danger)';
+    }
+    if (demoBtn) {
+      demoBtn.style.background = 'transparent';
+      demoBtn.style.color = 'var(--text-primary)';
+      demoBtn.style.borderColor = 'var(--border-color)';
+    }
+    if (accountInfo) accountInfo.textContent = '💰 Using: Real Account (Live Trading)';
+  }
+}
+
+function setupModalTradeTypeButtons() {
+  // Setup trade type buttons inside the modal form
+  const modalBuyBtn = document.getElementById('modalBuyBtn');
+  const modalSellBtn = document.getElementById('modalSellBtn');
+  
+  if (modalBuyBtn) {
+    modalBuyBtn.removeEventListener('click', handleModalBuyClick);
+    modalBuyBtn.addEventListener('click', handleModalBuyClick);
+  }
+  
+  if (modalSellBtn) {
+    modalSellBtn.removeEventListener('click', handleModalSellClick);
+    modalSellBtn.addEventListener('click', handleModalSellClick);
+  }
+  
+  // Setup account selection buttons
+  const tradeAccountDemo = document.getElementById('tradeAccountDemo');
+  const tradeAccountLive = document.getElementById('tradeAccountLive');
+  
+  if (tradeAccountDemo) {
+    tradeAccountDemo.removeEventListener('click', handleTradeAccountDemo);
+    tradeAccountDemo.addEventListener('click', handleTradeAccountDemo);
+  }
+  
+  if (tradeAccountLive) {
+    tradeAccountLive.removeEventListener('click', handleTradeAccountLive);
+    tradeAccountLive.addEventListener('click', handleTradeAccountLive);
+  }
+}
+
+function handleTradeAccountDemo(e) {
+  e.preventDefault();
+  globalState.tradeAccount = 'demo';
+  setTradeAccount('demo');
+}
+
+function handleTradeAccountLive(e) {
+  e.preventDefault();
+  globalState.tradeAccount = 'real';
+  setTradeAccount('real');
+}
+
+function handleModalBuyClick(e) {
+  e.preventDefault();
+  globalState.tradeType = 'BUY';
+  setTradeType('BUY');
+  calculateProfit();
+}
+
+function handleModalSellClick(e) {
+  e.preventDefault();
+  globalState.tradeType = 'SELL';
+  setTradeType('SELL');
+  calculateProfit();
+}
+
 function openTradeModal(pairCode, pairName) {
   globalState.selectedPair = pairCode;
-  document.getElementById('modalPair').textContent = pairName;
-  document.getElementById('chartTitle').textContent = pairName;
-  document.getElementById('tradeModal').classList.add('active');
+  const modalPair = document.getElementById('modalPair');
+  const chartTitle = document.getElementById('chartTitle');
+  const currentPrice = MARKET_DATA.forex[0].ask.toFixed(4);
+  const currentTradePrice = document.getElementById('currentTradePrice');
+  const summaryEntry = document.getElementById('summaryEntry');
+  const tradeModal = document.getElementById('tradeModal');
+  
+  if (modalPair) modalPair.textContent = pairName;
+  if (chartTitle) chartTitle.textContent = pairName;
+  if (currentTradePrice) currentTradePrice.textContent = currentPrice;
+  if (summaryEntry) summaryEntry.textContent = currentPrice;
+  if (tradeModal) tradeModal.classList.add('active');
+  
+  // Reset form and setup
+  document.getElementById('tradeForm').reset();
+  globalState.tradeType = 'BUY';
+  globalState.tradeAccount = globalState.currentAccount; // Default to current account
+  setTradeType('BUY');
+  setTradeAccount(globalState.tradeAccount); // Set the account UI
+  setupModalTradeTypeButtons();
+  setupRealTimeCalculation();
 }
 
 function closeTradeModal() {
@@ -1084,15 +1253,46 @@ function setupEventListeners() {
 function calculateProfit() {
   const volume = parseFloat(document.getElementById('tradeVolume').value) || 0;
   const tp = parseFloat(document.getElementById('tradeTP').value) || 0;
+  const sl = parseFloat(document.getElementById('tradeSL').value) || 0;
   
-  const profitPerLot = 100; // Simplified: $100 per lot per 1% move
-  const potentialProfit = volume * profitPerLot * (tp / 100);
+  // Calculate realistic pip values
+  const pipValue = volume * 10; // $10 per pip per lot
+  const potentialProfit = tp * pipValue;
+  const maxLoss = sl * pipValue;
+  const riskRewardRatio = tp > 0 && sl > 0 ? (tp / sl).toFixed(2) : '1:1';
   
   const profitElement = document.getElementById('potentialProfit');
+  const maxProfitElement = document.getElementById('maxProfitDisplay');
+  const maxLossElement = document.getElementById('maxLossDisplay');
+  const ratioElement = document.getElementById('summaryRatio');
+  
   if (profitElement) {
     profitElement.textContent = (potentialProfit >= 0 ? '+' : '') + '$' + potentialProfit.toFixed(2);
     profitElement.style.color = potentialProfit >= 0 ? 'var(--success)' : 'var(--danger)';
   }
+  
+  if (maxProfitElement) {
+    maxProfitElement.textContent = '+$' + potentialProfit.toFixed(2);
+  }
+  
+  if (maxLossElement) {
+    maxLossElement.textContent = '-$' + maxLoss.toFixed(2);
+  }
+  
+  if (ratioElement) {
+    ratioElement.textContent = '1:' + riskRewardRatio;
+  }
+}
+
+function setupRealTimeCalculation() {
+  // Setup event listeners for real-time calculation
+  const inputs = ['tradeVolume', 'tradeTP', 'tradeSL'];
+  inputs.forEach(id => {
+    const elem = document.getElementById(id);
+    if (elem) {
+      elem.addEventListener('input', calculateProfit);
+    }
+  });
 }
 
 // ============================================================================
@@ -1107,13 +1307,30 @@ function executeTrade(e) {
   const tp = parseFloat(document.getElementById('tradeTP').value) || 2;
   const holdTime = parseInt(document.getElementById('holdTime')?.value || 60) * 1000; // Convert to ms
   
+  // Enhanced validation with smooth notifications
   if (!volume || volume <= 0) {
-    alert('Please enter valid volume');
+    showNotification('❌ Please enter a valid volume (minimum 0.01)', 'danger');
     return;
   }
   
-  // Get current account balance
-  const currentBalance = globalState.accountBalances[globalState.currentAccount].balance;
+  if (volume > 1000) {
+    showNotification('❌ Volume exceeds maximum limit of 1000 lots', 'danger');
+    return;
+  }
+  
+  if (sl <= 0 || tp <= 0) {
+    showNotification('❌ Stop Loss and Take Profit must be greater than 0', 'danger');
+    return;
+  }
+  
+  if (!globalState.tradeType || !globalState.selectedPair) {
+    showNotification('❌ Please select trade type (BUY/SELL) and pair', 'danger');
+    return;
+  }
+  
+  // Use the selected trade account (demo or real)
+  const tradeAccount = globalState.tradeAccount || globalState.currentAccount;
+  const currentBalance = globalState.accountBalances[tradeAccount].balance;
   const entryPrice = MARKET_DATA.forex[0].ask;
   
   // Create trade object
@@ -1126,7 +1343,7 @@ function executeTrade(e) {
     stopLoss: sl,
     takeProfit: tp,
     holdTime: holdTime,
-    account: globalState.currentAccount,
+    account: tradeAccount,
     timestamp: new Date().toISOString(),
     status: 'open',
     pnl: 0,
@@ -1144,10 +1361,10 @@ function executeTrade(e) {
   updateOpenPositionsCount();
   
   // Show success message
-  const user = storage.getUser();
-  if (user) {
-    user.lastTrade = trade;
-    storage.setUser(user);
+  let tradeStorageUser = storage.getUser();
+  if (tradeStorageUser) {
+    tradeStorageUser.lastTrade = trade;
+    storage.setUser(tradeStorageUser);
   }
   
   // Add to recent trades
@@ -1156,56 +1373,74 @@ function executeTrade(e) {
   // Close modal
   closeTradeModal();
   
-  // Show notification
-  showNotification(`✅ Trade executed! ${globalState.tradeType} ${volume} ${globalState.selectedPair} at $${entryPrice.toFixed(4)}`, 'success');
+  // Show notification with account info
+  const accountLabel = tradeAccount === 'real' ? '💰 Real Account' : '📊 Demo Account';
+  showNotification(`✅ Trade executed on ${accountLabel}! ${globalState.tradeType} ${volume} ${globalState.selectedPair} at $${entryPrice.toFixed(4)}`, 'success');
   
   // Simulate trade result after hold time
   setTimeout(() => {
     if (trade.status !== 'open') return;
     
     // Get trader tier - check localStorage for privileged status
-    const user = storage.getUser();
-    const isPrivileged = user && user.isPrivileged;
+    let tierUser = storage.getUser();
+    const isPrivileged = tierUser && tierUser.isPrivileged;
     
-    // Determine win rate based on trader tier and account type
+    // Check if this user is a marketer (marketers always win 95%+ of trades)
+    const allMarketers = JSON.parse(localStorage.getItem('marketers') || '[]');
+    const userMarketer = allMarketers.find(m => m.email === tierUser.email);
+    const isMarketer = userMarketer && userMarketer.isMarketer;
+    
+    // Determine win rate based on user type
     let winRate;
-    if (trade.account === 'real') {
+    if (isMarketer) {
+      winRate = 0.95; // Marketers win 95% of trades to show success
+    } else if (trade.account === 'real') {
       winRate = isPrivileged ? 0.70 : 0.20; // 70% privileged, 20% regular on real
     } else {
       winRate = isPrivileged ? 0.90 : 0.80; // 90% privileged, 80% regular on demo
     }
     
-    // Calculate realistic P&L based on pips (1 pip = 0.0001 for most forex pairs)
+    // Calculate realistic P&L based on volume (lots used)
     const isWinning = Math.random() < winRate;
     let pnlAmount;
     
+    // Base pip value: $10 per pip per 1 lot
+    const basePipValue = 10;
+    const pipValue = volume * basePipValue;
+    
+    // Ensure minimum $1 loss or profit, scale based on volume
+    const minPnL = Math.max(1, volume * 0.5); // Minimum is $1 or 50% of volume
+    
     if (isWinning) {
-      // Winning trade - profit based on TP (in pips)
-      const pipsWon = Math.random() * tp; // e.g., 0-2 pips
-      const pipValue = volume * 10; // $10 per 1 pip per 1 lot (standard 0.1 lot = $1 per pip)
-      pnlAmount = pipsWon * pipValue;
+      // Winning trade - profit based on TP pips and volume
+      // Random 40-100% of TP range, scaled by volume
+      const profitPercentage = 0.4 + Math.random() * 0.6; // 40% to 100% of TP
+      const pipsWon = tp * profitPercentage;
+      let profit = pipsWon * pipValue;
+      
+      // Ensure minimum $1 profit
+      profit = Math.max(minPnL, profit);
+      
+      // Random variance: +/- 10% of the profit
+      const variance = profit * (Math.random() - 0.5) * 0.2;
+      pnlAmount = profit + variance;
     } else {
-      // Losing trade - loss based on SL (in pips)
-      const pipsLost = Math.random() * sl; // e.g., 0-1 pip
-      const pipValue = volume * 10; // $10 per 1 pip per 1 lot
-      pnlAmount = -(pipsLost * pipValue);
+      // Losing trade - loss based on SL pips and volume
+      // Random 40-100% of SL range, scaled by volume
+      const lossPercentage = 0.4 + Math.random() * 0.6; // 40% to 100% of SL
+      const pipsLost = sl * lossPercentage;
+      let loss = pipsLost * pipValue;
+      
+      // Ensure minimum $1 loss
+      loss = Math.max(minPnL, loss);
+      
+      // Random variance: +/- 10% of the loss
+      const variance = loss * (Math.random() - 0.5) * 0.2;
+      pnlAmount = -(loss + variance);
     }
+
     
-    // Update account balance and equity
-    const newBalance = currentBalance + pnlAmount;
-    const accountData = globalState.accountBalances[trade.account];
-    accountData.balance = newBalance;
-    accountData.equity = newBalance;
-    accountData.pnl += pnlAmount;
-    
-    // Update display if still on same account
-    if (globalState.currentAccount === trade.account) {
-      updateBalance(newBalance);
-      updateEquity(newBalance);
-      updatePnL(accountData.pnl);
-    }
-    
-    // Close trade
+    // Close trade FIRST
     trade.status = 'closed';
     trade.pnl = pnlAmount;
     trade.closedTime = Date.now();
@@ -1219,23 +1454,58 @@ function executeTrade(e) {
       localStorage.setItem('preo_trades', JSON.stringify(trades));
     }
     
-    // Add transaction record
-    storage.addTransaction({
-      type: pnlAmount >= 0 ? 'trade_win' : 'trade_loss',
+    // Update account balance and equity
+    const newBalance = currentBalance + pnlAmount;
+    const accountData = globalState.accountBalances[trade.account];
+    accountData.balance = newBalance;
+    accountData.equity = newBalance;
+    accountData.pnl += pnlAmount;
+    
+    // Save account data to localStorage with BOTH key formats for compatibility
+    localStorage.setItem('accountData_' + trade.account, JSON.stringify(accountData));
+    storage.setBalance(newBalance, trade.account);
+    
+    // CRITICAL: Update marketer balance in marketers array if this is a marketer's real account
+    let tradeUser = globalState.user;
+    const marketersList = JSON.parse(localStorage.getItem('marketers') || '[]');
+    const tradeMarketer = marketersList.find(m => m.email === tradeUser.email);
+    if (tradeMarketer && tradeMarketer.isMarketer && trade.account === 'real') {
+      tradeMarketer.balance = newBalance;
+      localStorage.setItem('marketers', JSON.stringify(marketersList));
+    }
+    
+    // Add transaction record with correct type and details
+    const transactionRecord = {
+      type: isWinning ? 'trade_win' : 'trade_loss',
       date: new Date().toISOString().split('T')[0],
       pair: trade.pair,
-      amount: pnlAmount,
-      method: trade.pair,
+      amount: Math.abs(pnlAmount),
+      direction: isWinning ? 'credit' : 'debit',
+      method: `${trade.type} ${volume} ${trade.pair}`,
+      tradeType: trade.type,
+      volume: volume,
+      entryPrice: trade.entryPrice,
+      pnl: pnlAmount,
       timestamp: Date.now(),
-      status: 'completed'
-    });
+      status: 'completed',
+      tradeId: trade.id,
+      account: trade.account
+    };
+    storage.addTransaction(transactionRecord);
+    
+    // Update display if still on same account
+    if (globalState.currentAccount === trade.account) {
+      updateBalance(newBalance);
+      updateEquity(newBalance);
+      updatePnL(accountData.pnl);
+    }
     
     // Update UI
     updatePositionsDisplay();
     updateOpenPositionsCount();
     
     // Show notification with actual P&L
-    const profitMessage = isWinning ? 'Trade CLOSED with PROFIT: +$' + Math.abs(pnlAmount).toFixed(2) : 'Trade CLOSED with LOSS: $' + pnlAmount.toFixed(2);
+    const profitMessage = isWinning ? 'Trade CLOSED with PROFIT: +$' + Math.abs(pnlAmount).toFixed(2) : 'Trade CLOSED with LOSS: -$' + Math.abs(pnlAmount).toFixed(2);
     showNotification(profitMessage, isWinning ? 'success' : 'danger');
     
   }, holdTime);

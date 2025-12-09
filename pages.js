@@ -398,13 +398,13 @@ window.selectPaymentMethod = function(method) {
   const paymentInfo = {
     mpesa: `
       <p><strong>Phone Number:</strong> +254 712 345 678</p>
-      <p><strong>Business Name:</strong> PreoTrade FX Ltd</p>
+      <p><strong>Business Name:</strong> PreoCrypto Ltd</p>
       <p><strong>Account:</strong> 123456789</p>
       <p><strong style="color:#2ecc71;">Minimum Deposit: $20</strong></p>
       <p>Send the amount to the above M-Pesa number and provide the transaction code in the notes.</p>
     `,
     bank: `
-      <p><strong>Account Name:</strong> PreoTrade FX Limited</p>
+      <p><strong>Account Name:</strong> PreoCrypto Limited</p>
       <p><strong>Account Number:</strong> 1234567890</p>
       <p><strong>Bank:</strong> Standard Bank Kenya</p>
       <p><strong>SWIFT Code:</strong> SBKEKE22</p>

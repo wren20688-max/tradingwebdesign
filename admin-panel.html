@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — PreoCrypto</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0e27;
+      color: #e0e0e0;
+    }
+
+    .admin-container {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+    .admin-sidebar {
+      background: rgba(15, 20, 25, 0.95);
+      border-right: 1px solid rgba(0, 212, 255, 0.2);
+      padding: 30px 20px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .admin-logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: #00d4ff;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+    }
+
+    .admin-menu {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .admin-menu a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: rgba(0, 212, 255, 0.05);
+      border: 1px solid rgba(0, 212, 255, 0.1);
+      border-radius: 8px;
+      color: #a0a0a0;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .admin-menu a:hover,
+    .admin-menu a.active {
+      background: rgba(0, 212, 255, 0.15);
+      border-color: rgba(0, 212, 255, 0.3);
+      color: #00d4ff;
+    }
+
+    .admin-menu a.logout {
+      margin-top: auto;
+      background: rgba(255, 71, 87, 0.1);
+      border-color: rgba(255, 71, 87, 0.2);
+      color: #ff6b87;
+    }
+
+    .admin-menu a.logout:hover {
+      background: rgba(255, 71, 87, 0.2);
+      border-color: rgba(255, 71, 87, 0.3);
+    }
+
+    /* MAIN CONTENT */
+    .admin-main {
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+    }
+
+    .admin-header h1 {
+      font-size: 32px;
+      color: #00d4ff;
+    }
+
+    .admin-header p {
+      color: #a0a0a0;
+      font-size: 14px;
+    }
+
+    /* DASHBOARD STATS */
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: rgba(0, 212, 255, 0.05);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 12px;
+      padding: 25px;
+      text-align: center;
+    }
+
+    .stat-card h3 {
+      color: #a0a0a0;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .stat-card .value {
+      font-size: 36px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #00d4ff, #0055ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* SECTIONS */
+    .admin-section {
+      display: none;
+    }
+
+    .admin-section.active {
+      display: block;
+    }
+
+    .section-title {
+      font-size: 24px;
+      color: #00d4ff;
+      margin-bottom: 25px;
+      font-weight: 700;
+    }
+
+    /* FORM */
+    .admin-form {
+      background: rgba(0, 212, 255, 0.05);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
+      color: #c0c0c0;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .form-group input,
+    .form-group select {
+      padding: 12px;
+      background: rgba(15, 20, 25, 0.8);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 8px;
+      color: #e0e0e0;
+      font-size: 14px;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #00d4ff;
+      background: rgba(0, 212, 255, 0.05);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 14px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0055ff, #00d4ff);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 85, 255, 0.3);
+    }
+
+    .btn-secondary {
+      background: rgba(0, 212, 255, 0.1);
+      color: #00d4ff;
+      border: 1px solid rgba(0, 212, 255, 0.3);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(0, 212, 255, 0.2);
+    }
+
+    /* TABLE */
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(0, 212, 255, 0.03);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .admin-table th {
+      background: rgba(0, 212, 255, 0.1);
+      padding: 15px;
+      text-align: left;
+      color: #00d4ff;
+      font-weight: 600;
+      font-size: 13px;
+      border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+    }
+
+    .admin-table td {
+      padding: 15px;
+      border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+      color: #c0c0c0;
+      font-size: 14px;
+    }
+
+    .admin-table tr:hover {
+      background: rgba(0, 212, 255, 0.05);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .badge-success {
+      background: rgba(0, 208, 132, 0.2);
+      color: #00d084;
+    }
+
+    .badge-danger {
+      background: rgba(255, 71, 87, 0.2);
+      color: #ff6b87;
+    }
+
+    .badge-warning {
+      background: rgba(255, 193, 7, 0.2);
+      color: #ffc107;
+    }
+
+    @media (max-width: 768px) {
+      .admin-container {
+        grid-template-columns: 1fr;
+      }
+
+      .admin-sidebar {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <!-- SIDEBAR -->
+    <div class="admin-sidebar">
+      <div class="admin-logo">🔐 Admin Panel</div>
+      <ul class="admin-menu">
+        <li><a href="#" class="menu-link active" data-section="dashboard">📊 Dashboard</a></li>
+        <li><a href="#" class="menu-link" data-section="marketers">👥 Manage Marketers</a></li>
+        <li><a href="#" class="menu-link" data-section="users">👤 Users</a></li>
+        <li><a href="#" class="menu-link" data-section="trades">📈 Trades</a></li>
+        <li><a href="#" class="menu-link" data-section="withdrawals">💰 Withdrawals</a></li>
+        <li><a href="#" class="menu-link" data-section="debug">🐛 Debug</a></li>
+        <li><a href="#" class="logout menu-link" onclick="logoutAdmin()">🚪 Logout</a></li>
+      </ul>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="admin-main">
+      <!-- DASHBOARD SECTION -->
+      <section id="dashboard" class="admin-section active">
+        <div class="admin-header">
+          <div>
+            <h1>Admin Dashboard</h1>
+            <p>System Overview & Statistics</p>
+          </div>
+        </div>
+
+        <div class="admin-stats">
+          <div class="stat-card">
+            <h3>Total Users</h3>
+            <div class="value" id="totalUsers">0</div>
+          </div>
+          <div class="stat-card">
+            <h3>Total Trades</h3>
+            <div class="value" id="totalTrades">0</div>
+          </div>
+          <div class="stat-card">
+            <h3>Total Deposits</h3>
+            <div class="value">$<span id="totalDeposits">0</span></div>
+          </div>
+          <div class="stat-card">
+            <h3>Total Withdrawals</h3>
+            <div class="value">$<span id="totalWithdrawals">0</span></div>
+          </div>
+          <div class="stat-card">
+            <h3>Active Marketers</h3>
+            <div class="value" id="totalMarketers">0</div>
+          </div>
+          <div class="stat-card">
+            <h3>Platform Balance</h3>
+            <div class="value">$<span id="platformBalance">0</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MANAGE MARKETERS SECTION -->
+      <section id="marketers" class="admin-section">
+        <h2 class="section-title">Manage Marketer Accounts</h2>
+
+        <div class="admin-form">
+          <h3 style="color: #00d4ff; margin-bottom: 20px;">Create New Marketer Account</h3>
+          <form id="marketerForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="marketerUsername" placeholder="marketer_name" required>
+              </div>
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="marketerEmail" placeholder="marketer@example.com" required>
+              </div>
+              <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="marketerPassword" placeholder="Enter password" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Win Percentage (%)</label>
+                <input type="number" id="marketerWinPercent" placeholder="85" min="0" max="100" value="85" required>
+              </div>
+              <div class="form-group">
+                <label>Initial Live Trading Balance ($)</label>
+                <input type="number" id="marketerBalance" placeholder="10000" value="10000" required>
+              </div>
+              <div class="form-group">
+                <label>Status</label>
+                <select id="marketerStatus">
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Create Marketer Account</button>
+            </div>
+          </form>
+        </div>
+
+        <h3 style="color: #00d4ff; margin-bottom: 20px;">Active Marketers</h3>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Win %</th>
+              <th>Live Trading Balance</th>
+              <th>Live Trades Count</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="marketersTableBody">
+            <!-- Populated by JavaScript -->
+          </tbody>
+        </table>
+
+        <!-- Add Funds Modal -->
+        <div id="addFundsModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center;">
+          <div style="background: rgba(15, 20, 25, 0.95); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 12px; padding: 30px; max-width: 400px; width: 90%;">
+            <h3 style="color: #00d4ff; margin-bottom: 20px;">Add Funds to Marketer Account</h3>
+            <div class="form-group">
+              <label>Marketer Email</label>
+              <input type="email" id="addFundsEmail" readonly style="background: rgba(0,0,0,0.3);">
+            </div>
+            <div class="form-group">
+              <label>Amount ($)</label>
+              <input type="number" id="addFundsAmount" placeholder="1000" min="1" step="0.01">
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <input type="text" id="addFundsDescription" placeholder="e.g., Bonus, Promotion, etc.">
+            </div>
+            <div style="display: flex; gap: 12px; margin-top: 20px;">
+              <button class="btn btn-primary" style="flex: 1;" onclick="confirmAddFunds()">Add Funds</button>
+              <button class="btn btn-secondary" style="flex: 1;" onclick="closeAddFundsModal()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- USERS SECTION -->
+      <section id="users" class="admin-section">
+        <h2 class="section-title">User Management</h2>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Account Type</th>
+              <th>Balance</th>
+              <th>Joined</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody">
+            <!-- Populated by JavaScript -->
+          </tbody>
+        </table>
+      </section>
+
+      <!-- TRADES SECTION -->
+      <section id="trades" class="admin-section">
+        <h2 class="section-title">Trading Activity</h2>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Pair</th>
+              <th>Type</th>
+              <th>Price</th>
+              <th>Profit/Loss</th>
+              <th>Status</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody id="tradesTableBody">
+            <!-- Populated by JavaScript -->
+          </tbody>
+        </table>
+      </section>
+
+      <!-- WITHDRAWALS SECTION -->
+      <section id="withdrawals" class="admin-section">
+        <h2 class="section-title">Withdrawal Requests</h2>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Amount</th>
+              <th>Method</th>
+              <th>Status</th>
+              <th>Requested</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="withdrawalsTableBody">
+            <!-- Populated by JavaScript -->
+          </tbody>
+        </table>
+      </section>
+
+      <!-- DEBUG SECTION -->
+      <section id="debug" class="admin-section">
+        <h2 class="section-title">🐛 Debug Console</h2>
+        <div class="admin-form">
+          <button class="btn btn-secondary" onclick="showStorageDebug()">Show All Storage</button>
+          <button class="btn btn-secondary" onclick="clearAllStorage()">Clear All Storage</button>
+        </div>
+        <pre id="debugOutput" style="background: rgba(0,0,0,0.5); padding: 20px; border-radius: 8px; color: #00d4ff; overflow-x: auto; font-size: 12px; max-height: 500px; overflow-y: auto;"></pre>
+      </section>
+    </div>
+  </div>
+
+  <script src="storage.js"></script>
+  <script>
+    // Admin security check
+    window.addEventListener('load', () => {
+      const user = JSON.parse(localStorage.getItem('preo_user') || '{}');
+      if (!user.isAdmin) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      initializeAdmin();
+    });
+
+    // Initialize admin panel
+    function initializeAdmin() {
+      setupMenuListeners();
+      loadAdminStats();
+      loadMarketersTable();
+      loadUsersTable();
+      loadTradesTable();
+      loadWithdrawalsTable();
+      setupMarketerForm();
+    }
+
+    // Menu navigation
+    function setupMenuListeners() {
+      document.querySelectorAll('.menu-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const section = link.dataset.section;
+          if (!section) return;
+
+          document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+          document.getElementById(section).classList.add('active');
+
+          document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
+          link.classList.add('active');
+        });
+      });
+    }
+
+    // Load dashboard stats
+    function loadAdminStats() {
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const marketers = JSON.parse(localStorage.getItem('marketers') || '[]');
+      const trades = JSON.parse(localStorage.getItem('trades') || '[]');
+      const withdrawals = JSON.parse(localStorage.getItem('withdrawals') || '[]');
+      const deposits = JSON.parse(localStorage.getItem('deposits') || '[]');
+
+      document.getElementById('totalUsers').textContent = users.length;
+      document.getElementById('totalMarketers').textContent = marketers.length;
+      document.getElementById('totalTrades').textContent = trades.length;
+
+      const totalDeposits = deposits.reduce((sum, d) => sum + (d.amount || 0), 0);
+      const totalWithdrawals = withdrawals.reduce((sum, w) => sum + (w.amount || 0), 0);
+      const platformBalance = totalDeposits - totalWithdrawals;
+
+      document.getElementById('totalDeposits').textContent = totalDeposits.toFixed(2);
+      document.getElementById('totalWithdrawals').textContent = totalWithdrawals.toFixed(2);
+      document.getElementById('platformBalance').textContent = platformBalance.toFixed(2);
+    }
+
+    // Marketer form
+    function setupMarketerForm() {
+      document.getElementById('marketerForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const marketer = {
+          username: document.getElementById('marketerUsername').value,
+          email: document.getElementById('marketerEmail').value,
+          password: document.getElementById('marketerPassword').value,
+          winPercent: parseInt(document.getElementById('marketerWinPercent').value),
+          balance: parseFloat(document.getElementById('marketerBalance').value),
+          status: document.getElementById('marketerStatus').value,
+          created: new Date().toISOString(),
+          isMarketer: true,
+          accountType: 'live',
+          totalLiveTrades: 0
+        };
+
+        let marketers = JSON.parse(localStorage.getItem('marketers') || '[]');
+        marketers.push(marketer);
+        localStorage.setItem('marketers', JSON.stringify(marketers));
+
+        alert('✅ Marketer account created successfully!');
+        document.getElementById('marketerForm').reset();
+        loadMarketersTable();
+        loadAdminStats();
+      });
+    }
+
+    // Load marketers table
+    function loadMarketersTable() {
+      const marketers = JSON.parse(localStorage.getItem('marketers') || '[]');
+      const trades = JSON.parse(localStorage.getItem('trades') || '[]');
+      const tbody = document.getElementById('marketersTableBody');
+      tbody.innerHTML = '';
+
+      marketers.forEach(m => {
+        // Count only live trades for this marketer
+        const marketerLiveTrades = trades.filter(t => t.trader === m.email && t.accountType === 'live').length;
+        // Calculate current live balance from initial balance + live trades profit/loss
+        const liveTradesProfit = trades
+          .filter(t => t.trader === m.email && t.accountType === 'live')
+          .reduce((sum, t) => sum + (t.profit || 0), 0);
+        const currentBalance = m.balance + liveTradesProfit;
+        
+        const row = `
+          <tr>
+            <td>${m.username}</td>
+            <td>${m.email}</td>
+            <td>${m.winPercent}%</td>
+            <td>$${currentBalance.toFixed(2)}</td>
+            <td>${marketerLiveTrades}</td>
+            <td><span class="badge ${m.status === 'active' ? 'badge-success' : 'badge-danger'}">${m.status}</span></td>
+            <td>${new Date(m.created).toLocaleDateString()}</td>
+            <td style="display: flex; gap: 8px;">
+              <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="openAddFundsModal('${m.email}')">Add Funds</button>
+              <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="deleteMarketer('${m.email}')">Delete</button>
+            </td>
+          </tr>
+        `;
+        tbody.innerHTML += row;
+      });
+    }
+
+    // Delete marketer
+    function deleteMarketer(email) {
+      if (confirm('Are you sure?')) {
+        let marketers = JSON.parse(localStorage.getItem('marketers') || '[]');
+        marketers = marketers.filter(m => m.email !== email);
+        localStorage.setItem('marketers', JSON.stringify(marketers));
+        loadMarketersTable();
+      }
+    }
+
+    // Add funds modal functions
+    function openAddFundsModal(email) {
+      document.getElementById('addFundsEmail').value = email;
+      document.getElementById('addFundsAmount').value = '';
+      document.getElementById('addFundsDescription').value = '';
+      document.getElementById('addFundsModal').style.display = 'flex';
+    }
+
+    function closeAddFundsModal() {
+      document.getElementById('addFundsModal').style.display = 'none';
+    }
+
+    function confirmAddFunds() {
+      const email = document.getElementById('addFundsEmail').value;
+      const amount = parseFloat(document.getElementById('addFundsAmount').value);
+      const description = document.getElementById('addFundsDescription').value || 'Admin Deposit';
+
+      if (!email || !amount || amount <= 0) {
+        alert('Please enter a valid amount');
+        return;
+      }
+
+      // Update marketer balance
+      let marketers = JSON.parse(localStorage.getItem('marketers') || '[]');
+      let marketer = marketers.find(m => m.email === email);
+      if (marketer) {
+        marketer.balance += amount;
+        localStorage.setItem('marketers', JSON.stringify(marketers));
+      }
+
+      // Add deposit to deposits array (shows in transactions)
+      let deposits = JSON.parse(localStorage.getItem('deposits') || '[]');
+      deposits.push({
+        user: email,
+        amount: amount,
+        method: 'Admin Transfer',
+        description: description,
+        timestamp: new Date().toISOString(),
+        status: 'completed'
+      });
+      localStorage.setItem('deposits', JSON.stringify(deposits));
+
+      // Also add to marketer's personal transaction history
+      let transactions = JSON.parse(localStorage.getItem('transactions_' + email) || '[]');
+      transactions.push({
+        type: 'deposit',
+        amount: amount,
+        method: 'Admin Transfer',
+        description: description,
+        timestamp: new Date().toISOString(),
+        status: 'completed',
+        newBalance: marketer.balance
+      });
+      localStorage.setItem('transactions_' + email, JSON.stringify(transactions));
+
+      alert('✅ $' + amount.toFixed(2) + ' added to ' + email);
+      closeAddFundsModal();
+      loadMarketersTable();
+      loadAdminStats();
+    }
+
+    // Load users table
+    function loadUsersTable() {
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const tbody = document.getElementById('usersTableBody');
+      tbody.innerHTML = '';
+
+      users.forEach(u => {
+        const row = `
+          <tr>
+            <td>${u.username}</td>
+            <td>${u.email}</td>
+            <td>Regular</td>
+            <td>$0</td>
+            <td>${new Date(u.created).toLocaleDateString()}</td>
+            <td><span class="badge badge-success">Active</span></td>
+          </tr>
+        `;
+        tbody.innerHTML += row;
+      });
+    }
+
+    // Load trades table
+    function loadTradesTable() {
+      const trades = JSON.parse(localStorage.getItem('trades') || '[]');
+      const tbody = document.getElementById('tradesTableBody');
+      tbody.innerHTML = trades.slice(-10).map(t => `
+        <tr>
+          <td>${t.trader || 'Unknown'}</td>
+          <td>${t.pair}</td>
+          <td>${t.type}</td>
+          <td>$${t.price}</td>
+          <td class="${t.profit > 0 ? 'badge-success' : 'badge-danger'}">$${t.profit.toFixed(2)}</td>
+          <td><span class="badge badge-success">Closed</span></td>
+          <td>${new Date(t.timestamp).toLocaleDateString()}</td>
+        </tr>
+      `).join('');
+    }
+
+    // Load withdrawals table
+    function loadWithdrawalsTable() {
+      const withdrawals = JSON.parse(localStorage.getItem('withdrawals') || '[]');
+      const tbody = document.getElementById('withdrawalsTableBody');
+      tbody.innerHTML = '';
+
+      withdrawals.forEach(w => {
+        const row = `
+          <tr>
+            <td>${w.user}</td>
+            <td>$${w.amount.toFixed(2)}</td>
+            <td>${w.method}</td>
+            <td><span class="badge badge-success">Completed</span></td>
+            <td>${new Date(w.timestamp).toLocaleDateString()}</td>
+            <td><button class="btn btn-secondary" onclick="approveWithdrawal()">Approve</button></td>
+          </tr>
+        `;
+        tbody.innerHTML += row;
+      });
+    }
+
+    // Logout admin
+    function logoutAdmin() {
+      localStorage.removeItem('preo_user');
+      localStorage.removeItem('preo_token');
+      window.location.href = 'login.html';
+    }
+
+    // Debug functions
+    function showStorageDebug() {
+      const output = document.getElementById('debugOutput');
+      const debug = {
+        marketers: JSON.parse(localStorage.getItem('marketers') || '[]'),
+        deposits: JSON.parse(localStorage.getItem('deposits') || '[]'),
+        withdrawals: JSON.parse(localStorage.getItem('withdrawals') || '[]'),
+        users: JSON.parse(localStorage.getItem('users') || '[]'),
+        trades: JSON.parse(localStorage.getItem('preo_trades') || '[]')
+      };
+      output.textContent = JSON.stringify(debug, null, 2);
+    }
+
+    function clearAllStorage() {
+      if (confirm('⚠️ Are you SURE? This will delete all data!')) {
+        localStorage.clear();
+        alert('All data cleared!');
+        location.reload();
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketer Dashboard — PreoCrypto</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Top Navigation -->
+  <header class="top-nav">
+    <div class="nav-left">
+      <button id="menuToggle" class="menu-toggle">☰</button>
+      <div class="logo">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#0055ff;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <circle cx="100" cy="100" r="95" fill="none" stroke="url(#logoGradient)" stroke-width="2" opacity="0.3"/>
+          <path d="M 100 30 L 150 60 L 150 130 L 100 160 L 50 130 L 50 60 Z" fill="url(#logoGradient)" opacity="0.1" stroke="url(#logoGradient)" stroke-width="1.5"/>
+          <g>
+            <rect x="70" y="95" width="8" height="35" fill="#00d084" opacity="0.9"/>
+            <rect x="85" y="75" width="8" height="55" fill="#00d084" opacity="0.95"/>
+            <rect x="100" y="55" width="8" height="75" fill="#0055ff" opacity="1"/>
+            <rect x="115" y="80" width="8" height="50" fill="#00d4ff" opacity="0.9"/>
+          </g>
+        </svg>
+      </div>
+      <h1>Marketer Dashboard</h1>
+    </div>
+    <div class="nav-right">
+      <div class="user-info">
+        <span id="username" style="font-size: 13px;">Marketer</span>
+        <img src="https://ui-avatars.com/api/?name=Marketer&background=ff6b35&color=fff" alt="Avatar" class="user-avatar">
+      </div>
+      <button id="toggleMode" class="nav-btn" title="Dark Mode">🌙</button>
+      <button id="logoutBtn" class="nav-btn logout" title="Logout">Logout</button>
+    </div>
+  </header>
+
+  <!-- Side Menu -->
+  <nav id="sideMenu" class="side-menu">
+    <button class="menu-close">✕</button>
+    <div class="menu-items">
+      <a href="marketer.html" class="menu-item active">📊 Dashboard</a>
+      <a href="dashboard.html" class="menu-item">💹 Live Trading</a>
+      <a href="transactions.html" class="menu-item">📋 Transactions</a>
+      <a href="profile.html" class="menu-item">👤 Profile</a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-container">
+    <!-- Marketer Status Header -->
+    <div class="security-header">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 18px;">👨‍💼 Marketer Account</span>
+        <div class="security-badges">
+          <div class="trust-badge verified">
+            <span style="font-size: 14px;">✓</span>
+            Active Marketer
+          </div>
+          <div class="trust-badge secure">
+            <span style="font-size: 14px;">💰</span>
+            Commission Enabled
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Summary Cards -->
+    <section class="account-summary">
+      <div class="summary-card">
+        <div class="summary-label">Account Balance</div>
+        <div class="summary-value" id="marketerBalance">$0.00</div>
+        <div class="summary-change">Live Trading Account</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Total Trades</div>
+        <div class="summary-value" id="totalTrades">0</div>
+        <div class="summary-change">All time trades</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Win Rate</div>
+        <div class="summary-value" id="winRate">0%</div>
+        <div class="summary-change">Trading accuracy</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Total P&L</div>
+        <div class="summary-value" id="totalPnL" style="color: var(--success);">+$0.00</div>
+        <div class="summary-change">Cumulative profit/loss</div>
+      </div>
+    </section>
+
+    <!-- Main Content Grid -->
+    <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: var(--spacing-lg); grid-column: 1 / -1;">
+      <!-- Trading Activity -->
+      <section class="content-card">
+        <h3>📊 Trading Performance</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md); margin-bottom: var(--spacing-lg);">
+          <div style="padding: var(--spacing-md); background: var(--bg-tertiary); border-radius: var(--radius-md);">
+            <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">Winning Trades</div>
+            <div style="font-size: 24px; font-weight: 700; color: var(--success);" id="winningTrades">0</div>
+          </div>
+          <div style="padding: var(--spacing-md); background: var(--bg-tertiary); border-radius: var(--radius-md);">
+            <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">Losing Trades</div>
+            <div style="font-size: 24px; font-weight: 700; color: var(--danger);" id="losingTrades">0</div>
+          </div>
+        </div>
+        <div id="recentTradesMarketer" style="max-height: 400px; overflow-y: auto;">
+          <div style="text-align: center; color: var(--text-tertiary); padding: var(--spacing-lg);">No trades yet</div>
+        </div>
+      </section>
+
+      <!-- Quick Stats -->
+      <section class="content-card">
+        <h3>📈 Quick Stats</h3>
+        <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+          <div style="padding: var(--spacing-md); background: var(--bg-tertiary); border-radius: var(--radius-md);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 13px; color: var(--text-secondary);">Average Win</span>
+              <span style="font-size: 16px; font-weight: 600; color: var(--success);" id="avgWin">$0.00</span>
+            </div>
+          </div>
+          <div style="padding: var(--spacing-md); background: var(--bg-tertiary); border-radius: var(--radius-md);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 13px; color: var(--text-secondary);">Average Loss</span>
+              <span style="font-size: 16px; font-weight: 600; color: var(--danger);" id="avgLoss">$0.00</span>
+            </div>
+          </div>
+          <div style="padding: var(--spacing-md); background: var(--bg-tertiary); border-radius: var(--radius-md);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 13px; color: var(--text-secondary);">Profit Factor</span>
+              <span style="font-size: 16px; font-weight: 600;" id="profitFactor">1.00</span>
+            </div>
+          </div>
+          <div style="padding: var(--spacing-md); background: var(--bg-tertiary); border-radius: var(--radius-md);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 13px; color: var(--text-secondary);">Risk Reward Ratio</span>
+              <span style="font-size: 16px; font-weight: 600;" id="riskReward">1:1</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Transaction History -->
+    <section class="content-card">
+      <h3>💳 Transaction History</h3>
+      <div id="transactionHistoryMarketer" style="max-height: 500px; overflow-y: auto;">
+        <div style="text-align: center; color: var(--text-tertiary); padding: var(--spacing-lg);">No transactions yet</div>
+      </div>
+    </section>
+
+    <!-- Withdrawal -->
+    <section class="content-card">
+      <h3>🏦 Withdraw Funds</h3>
+      <form id="withdrawalForm" style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+        <input type="number" id="withdrawAmount" placeholder="Amount" min="1" step="0.01" required style="padding: var(--spacing-sm); border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary);">
+        <select id="withdrawMethod" required style="padding: var(--spacing-sm); border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary);">
+          <option value="">Select Payment Method</option>
+          <option value="bank_transfer">Bank Transfer</option>
+          <option value="credit_card">Credit Card</option>
+          <option value="crypto">Cryptocurrency</option>
+          <option value="paypal">PayPal</option>
+        </select>
+        <button type="submit" class="btn btn-danger" style="width: 100%; padding: var(--spacing-md);">Withdraw Now</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- Scripts -->
+  <script src="storage.js"></script>
+  <script src="pages.js"></script>
+  <script src="marketer-app.js"></script>
+</body>
+</html>

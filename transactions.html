@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Transactions — PreoTrade FX</title>
+  <title>Transactions — PreoCrypto</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,7 +14,7 @@
       <div class="logo" style="width: 32px; height: 32px; margin: 0 8px;">
         <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="lg2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#0055ff;stop-opacity:1" /><stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1" /></linearGradient></defs><circle cx="100" cy="100" r="95" fill="none" stroke="url(#lg2)" stroke-width="2" opacity="0.3"/><path d="M 100 30 L 150 60 L 150 130 L 100 160 L 50 130 L 50 60 Z" fill="url(#lg2)" opacity="0.1"/><g><rect x="70" y="95" width="8" height="35" fill="#00d084" opacity="0.9"/><line x1="74" y1="85" x2="74" y2="135" stroke="#00d084" stroke-width="2"/><rect x="85" y="75" width="8" height="55" fill="#00d084" opacity="0.95"/><line x1="89" y1="65" x2="89" y2="135" stroke="#00d084" stroke-width="2"/><rect x="100" y="55" width="8" height="75" fill="#0055ff" opacity="1"/><line x1="104" y1="45" x2="104" y2="135" stroke="#0055ff" stroke-width="2"/><rect x="115" y="80" width="8" height="50" fill="#00d4ff" opacity="0.9"/><line x1="119" y1="70" x2="119" y2="135" stroke="#00d4ff" stroke-width="2"/></g></svg>
       </div>
-      <h1>PreoTrade FX</h1>
+      <h1>PreoCrypto</h1>
     </div>
     <div class="nav-center">
       <span class="balance-display">Balance: <strong id="balance">$10,000.00</strong></span>
@@ -92,48 +92,77 @@
 
     function loadTransactions() {
       const el = document.getElementById('allTransactionsList');
+      const user = JSON.parse(localStorage.getItem('preo_user') || '{}');
+      const isMarketer = user.isMarketer || false;
+      const userEmail = user.email || user.username;
       
-      // Load actual transactions from storage
+      console.log('🔍 Loading transactions for:', userEmail, 'isMarketer:', isMarketer);
+      
       let transactions = [];
       
-      // Get trades from storage
+      // Get trades from storage - only show closed trades
       const tradesData = localStorage.getItem('preo_trades');
       if (tradesData) {
         try {
           const trades = JSON.parse(tradesData);
-          transactions = transactions.concat(trades.map(trade => ({
-            date: new Date(trade.timestamp).toISOString().split('T')[0],
-            type: trade.status === 'closed' ? (trade.pnl >= 0 ? 'Trade Win' : 'Trade Loss') : 'Trade Open',
-            method: trade.pair,
-            amount: (trade.pnl >= 0 ? '+' : '') + '$' + Math.abs(trade.pnl || 0).toFixed(2),
-            status: trade.status === 'closed' ? 'Closed' : 'Open'
-          })));
-        } catch (e) { }
+          transactions = transactions.concat(trades
+            .filter(trade => trade.status === 'closed')
+            .map(trade => ({
+              date: new Date(trade.timestamp).toISOString().split('T')[0],
+              type: `Trade Closed - ${trade.pnl >= 0 ? 'Profit' : 'Loss'} of $${Math.abs(trade.pnl || 0).toFixed(2)}`,
+              method: trade.pair,
+              amount: (trade.pnl >= 0 ? '+' : '') + '$' + Math.abs(trade.pnl || 0).toFixed(2),
+              status: 'Completed'
+            })));
+        } catch (e) { console.error('Error loading trades:', e); }
       }
       
-      // Get transactions from storage
-      const transactionsData = localStorage.getItem('preo_transactions');
-      if (transactionsData) {
+      // Get deposits from storage - filter by current user
+      const depositsData = localStorage.getItem('deposits');
+      if (depositsData) {
         try {
-          const storedTx = JSON.parse(transactionsData);
-          transactions = transactions.concat(storedTx.map(tx => ({
-            date: tx.date || new Date(tx.timestamp).toISOString().split('T')[0],
-            type: tx.type.charAt(0).toUpperCase() + tx.type.slice(1).replace('_', ' '),
-            method: tx.method || tx.type,
-            amount: (tx.amount >= 0 ? '+' : '') + '$' + Math.abs(tx.amount).toFixed(2),
-            status: 'Completed'
+          const deposits = JSON.parse(depositsData);
+          console.log('📊 All deposits:', deposits);
+          const userDeposits = deposits.filter(d => d.user === userEmail || d.user === user.username);
+          console.log('💰 Filtered deposits for user:', userDeposits);
+          transactions = transactions.concat(userDeposits.map(d => ({
+            date: new Date(d.timestamp).toISOString().split('T')[0],
+            type: 'Deposit',
+            method: d.method,
+            amount: '+$' + (d.amount || 0).toFixed(2),
+            status: d.status === 'completed' ? 'Completed' : 'Pending'
           })));
-        } catch (e) { }
+        } catch (e) { console.error('Error loading deposits:', e); }
+      }
+      
+      // Get withdrawals from storage - filter by current user
+      const withdrawalsData = localStorage.getItem('withdrawals');
+      if (withdrawalsData) {
+        try {
+          const withdrawals = JSON.parse(withdrawalsData);
+          transactions = transactions.concat(withdrawals
+            .filter(w => w.user === userEmail || w.user === user.username)
+            .map(w => ({
+              date: new Date(w.timestamp).toISOString().split('T')[0],
+              type: 'Withdrawal',
+              method: w.method,
+              amount: '-$' + (w.amount || 0).toFixed(2),
+              status: isMarketer ? 'Completed' : 'Pending'
+            })));
+        } catch (e) { console.error('Error loading withdrawals:', e); }
       }
       
       // Sort by date descending (newest first)
       transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      console.log('📋 Total transactions:', transactions.length, transactions);
       
       // If no transactions, show empty message with demo data option
       if (transactions.length === 0) {
         el.innerHTML = `
           <div style="padding: 30px; text-align: center; color: var(--text-secondary);">
             <p>No transactions yet. Start trading to see your activity here.</p>
+            <p style="font-size: 12px; margin-top: 10px; color: #888;">Debug: Email=${userEmail}, isMarketer=${isMarketer}</p>
             <button onclick="loadDemoTransactions()" style="margin-top: 15px; padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
               Load Demo Data
             </button>

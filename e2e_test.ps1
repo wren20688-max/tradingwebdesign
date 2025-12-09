@@ -1,13 +1,13 @@
 #!/usr/bin/env pwsh
 
-# E2E Test Script for PreoTrade FX
+# E2E Test Script for PreoCrypto
 $API_URL = "http://localhost:3000"
 $DEMO_EMAIL = "test_e2e_$(Get-Date -Format 'yyyyMMddHHmmss')@preofx.local"
 $DEMO_PASSWORD = "demo12345"
 $ADMIN_EMAIL = "admin@preofx.local"
 $ADMIN_PASSWORD = "admin12345"
 
-Write-Host "========== PreoTrade FX E2E Test ==========" -ForegroundColor Cyan
+Write-Host "========== PreoCrypto E2E Test ==========" -ForegroundColor Cyan
 
 # Test 1: Signup a new demo user
 Write-Host "`n[TEST 1] Signup new user..." -ForegroundColor Yellow

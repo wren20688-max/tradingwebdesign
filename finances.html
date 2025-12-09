@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wallet — PreoTrade FX</title>
+  <title>Wallet — PreoCrypto</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,7 +13,7 @@
       <div class="logo" style="width: 32px; height: 32px; margin: 0 8px;">
         <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#0055ff;stop-opacity:1" /><stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1" /></linearGradient></defs><circle cx="100" cy="100" r="95" fill="none" stroke="url(#lg1)" stroke-width="2" opacity="0.3"/><path d="M 100 30 L 150 60 L 150 130 L 100 160 L 50 130 L 50 60 Z" fill="url(#lg1)" opacity="0.1"/><g><rect x="70" y="95" width="8" height="35" fill="#00d084" opacity="0.9"/><line x1="74" y1="85" x2="74" y2="135" stroke="#00d084" stroke-width="2"/><rect x="85" y="75" width="8" height="55" fill="#00d084" opacity="0.95"/><line x1="89" y1="65" x2="89" y2="135" stroke="#00d084" stroke-width="2"/><rect x="100" y="55" width="8" height="75" fill="#0055ff" opacity="1"/><line x1="104" y1="45" x2="104" y2="135" stroke="#0055ff" stroke-width="2"/><rect x="115" y="80" width="8" height="50" fill="#00d4ff" opacity="0.9"/><line x1="119" y1="70" x2="119" y2="135" stroke="#00d4ff" stroke-width="2"/></g></svg>
       </div>
-      <h1>PreoTrade FX</h1>
+      <h1>PreoCrypto</h1>
     </div>
     <div class="nav-right">
       <button id="toggleMode" class="nav-btn" title="Dark Mode">🌙</button>
@@ -39,6 +39,18 @@
   <main class="main-container">
     <h2 style="margin-bottom: var(--spacing-xl);">💰 Wallet & Funds</h2>
 
+    <!-- Account Selector Tabs -->
+    <section class="content-card" style="margin-bottom: var(--spacing-lg);">
+      <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+        <button class="btn btn-primary account-tab active" onclick="switchAccount('demo')" id="tab-demo">📱 Demo Account</button>
+        <button class="btn btn-secondary account-tab" onclick="switchAccount('real')" id="tab-real">💎 Real Account</button>
+      </div>
+      <div style="padding: 20px; background: rgba(0, 212, 255, 0.05); border-radius: 8px; border: 1px solid rgba(0, 212, 255, 0.2);">
+        <div style="font-size: 14px; color: #a0a0a0; margin-bottom: 10px;">Current Balance</div>
+        <div style="font-size: 36px; font-weight: 700; background: linear-gradient(135deg, #0055ff, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;" id="currentBalance">$10,000.00</div>
+      </div>
+    </section>
+
     <!-- Account Balances -->
     <section class="account-summary">
       <div class="summary-card">
@@ -61,8 +73,9 @@
     <!-- Deposit & Withdraw Section -->
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg); grid-column: 1 / -1; margin-bottom: var(--spacing-lg);">
       <!-- Quick Deposit -->
-      <section class="content-card">
+      <section class="content-card" id="depositSection">
         <h3>📥 Quick Deposit</h3>
+        <p style="font-size: 12px; color: #a0a0a0; margin-bottom: 12px;">Add funds to <span id="accountTypeDeposit">Demo</span> Account</p>
         <div class="form-group">
           <label for="depositAmount">Amount (USD)</label>
           <input type="number" id="depositAmount" placeholder="100.00" min="10" step="0.01">
@@ -74,8 +87,9 @@
       </section>
 
       <!-- Quick Withdraw -->
-      <section class="content-card">
+      <section class="content-card" id="withdrawSection">
         <h3>📤 Quick Withdraw</h3>
+        <p style="font-size: 12px; color: #a0a0a0; margin-bottom: 12px;">Withdraw from <span id="accountTypeWithdraw">Demo</span> Account</p>
         <div class="form-group">
           <label for="withdrawAmount">Amount (USD)</label>
           <input type="number" id="withdrawAmount" placeholder="100.00" min="10" step="0.01">
@@ -209,6 +223,7 @@
   <script src="storage.js"></script>
   <script>
     let currentDepositMethod = '';
+    let currentAccount = 'demo'; // Track current account
 
     document.addEventListener('DOMContentLoaded', () => {
       const user = storage.getUser();
@@ -220,6 +235,12 @@
       loadBalances();
       loadTransactions();
       setupMenuToggle();
+      updateAccountDisplay();
+      
+      // Refresh balances every 2 seconds
+      setInterval(() => {
+        loadBalances();
+      }, 2000);
       
       document.querySelectorAll('.modal-close').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -255,6 +276,34 @@
       } else if (method === 'crypto') {
         document.getElementById('cryptoForm').style.display = 'block';
         document.getElementById('depositTitle').textContent = 'Deposit via Cryptocurrency';
+      }
+    }
+
+    function switchAccount(account) {
+      currentAccount = account;
+      updateAccountDisplay();
+    }
+
+    function updateAccountDisplay() {
+      // Update tab buttons
+      document.getElementById('tab-demo').classList.toggle('active', currentAccount === 'demo');
+      document.getElementById('tab-demo').classList.toggle('btn-secondary', currentAccount !== 'demo');
+      document.getElementById('tab-real').classList.toggle('active', currentAccount === 'real');
+      document.getElementById('tab-real').classList.toggle('btn-secondary', currentAccount !== 'real');
+
+      // Get balances from dashboard
+      const demoBalance = parseFloat(localStorage.getItem('accountData_demo_balance') || '10000');
+      const realBalance = parseFloat(localStorage.getItem('accountData_real_balance') || '0');
+
+      // Update current balance display
+      if (currentAccount === 'demo') {
+        document.getElementById('currentBalance').textContent = '$' + demoBalance.toLocaleString('en-US', {minimumFractionDigits: 2});
+        document.getElementById('accountTypeDeposit').textContent = 'Demo';
+        document.getElementById('accountTypeWithdraw').textContent = 'Demo';
+      } else {
+        document.getElementById('currentBalance').textContent = '$' + realBalance.toLocaleString('en-US', {minimumFractionDigits: 2});
+        document.getElementById('accountTypeDeposit').textContent = 'Real';
+        document.getElementById('accountTypeWithdraw').textContent = 'Real';
       }
     }
 
@@ -362,46 +411,75 @@
     }
 
     function loadBalances() {
-      const balance = parseFloat(localStorage.getItem('balance') || '10000');
-      document.getElementById('totalBalance').textContent = '$' + balance.toLocaleString('en-US', {minimumFractionDigits: 2});
-      document.getElementById('demoBalance').textContent = '$' + balance.toLocaleString('en-US', {minimumFractionDigits: 2});
-      document.getElementById('realBalance').textContent = '$0.00';
+      const demoBalance = parseFloat(localStorage.getItem('accountData_demo_balance') || localStorage.getItem('balance') || '10000');
+      const realBalance = parseFloat(localStorage.getItem('accountData_real_balance') || '0');
+      const totalBalance = demoBalance + realBalance;
+      
+      document.getElementById('totalBalance').textContent = '$' + totalBalance.toLocaleString('en-US', {minimumFractionDigits: 2});
+      document.getElementById('demoBalance').textContent = '$' + demoBalance.toLocaleString('en-US', {minimumFractionDigits: 2});
+      document.getElementById('realBalance').textContent = '$' + realBalance.toLocaleString('en-US', {minimumFractionDigits: 2});
+      
+      // Update current account display
+      updateAccountDisplay();
     }
 
     function loadTransactions() {
       const el = document.getElementById('transactionList');
       if (!el) return;
       
-      // Load actual transactions from storage
+      const user = JSON.parse(localStorage.getItem('preo_user') || '{}');
+      const isMarketer = user.isMarketer || false;
+      const userEmail = user.email || user.username;
+      
       let transactions = [];
       
-      // Get trades from storage
+      // Get trades from storage - only show closed trades
       const tradesData = localStorage.getItem('preo_trades');
       if (tradesData) {
         try {
           const trades = JSON.parse(tradesData);
-          transactions = transactions.concat(trades.map(trade => ({
-            date: new Date(trade.timestamp).toISOString().split('T')[0],
-            type: trade.status === 'closed' ? (trade.pnl >= 0 ? 'Trade Win' : 'Trade Loss') : 'Trade Open',
-            method: trade.pair,
-            amount: (trade.pnl >= 0 ? '+' : '') + '$' + Math.abs(trade.pnl || 0).toFixed(2),
-            status: trade.status === 'closed' ? 'Closed' : 'Open'
+          transactions = transactions.concat(trades
+            .filter(trade => trade.status === 'closed')
+            .map(trade => ({
+              date: new Date(trade.timestamp).toISOString().split('T')[0],
+              type: `Trade Closed - ${trade.pnl >= 0 ? 'Profit' : 'Loss'} of $${Math.abs(trade.pnl || 0).toFixed(2)}`,
+              method: trade.pair,
+              amount: (trade.pnl >= 0 ? '+' : '') + '$' + Math.abs(trade.pnl || 0).toFixed(2),
+              status: 'Completed'
+            })));
+        } catch (e) { }
+      }
+      
+      // Get deposits from storage - filter by current user
+      const depositsData = localStorage.getItem('deposits');
+      if (depositsData) {
+        try {
+          const deposits = JSON.parse(depositsData);
+          const userDeposits = deposits.filter(d => d.user === userEmail || d.user === user.username);
+          transactions = transactions.concat(userDeposits.map(d => ({
+            date: new Date(d.timestamp).toISOString().split('T')[0],
+            type: 'Deposit',
+            method: d.method,
+            amount: '+$' + (d.amount || 0).toFixed(2),
+            status: d.status === 'completed' ? 'Completed' : 'Pending'
           })));
         } catch (e) { }
       }
       
-      // Get transactions from storage
-      const transactionsData = localStorage.getItem('preo_transactions');
-      if (transactionsData) {
+      // Get withdrawals from storage - filter by current user
+      const withdrawalsData = localStorage.getItem('withdrawals');
+      if (withdrawalsData) {
         try {
-          const storedTx = JSON.parse(transactionsData);
-          transactions = transactions.concat(storedTx.map(tx => ({
-            date: tx.date || new Date(tx.timestamp).toISOString().split('T')[0],
-            type: tx.type.charAt(0).toUpperCase() + tx.type.slice(1).replace('_', ' '),
-            method: tx.method || tx.type,
-            amount: (tx.amount >= 0 ? '+' : '') + '$' + Math.abs(tx.amount).toFixed(2),
-            status: 'Completed'
-          })));
+          const withdrawals = JSON.parse(withdrawalsData);
+          transactions = transactions.concat(withdrawals
+            .filter(w => w.user === userEmail || w.user === user.username)
+            .map(w => ({
+              date: new Date(w.timestamp).toISOString().split('T')[0],
+              type: 'Withdrawal',
+              method: w.method,
+              amount: '-$' + (w.amount || 0).toFixed(2),
+              status: isMarketer ? 'Completed' : 'Pending'
+            })));
         } catch (e) { }
       }
       

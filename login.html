@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login — PreoTrade FX</title>
+  <title>Login — PreoCrypto</title>
   <link rel="stylesheet" href="style.css">
   <style>
     * {
@@ -295,7 +295,7 @@
           <line x1="119" y1="70" x2="119" y2="135" stroke="#00d4ff" stroke-width="2"/>
         </g>
       </svg>
-      <h2>PreoTrade FX</h2>
+      <h2>PreoCrypto</h2>
       <p>Professional Trading Platform</p>
     </div>
 
@@ -377,6 +377,48 @@
       // require matching email and password
       const found = users.find(u => (u.email && u.email.toLowerCase() === ident.toLowerCase()));
       
+      // Check if it's admin email
+      const adminEmail = 'wren20688@gmail.com';
+      if (ident.toLowerCase() === adminEmail.toLowerCase() && pwd === 'Jos134ka2') {
+        console.log('✓ Admin login successful');
+        const adminData = {
+          username: 'admin',
+          email: adminEmail,
+          role: 'admin',
+          timestamp: new Date().getTime(),
+          isAdmin: true
+        };
+        localStorage.setItem('preo_user', JSON.stringify(adminData));
+        localStorage.setItem('preo_token', 'admin_token_' + Date.now());
+        localStorage.setItem('preo_last_login', adminEmail);
+        window.location.href = 'admin-panel.html';
+        return;
+      }
+
+      // Check if marketer
+      const marketers = JSON.parse(localStorage.getItem('marketers') || '[]');
+      const marketerFound = marketers.find(m => 
+        (m.email && m.email.toLowerCase() === ident.toLowerCase()) || 
+        (m.username && m.username.toLowerCase() === ident.toLowerCase())
+      );
+
+      if (marketerFound && marketerFound.password === pwd) {
+        console.log('✓ Marketer login successful:', marketerFound.email);
+        const marketerData = {
+          username: marketerFound.username,
+          email: marketerFound.email,
+          timestamp: new Date().getTime(),
+          isRegistered: true,
+          isMarketer: true,
+          winPercent: marketerFound.winPercent
+        };
+        localStorage.setItem('preo_user', JSON.stringify(marketerData));
+        localStorage.setItem('preo_token', 'token_' + Date.now());
+        localStorage.setItem('preo_last_login', ident);
+        window.location.href = 'dashboard.html';
+        return;
+      }
+      
       if (found && found.password === pwd) {
         console.log('✓ Login successful for:', found.email);
         // store session with all user data
@@ -431,13 +473,13 @@
     document.getElementById('demoBtn').addEventListener('click', function () {
       const userData = {
         username: 'demo_user',
-        email: 'demo@preotrade.local',
+        email: 'demo@preocrypto.local',
         timestamp: new Date().getTime(),
         isDemo: true
       };
       localStorage.setItem('preo_user', JSON.stringify(userData));
       localStorage.setItem('preo_token', 'token_' + Date.now());
-      localStorage.setItem('preo_last_login', 'demo@preotrade.local');
+      localStorage.setItem('preo_last_login', 'demo@preocrypto.local');
       window.location.href = 'dashboard.html';
     });
   </script>

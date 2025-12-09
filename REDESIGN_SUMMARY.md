@@ -1,4 +1,4 @@
-# PreoTrade FX - Professional Redesign Complete
+# PreoCrypto - Professional Redesign Complete
 
 ## Summary of Changes
 

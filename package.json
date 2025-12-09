@@ -1,7 +1,7 @@
 {
-  "name": "preotrade-fx-admin",
+  "name": "preocrypto-admin",
   "version": "1.0.0",
-  "description": "PreoTrade FX Admin Backend",
+  "description": "PreoCrypto Admin Backend",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

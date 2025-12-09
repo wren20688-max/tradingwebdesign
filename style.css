@@ -1,6 +1,6 @@
 /* ============================================================================
    MODERN TRADING PLATFORM DESIGN SYSTEM
-   PreoTrade FX - Professional Color Scheme & Components
+   PreoCrypto - Professional Color Scheme & Components
    ============================================================================ */
 
 * {
@@ -1441,43 +1441,45 @@ button {
   justify-content: center;
   width: 70px;
   padding: 12px 8px;
-  border: none;
-  border-radius: var(--radius-md);
-  font-weight: bold;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+  font-size: 13px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .buy-btn {
-  background: linear-gradient(135deg, #00d084 0%, #00b870 100%);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
+  border-color: #047857;
 }
 
 .buy-btn:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(0, 208, 132, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
 .buy-btn:active {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 208, 132, 0.3);
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
 }
 
 .sell-btn {
-  background: linear-gradient(135deg, #ff4444 0%, #cc3333 100%);
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   color: white;
+  border-color: #b91c1c;
 }
 
 .sell-btn:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(255, 68, 68, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
 .sell-btn:active {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(255, 68, 68, 0.3);
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
 }
 
 /* ============================================================================
