@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Netapal Style Mirror</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    :root {
+      --bg: #0a0e27;
+      --text: #e0e0e0;
+      --muted: #a0a0a0;
+      --primary: #0055ff;
+      --accent: #00d4ff;
+      --card: rgba(0,212,255,0.06);
+      --card-border: rgba(0,212,255,0.2);
+    }
+    * { box-sizing: border-box; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; line-height: 1.6; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Top Nav */
+    .nav { position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(12px); background: rgba(10,14,39,0.85); border-bottom: 1px solid rgba(0,212,255,0.12); }
+    .nav-container { max-width: 1200px; margin: 0 auto; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; color: var(--accent); letter-spacing: 0.4px; }
+    .nav-links { display: flex; gap: 22px; }
+    .nav-links a { color: #a8b0c0; font-size: 14px; }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* Hero */
+    .hero-wrap { position: relative; overflow: hidden; }
+    .hero { text-align: center; padding: 96px 24px; }
+    .glow-1, .glow-2 { position: absolute; width: 520px; height: 520px; border-radius: 50%; filter: blur(40px); opacity: 0.25; pointer-events: none; }
+    .glow-1 { background: radial-gradient(circle, rgba(0,85,255,0.25), transparent 70%); top: -120px; left: -140px; }
+    .glow-2 { background: radial-gradient(circle, rgba(0,212,255,0.25), transparent 70%); bottom: -140px; right: -160px; }
+    .hero h1 { font-size: 52px; margin: 0 0 14px; background: linear-gradient(135deg, var(--accent), var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 900; }
+    .hero p { color: var(--muted); max-width: 760px; margin: 0 auto 28px; font-size: 18px; }
+    .cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn { padding: 14px 26px; border-radius: 10px; font-weight: 700; text-decoration: none; transition: transform .15s ease, box-shadow .15s ease, background .15s ease; display: inline-block; }
+    .btn-primary { background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 16px 36px rgba(0,85,255,0.35); }
+    .btn-secondary { border: 2px solid var(--accent); color: var(--accent); }
+    .btn-secondary:hover { background: rgba(0,212,255,0.1); transform: translateY(-3px); }
+
+    /* Sections */
+    .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
+    .section { margin: 70px 0; }
+    .section h2 { font-size: 36px; margin-bottom: 16px; font-weight: 800; }
+    .section h2 span { background: linear-gradient(135deg, var(--accent), var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    /* Cards */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; }
+    .card { background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; padding: 22px; transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease; }
+    .card:hover { transform: translateY(-6px); border-color: rgba(0,212,255,0.4); box-shadow: 0 18px 38px rgba(0,85,255,0.25); }
+    .card h3 { color: var(--accent); margin-bottom: 10px; font-size: 20px; }
+    .card p { color: var(--muted); }
+    .images { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 16px; }
+    .images img { width: 100%; border-radius: 10px; border: 1px solid rgba(0,212,255,0.15); }
+
+    /* Footer */
+    footer { border-top: 1px solid rgba(0,212,255,0.12); padding: 28px 0; color: var(--muted); }
+    .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+    .footer-grid h3 { color: var(--accent); margin-bottom: 8px; }
+    .copyright { margin-top: 16px; font-size: 13px; color: #8a94a6; }
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <div class="nav-container">
+      <div class="brand">Netapal Mirror</div>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/features">Features</a>
+        <a href="/auth">Login</a>
+      </div>
+    </div>
+  </div>
+  <div class="container hero-wrap">
+    <div class="glow-1"></div>
+    <div class="glow-2"></div>
+    <section class="hero">
+      <h1>Advanced Trading For Modern Investors</h1>
+      <p>Experience the future of trading with real-time analytics, AI-powered automation, and institutional-grade tools to maximize your returns.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="/auth">Get Started</a>
+        <a class="btn btn-secondary" href="/features">View Features</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Advanced Trading Features</h2>
+      <div class="grid">
+        <div class="card"><h3>Real-Time Analytics</h3><p>Instant insights with a powerful analytics dashboard.</p></div>
+        <div class="card"><h3>Auto-Trading</h3><p>Let algorithms trade for you based on preferences.</p></div>
+        <div class="card"><h3>Market Predictions</h3><p>AI-powered predictions for informed decisions.</p></div>
+        <div class="card"><h3>Secure Transactions</h3><p>Bank-level security protects assets and data.</p></div>
+        <div class="card"><h3>Social Trading</h3><p>Follow and copy strategies of successful traders.</p></div>
+        <div class="card"><h3>Premium Signals</h3><p>High-quality signals from market experts.</p></div>
+        <div class="card"><h3>Portfolio Diversification</h3><p>Build and manage diversified portfolios.</p></div>
+        <div class="card"><h3>24/7 Trading</h3><p>Trade crypto and other assets anytime.</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Powerful Trading Tools</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Advanced Charting</h3>
+          <p>Professional-grade charts, indicators, and drawing tools.</p>
+          <div class="images">
+            <img src="https://netapal.com/images/chart-screenshot.jpg" alt="Advanced Charts" />
+          </div>
+        </div>
+        <div class="card">
+          <h3>AI-Powered Auto Trading</h3>
+          <p>Adaptive machine learning strategies with backtesting and stop-loss protection.</p>
+          <a href="/guide/auto-trading">Explore Auto Trading</a>
+          <div class="images">
+            <img src="https://netapal.com/images/ai-trading.jpg" alt="AI Trading" />
+          </div>
+        </div>
+        <div class="card">
+          <h3>Real-Time Analytics</h3>
+          <p>Track performance, analyze strategies, and export reports.</p>
+          <a href="/guide/analytics">Discover Analytics</a>
+          <div class="images">
+            <img src="https://netapal.com/images/analytics-dashboard.jpg" alt="Analytics Dashboard" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Ready to Transform Your Trading?</h2>
+      <p>Join thousands of traders. Get started in minutes with intuitive tools.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="/auth">Create Free Account</a>
+        <a class="btn btn-secondary" href="/features">Explore All Features</a>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-grid">
+        <div>
+          <h3>About Us</h3>
+          <p>We provide cutting-edge trading tools and technology to traders worldwide.</p>
+        </div>
+        <div>
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="/about">About</a></li>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="/faq">FAQ</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Contact Us</h3>
+          <p>123 Trading Street, Financial District, New York, NY 10004</p>
+          <p>+1 (555) 123-4567</p>
+          <p>support@netapal.com</p>
+        </div>
+        <div>
+          <h3>Stay Connected</h3>
+          <p>Subscribe for updates, insights, and offers.</p>
+          <form onsubmit="event.preventDefault(); alert('Thanks for subscribing!');">
+            <input type="email" placeholder="Enter your email" aria-label="Email" style="padding:10px 12px;border-radius:8px;border:1px solid rgba(0,212,255,0.25);background:rgba(255,255,255,0.03);color:#e0e0e0;width:100%;max-width:280px;" />
+            <button class="btn btn-primary" style="margin-top:10px;">Subscribe</button>
+          </form>
+          <div style="margin-top:12px;display:flex;gap:10px;">
+            <a href="#" aria-label="Twitter" title="Twitter" style="padding:8px 12px;border:1px solid rgba(0,212,255,0.25);border-radius:8px;">Twitter</a>
+            <a href="#" aria-label="LinkedIn" title="LinkedIn" style="padding:8px 12px;border:1px solid rgba(0,212,255,0.25);border-radius:8px;">LinkedIn</a>
+            <a href="#" aria-label="YouTube" title="YouTube" style="padding:8px 12px;border:1px solid rgba(0,212,255,0.25);border-radius:8px;">YouTube</a>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;">
+        <p class="copyright">© 2025 Netapal-style Mirror. For development use only.</p>
+        <div style="display:flex;gap:14px;">
+          <a href="/privacy">Privacy Policy</a>
+          <a href="/terms">Terms of Service</a>
+          <a href="/cookies">Cookie Policy</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

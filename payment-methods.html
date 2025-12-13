@@ -47,37 +47,22 @@
 
     <!-- PAYMENT OPTIONS -->
     <div class="payment-options">
-      <!-- M-Pesa with PayHero Integration -->
-      <section class="content-card payment-card">
-        <h3>📱 M-Pesa (Pay via PayHero)</h3>
-        <p>Enter M-Pesa number → Pay via PayHero in KSH</p>
-        <button class="action-btn" onclick="selectPaymentMethod('mpesa')">Select M-Pesa</button>
-      </section>
-
-      <!-- Bank Transfer -->
-      <section class="content-card payment-card">
-        <h3>🏦 Bank Transfer</h3>
-        <p>Wire transfer to our business account</p>
-        <button class="action-btn" onclick="selectPaymentMethod('bank')">Select Bank Transfer</button>
-      </section>
-
-      <!-- Crypto Options -->
-      <section class="content-card payment-card">
-        <h3>🔗 Cryptocurrency</h3>
-        <p>Pay with your preferred cryptocurrency</p>
-        <div class="crypto-grid">
-          <button class="action-btn small" onclick="selectPaymentMethod('usdt')">💲 USDT</button>
-          <button class="action-btn small" onclick="selectPaymentMethod('bitcoin')">₿ Bitcoin</button>
-          <button class="action-btn small" onclick="selectPaymentMethod('ethereum')">Ξ Ethereum</button>
-          <button class="action-btn small" onclick="selectPaymentMethod('tron')">⟡ Tron</button>
+      <!-- Methods Grid -->
+      <section class="content-card" style="margin-bottom:16px;">
+        <h3 style="margin-bottom:12px;">Available Methods</h3>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
+          <button class="action-btn" onclick="selectPaymentMethod('mpesa')">📱 M-Pesa (PayHero)</button>
+          <button class="action-btn outline" onclick="selectPaymentMethod('bank')">🏦 Bank Transfer</button>
+          <button class="action-btn outline" onclick="selectPaymentMethod('usdt')">💠 USDT (BEP20)</button>
+          <button class="action-btn outline" onclick="selectPaymentMethod('bitcoin')">₿ Bitcoin</button>
+          <button class="action-btn outline" onclick="selectPaymentMethod('ethereum')">🧿 Ethereum (ERC20)</button>
+          <button class="action-btn outline" onclick="selectPaymentMethod('tron')">⚡ TRON (TRC20)</button>
         </div>
       </section>
-    </div>
 
-    <!-- PAYMENT DETAILS -->
-    <div id="paymentDetails" class="content-card" style="display:none; margin-top:20px;">
-      <button class="action-btn outline" onclick="backToPaymentList()">← Back</button>
-      <h3 id="paymentDetailsTitle">Payment Method</h3>
+      <!-- Details Panel -->
+      <section id="paymentDetails" class="content-card payment-card" style="display:none;">
+        <h3 id="paymentDetailsTitle">Payment Method</h3>
       
       <!-- STK Push Modal for M-Pesa -->
       <div id="stkPushModal" style="display:none; margin-top:20px; padding:20px; background:rgba(0,212,255,0.1); border:1px solid rgba(0,212,255,0.3); border-radius:12px;">
@@ -116,6 +101,7 @@
       
       <!-- Regular Payment Info -->
       <div id="paymentInfo" style="margin-top:15px; line-height:1.8;"></div>
+      <div id="copyToast" style="display:none; position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--bg-secondary); color:var(--text-primary); border:1px solid var(--border-color); padding:10px 14px; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,0.2); z-index:1000;">Copied to clipboard</div>
       <div style="text-align:center; margin-top:20px;">
         <p style="font-size:12px; color:#888;">Copy and send payment to complete your transaction</p>
       </div>
@@ -123,163 +109,7 @@
   </main>
 
   <script src="storage.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      if (!storage.isLoggedIn()) {
-        window.location.href = 'index.html';
-        return;
-      }
-
-      loadBalance();
-      setupMenuToggle();
-    });
-
-    function loadBalance() {
-      const balance = storage.getBalance('demo');
-      document.getElementById('balance').textContent = '$' + balance.toLocaleString('en-US', {minimumFractionDigits: 2});
-    }
-
-    function selectPaymentMethod(method) {
-      const details = {
-        mpesa: { title: 'M-Pesa (Pay via PayHero)', info: 'Enter your M-Pesa number and pay via PayHero in KSH', showStk: true },
-        bank: { title: 'Bank Transfer', info: 'Account: 1234567890\\nBank: Global Finance Bank\\nSwift: GFBKXX\\nMinimum: $50', showStk: false },
-        usdt: { title: 'USDT (TRC20)', info: 'Address: TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t\\nNetwork: TRC20\\nMinimum: $10', showStk: false },
-        bitcoin: { title: 'Bitcoin', info: 'Address: 1A1z7agoat7SBLkjvotQwNLac5cBacK8h2\\nNetwork: Bitcoin\\nMinimum: $50', showStk: false },
-        ethereum: { title: 'Ethereum', info: 'Address: 0x742d35Cc6634C0532925a3b844Bc9e7595f42e7\\nNetwork: ETH\\nMinimum: $10', showStk: false },
-        tron: { title: 'TRON', info: 'Address: TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t\\nNetwork: Tron\\nMinimum: $10', showStk: false }
-      };
-
-      const detail = details[method];
-      if (detail) {
-        document.getElementById('paymentDetailsTitle').textContent = detail.title;
-        
-        // Show STK push modal for M-Pesa
-        if (detail.showStk) {
-          document.getElementById('stkPushModal').style.display = 'block';
-          document.getElementById('paymentInfo').innerHTML = '';
-        } 
-        // Show regular payment info
-        else {
-          document.getElementById('stkPushModal').style.display = 'none';
-          document.getElementById('paymentInfo').innerHTML = '<pre style="white-space:pre-wrap; word-wrap:break-word;">' + detail.info + '</pre>';
-        }
-        
-        document.getElementById('paymentDetails').style.display = 'block';
-      }
-    }
-
-    function initiateStkPush() {
-      const phone = document.getElementById('mpesaPhone').value.trim();
-      const amount = parseFloat(document.getElementById('mpesaAmount').value);
-      
-      // Validate phone number - accept +254XXXXXXXXX or 07XXXXXXXXX or 01XXXXXXXXX
-      if (!phone.match(/^(\+254|0)[17]\d{8}$/)) {
-        alert('Please enter a valid M-Pesa phone number (e.g., +254712345678 or 0712345678)');
-        return;
-      }
-      
-      if (!amount || amount < 10) {
-        alert('Amount must be at least $10');
-        return;
-      }
-      
-      console.log('STK Push initiated for:', phone, 'Amount:', amount);
-      
-      // Request notification permission first
-      if ('Notification' in window && Notification.permission === 'default') {
-        Notification.requestPermission().then(permission => {
-          if (permission === 'granted') {
-            sendBrowserNotification('STK Push Sent', 'Check your phone for M-Pesa payment prompt');
-          }
-          proceedWithStkPush(phone, amount);
-        });
-      } else if ('Notification' in window && Notification.permission === 'granted') {
-        sendBrowserNotification('STK Push Sent', 'Check your phone for M-Pesa payment prompt');
-        proceedWithStkPush(phone, amount);
-      } else {
-        proceedWithStkPush(phone, amount);
-      }
-    }
-
-    function proceedWithStkPush(phone, amount) {
-      // Show success message
-      document.getElementById('stkResponse').style.display = 'block';
-      document.getElementById('stkPhoneDisplay').textContent = 'Phone: ' + phone + '\nAmount: $' + amount.toFixed(2) + '\nStatus: ⏳ Redirecting to PayHero...';
-      
-      // Proceed to PayHero after 2 seconds
-      setTimeout(() => {
-        showPayheroPayment(phone, amount);
-      }, 2000);
-    }
-
-    function showPayheroPayment(phone, amount) {
-      // Convert USD to KSH (1 USD = 130 KSH approx)
-      const kshAmount = Math.round(amount * 130);
-      
-      const paymentRef = prompt('💳 PayHero Payment\n\nM-Pesa Number: ' + phone + '\nUSD Amount: $' + amount.toFixed(2) + '\nKSH Amount: KSH ' + kshAmount + '\n\nProceed to PayHero to complete payment.\n\n(Enter confirmation or click OK):', '');
-      
-      if (paymentRef !== null) {
-        // Simulate PayHero payment completion
-        setTimeout(() => {
-          const refNo = 'PH-' + Date.now();
-          sendBrowserNotification('✅ Payment Completed', 'Amount: KSH ' + kshAmount + ' | Ref: ' + refNo);
-          alert('✅ PayHero Payment Completed!\n\nM-Pesa: ' + phone + '\nAmount: KSH ' + kshAmount + '\nReference: ' + refNo + '\n\nYour account has been credited.');
-          resetStkPush();
-          backToPaymentList();
-          
-          // Update balance
-          const newBalance = storage.getBalance('demo') + amount;
-          storage.setBalance(newBalance, 'demo');
-          loadBalance();
-        }, 1500);
-      }
-    }
-
-    function resetStkPush() {
-      document.getElementById('mpesaPhone').value = '';
-      document.getElementById('mpesaAmount').value = '';
-      document.getElementById('stkResponse').style.display = 'none';
-    }
-
-    function sendBrowserNotification(title, message) {
-      if ('Notification' in window && Notification.permission === 'granted') {
-        new Notification(title, {
-          body: message,
-          icon: '/assets/logo.png',
-          badge: '/assets/logo-badge.png',
-          tag: 'preocrypto-payment',
-          requireInteraction: false
-        });
-      }
-    }
-
-    function backToPaymentList() {
-      document.getElementById('paymentDetails').style.display = 'none';
-    }
-
-    function setupMenuToggle() {
-      const menuToggle = document.getElementById('menuToggle');
-      const sideMenu = document.getElementById('sideMenu');
-      const menuClose = document.querySelector('.menu-close');
-      const logout = document.querySelector('.logout');
-      const toggleMode = document.getElementById('toggleMode');
-
-      if (menuToggle) menuToggle.addEventListener('click', () => sideMenu?.classList.add('active'));
-      if (menuClose) menuClose.addEventListener('click', () => sideMenu?.classList.remove('active'));
-      if (logout) logout.addEventListener('click', (e) => {
-        e.preventDefault();
-        storage.removeUser();
-        window.location.href = 'index.html';
-      });
-      if (toggleMode) toggleMode.addEventListener('click', () => {
-        document.body.classList.toggle('light-mode');
-        localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
-      });
-
-      if (localStorage.getItem('theme') === 'light') {
-        document.body.classList.add('light-mode');
-      }
-    }
-  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="payments-app.js"></script>
 </body>
 </html>

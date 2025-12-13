@@ -1,3 +1,22 @@
+// Simple market polling and order actions
+(function(){
+  const apiBase = location.origin.replace(/:\d+$/, ':3000');
+  const priceEl = document.getElementById('live-prices');
+  async function fetchPrices(){
+    try{
+      const r = await fetch(`${apiBase}/api/market/prices`);
+      const j = await r.json();
+      if(j?.success){
+        const p = j.prices;
+        if(priceEl){
+          priceEl.textContent = `BTC ${p.BTCUSDT} | ETH ${p.ETHUSDT} | TRX ${p.TRXUSDT}`;
+        }
+      }
+    }catch(e){ /* noop */ }
+  }
+  setInterval(fetchPrices, 1500);
+  fetchPrices();
+})();
 // ============================================================================
 // PreoCrypto - Dashboard Application
 // Handles trading functionality, data management, and UI interactions
@@ -12,8 +31,8 @@ let globalState = {
   selectedPair: 'EUR/USD',
   tradeType: 'BUY',
   chart: null,
-  chartType: 'candlestick',
-  currentTimeframe: 1,
+  chartType: 'area',
+  currentTimeframe: 5, // seconds per candle (default 5s)
   drawingTool: 'select',
   priceData: {},
   positions: [],
@@ -84,8 +103,8 @@ function initializeApp() {
 
   globalState.user = appUser;
   
-  // Reset to 1-minute timeframe on page load
-  globalState.currentTimeframe = 1;
+  // Default to 5-second timeframe on page load
+  globalState.currentTimeframe = 5;
   
   // Setup UI
   document.getElementById('username').textContent = appUser.username;
@@ -101,8 +120,8 @@ function initializeApp() {
     setupEventListeners();
   }, 500);
   
-  // Update prices periodically
-  setInterval(updatePrices, 2000);
+  // Update prices frequently for faster movement
+  setInterval(updatePrices, 300);
 }
 
 // ============================================================================
@@ -279,21 +298,21 @@ function createTableRow(data) {
 // PRICE UPDATES & CHART UPDATES
 // ============================================================================
 
-let chartUpdateCounter = 0;
 let lastCandleTime = Math.floor(Date.now() / 1000);
 let currentCandleData = null;
 
 function updatePrices() {
   // Simulate realistic price movements
   MARKET_DATA.forex.forEach(item => {
-    const changeAmount = (Math.random() - 0.5) * 0.0001;
+    // Increase volatility slightly for faster visual movement
+    const changeAmount = (Math.random() - 0.5) * 0.0003;
     item.bid += changeAmount;
     item.ask += changeAmount;
     item.change += (Math.random() - 0.5) * 0.1;
   });
   
   MARKET_DATA.crypto.forEach(item => {
-    const changeAmount = (Math.random() - 0.5) * 50;
+    const changeAmount = (Math.random() - 0.5) * 100;
     item.price += changeAmount;
     item.change24h += (Math.random() - 0.5) * 0.2;
   });
@@ -301,11 +320,12 @@ function updatePrices() {
   // Update market ticker display
   updateTicker();
   
-  // Update chart with new candle data every ~5 seconds (3 updates at 2000ms each = ~6 seconds)
-  chartUpdateCounter++;
-  if (chartUpdateCounter >= 3 && globalState.chart) {
-    updateChartWithNewCandle();
-    chartUpdateCounter = 0;
+  // Time-based candle creation according to current timeframe (seconds per candle)
+  if (globalState.chart) {
+    const now = Math.floor(Date.now() / 1000);
+    if ((now - lastCandleTime) >= globalState.currentTimeframe) {
+      updateChartWithNewCandle();
+    }
   }
 }
 
@@ -546,7 +566,7 @@ function initChart() {
       },
       timeScale: {
         timeVisible: true,
-        secondsVisible: false
+        secondsVisible: true
       },
       rightPriceScale: {
         borderColor: '#2d3748',
@@ -618,7 +638,7 @@ function createChartSeries(chart, chartType) {
     return;
   }
   
-  console.log(`Creating ${chartType} series with ${data.length} candles, timeframe: ${globalState.currentTimeframe}m`);
+  console.log(`Creating ${chartType} series with ${data.length} candles, timeframe: ${globalState.currentTimeframe}s`);
   
   let series;
   
@@ -695,8 +715,8 @@ function createChartSeries(chart, chartType) {
 
 function generateCandleData() {
   const data = [];
-  const timeframeMinutes = globalState.currentTimeframe;
-  const timeframeSeconds = timeframeMinutes * 60;
+  // Interpret currentTimeframe as seconds per candle
+  const timeframeSeconds = globalState.currentTimeframe;
   const numCandles = 60; // Show 60 candles
   
   let baseTime = Math.floor(Date.now() / 1000) - (numCandles * timeframeSeconds);

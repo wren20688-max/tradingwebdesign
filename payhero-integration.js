@@ -360,30 +360,43 @@ const PayHeroIntegration = {
    * @returns {Promise<Object>} API response
    */
   async callPayHeroAPI(endpoint, data, method = 'POST') {
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${PayHeroConfig.PUBLIC_KEY}`,
-      'X-API-Key': PayHeroConfig.SECRET_KEY,
-      'X-Request-ID': this.generateRequestId(),
-      'X-Timestamp': new Date().toISOString()
-    };
+    // Route calls through backend proxy to keep credentials server-side
+    let url = '';
+    // Optional credential index from localStorage (0-based)
+    let credIdx = 0;
+    try { const v = localStorage.getItem('payheroCredIndex'); if (v !== null) credIdx = parseInt(v, 10) || 0; } catch {}
+    const credParam = (Number.isFinite(credIdx) && credIdx >= 0) ? `?cred=${credIdx}` : '';
+    if (endpoint.startsWith('/payment/create')) url = '/api/payments/create';
+    else if (endpoint.startsWith('/payment/process')) url = '/api/payments/process';
+    else if (endpoint.includes('/payment/') && endpoint.endsWith('/verify')) {
+      const id = endpoint.split('/payment/')[1].replace('/verify','');
+      url = `/api/payments/${id}/verify`;
+    } else {
+      // Fallback to proxy any other endpoint under a generic path if needed in future
+      url = '/api/payments/create';
+    }
+
+    // Append credential selection when applicable
+    if (!url.includes('/verify')) {
+      url = `${url}${credParam}`;
+    } else if (credParam) {
+      url = `${url}${credParam}`;
+    }
 
     try {
-      const response = await fetch(`${PayHeroConfig.API_URL}${endpoint}`, {
-        method: method,
-        headers: headers,
+      const response = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
         body: method !== 'GET' ? JSON.stringify(data) : undefined
       });
 
       const result = await response.json();
-
       if (!response.ok) {
-        throw new Error(result.message || 'API Error');
+        throw new Error(result.message || result.error || 'API Error');
       }
-
       return result;
     } catch (error) {
-      console.error('PayHero API call failed:', error);
+      console.error('PayHero proxy call failed:', error);
       throw error;
     }
   },
